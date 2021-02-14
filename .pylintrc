@@ -1,0 +1,19 @@
+[MASTER]
+init-hook='import sys; sys.path.append("$HOME/Workspace/Python/Simulacra/simulacra/")'
+
+[MESSAGES CONTROL]
+disable=
+    no-self-argument,
+    unsupported-assignment-operation,
+    missing-function-docstring,
+    ungrouped-imports,
+    missing-module-docstring,
+    missing-class-docstring,
+    consider-using-enumerate,
+    unnecessary-lambda,
+    too-many-arguments,
+    too-many-instance-attributes,
+    too-many-return-statements,
+    too-many-branches,
+    invalid-name,
+    arguments-differ
