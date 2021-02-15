@@ -1,4 +1,6 @@
-from anathema.core.game import Game
+from __future__ import annotations
+
+from anathema.core import Game
 
 
 def main():

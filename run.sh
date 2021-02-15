@@ -1,9 +1,9 @@
 #!/bin/bash
 
-echo "Welcome to Simulacra v.1.0"
+echo "Welcome to Anathema v.1.0"
 echo "Starting the adventure..."
 
-python3 ./simulacra/main.py
+python3 ./anathema/main.py
 
 echo "Farewell, adventurer!"
 echo ""
