@@ -20,6 +20,7 @@ class Game:
         self.clock = ClockManager(self)
         self.renderer = RenderManager(self)
         # self.camera = CameraManager(self)
+        # self.player = PlayerManager(self)
         self.screens = ScreenManager(self)
         self.input = InputController(self)
         # self.ui = UIManager(self)
