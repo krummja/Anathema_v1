@@ -1,6 +1,7 @@
 from __future__ import annotations
-from abc import ABC, abstractmethod
+from abc import ABC
 
+import numpy as np
 from anathema.abstracts import AbstractInitTiles
 
 
@@ -10,8 +11,29 @@ class InitTiles(AbstractInitTiles):
 
     def initialize_tiles(self):
         if self._factory is not None:
-            tiles = [[ self._factory.build(x, y) for x in range(self.width)  ]
-                                                 for y in range(self.height) ]
+            tiles = np.zeros((64, 64), dtype=object, order="F")
+            for x in range(64):
+                for y in range(64):
+                    tiles[x, y] = self._factory.build(x, y)
+
+            tiles[12, 12]['Renderable'].char = "≈"
+            tiles[12, 12]['Renderable'].fore = 0xFF9999FF
+
+            for x in range(9, 20):
+                tiles[x, 8].destroy()
+                tiles[x, 18].destroy()
+                self._factory.build(x, 8, "▒", "0xFFAAAAFF", True, True)
+                self._factory.build(x, 18, "▒", "0xFFAAAAFF", True, True)
+
+            for y in range(9, 18):
+                tiles[9, y].destroy()
+                tiles[19, y].destroy()
+                self._factory.build(9, y, "▒", "0xFFAAAAFF", True, True)
+                self._factory.build(19, y, "▒", "0xFFAAAAFF", True, True)
+
+            # NOTE An alternative way to do this -- build the map purely using NumPy,
+            # i.e. with the usual amenities like slicing, and then at the end interpret
+            # the array data and replace for real tile entities.
             return tiles
         else:
             raise Exception("No tile factory available to handle initialization.")
@@ -32,7 +54,3 @@ class Tiles2D(AbstractInitTiles, ABC):
         self.width = width
         self.height = height
         super().__init__()
-
-    def get_entity_at_pos(self, x: int, y: int):
-        tile = self.tiles[x][y]
-        # TODO Figure out a good way to query the map to get uids at pos
