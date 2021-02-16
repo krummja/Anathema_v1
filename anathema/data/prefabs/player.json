@@ -5,7 +5,7 @@
         {   "type": "Renderable",
             "properties": {"char": "@", "fore": "0xFFFF00FF"}},
         {   "type": "Position",
-            "properties": {"x": 2, "y": 2}},
+            "properties": {"x": 2, "y": 2, "z": 5}},
         {   "type": "IsPlayer",
             "properties": {}},
         {   "type": "Actor",

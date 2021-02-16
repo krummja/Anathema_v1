@@ -4,6 +4,7 @@ from collections import deque
 
 from anathema.data.actions.action import Action
 from anathema.abstracts import AbstractManager
+from anathema.world.tilemap import Depth
 
 if TYPE_CHECKING:
     from anathema.core import Game
@@ -36,8 +37,10 @@ class PlayerManager(AbstractManager):
     def initialize_player(self):
         player = self.game.ecs.engine.create_entity()
         self.game.ecs.engine.prefabs.apply_to_entity(
-            player, 'Player', {'Position': {'x': 10, 'y': 10}})
+            player, 'Player', {'Position': {'x': 10, 'y': 10, 'z': Depth.ABOVE_1.value}})
         self._player_uid = player.uid
+
+        self.game.world.current_area.tiles[10, 10, Depth.ABOVE_1.value] = self._player_uid
         return player
 
     def get_next_action(self):

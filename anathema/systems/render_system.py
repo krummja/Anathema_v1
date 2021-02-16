@@ -3,60 +3,51 @@ from typing import TYPE_CHECKING
 from abc import ABC, abstractmethod
 
 from anathema.abstracts import AbstractSystem
+from anathema.world.tilemap import Depth
 
 if TYPE_CHECKING:
     from anathema.core import Game
 
 
 class RenderSystem(AbstractSystem):
+    # TODO Rebuild this with new layer system in mind
 
     def __init__(self, game: Game) -> None:
         super().__init__(game)
         self.terminal = game.renderer.terminal
-
-        self._statics = self.ecs.create_query(
+        self.tiles = game.world.current_area.tiles
+        self._tiles = self.ecs.create_query(
             all_of=[ 'Renderable' ],
             none_of=[ 'Actor' ])
+
         self._actors = self.ecs.create_query(
-            all_of=[ 'Renderable', 'Actor' ])
+            all_of=[ 'Actor' ])
 
-    def draw(self) -> None:
-        for static in self._statics.result:
-            position = static['Position'].xy
-            if self.game.fov_system.visible[position[0], position[1]]:
-                self.draw_visible(at=position, renderable=static['Renderable'])
-            elif self.game.fov_system.explored[position[0], position[1]]:
-                self.draw_explored(at=position, renderable=static['Renderable'])
-            else:
-                self.terminal.layer(20)
-                self.terminal.color(0xFF2A2A2A)
-                self.terminal.put(*position, "█")
+    def render_tiles(self) -> None:
+        for tile in self._tiles.result:
+            x, y, z = tile['Position'].xyz
+            self.terminal.layer(z.value)
+            alpha = 0xFF000000 - (0x11000000 * z.value)
+            if alpha <= 0x00000000:
+                alpha = 0x00000000
+            self.terminal.color(alpha + tile['Renderable'].fore)
+            self.terminal.put(x, y, tile['Renderable'].char)
 
+    def render_actors(self) -> None:
         for actor in self._actors.result:
-            position = actor['Position'].xy
-            if self.game.fov_system.visible[position[0], position[1]]:
-                self.draw_actor(at=position, renderable=actor['Renderable'])
+            x, y, z = actor['Position'].xyz
 
-    def draw_visible(self, *, at, renderable) -> None:
-        self.terminal.layer(1)
-        self.terminal.color(renderable.fore)
-        self.terminal.put(*at, renderable.char)
+            self.terminal.clear_area(x, y, 1, 1)
 
-    def draw_explored(self, *, at, renderable) -> None:
-        self.terminal.layer(1)
-        self.terminal.color(0x88888888)
-        self.terminal.put(*at, renderable.char)
-
-    def draw_actor(self, *, at, renderable) -> None:
-        self.terminal.layer(1)
-        self.terminal.clear_area(*at, 1, 1)
-        self.terminal.layer(2)
-        self.terminal.color(renderable.fore)
-        self.terminal.put(*at, renderable.char)
+            self.terminal.layer(z)
+            self.terminal.color(actor['Renderable'].fore)
+            self.terminal.put(x, y, actor['Renderable'].char)
 
     def render(self) -> None:
+
         self.terminal.clear()
-        self.draw()
+        self.render_tiles()
+        self.render_actors()
 
     def update(self, dt) -> None:
         self.render()

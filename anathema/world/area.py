@@ -1,7 +1,8 @@
 from __future__ import annotations
 from typing import TYPE_CHECKING
+import numpy as np
 
-from anathema.world.tilemap import TileMap
+from anathema.world.tilemap import TileFactory, Depth
 
 if TYPE_CHECKING:
     from anathema.world.region import Region
@@ -10,11 +11,17 @@ if TYPE_CHECKING:
 class Area:
 
     def __init__(self, name: str, region: Region) -> None:
+        self.factory = TileFactory(region.world.ecs)
         self.name = name
         self.region = region
         self.width = 64
         self.height = 64
-        self.tiles = TileMap(self.width, self.height, self.region.world.ecs)
+        self.tiles = np.zeros((64, 64, 11), dtype=object, order="F")
+
+        for x in range(64):
+            for y in range(64):
+                z = Depth.GROUND.value
+                self.tiles[x, y, z] = self.factory.build(x, y, Depth.GROUND)
 
     def is_blocked(self, x: int, y: int) -> bool:
         if not (0 <= x < self.width and 0 <= y < self.height):

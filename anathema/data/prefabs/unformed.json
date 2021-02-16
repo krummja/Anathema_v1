@@ -6,12 +6,12 @@
             "type": "Renderable",
             "properties": {
                 "char": "?",
-                "fore": "0x55FF00FF"
+                "fore": "0x00FF00FF"
             }
         },
         {
             "type": "Position",
-            "properties": {}
+            "properties": {"z": 5}
         }
     ]
 }
