@@ -1,16 +1,14 @@
 from __future__ import annotations
 from typing import TYPE_CHECKING
-from abc import ABC, abstractmethod
 
 from anathema.abstracts import AbstractSystem
-from anathema.world.tilemap import Depth
+from clubsandwich.geom import Rect, Point, Size
 
 if TYPE_CHECKING:
     from anathema.core import Game
 
 
 class RenderSystem(AbstractSystem):
-    # TODO Rebuild this with new layer system in mind
 
     def __init__(self, game: Game) -> None:
         super().__init__(game)
@@ -18,7 +16,7 @@ class RenderSystem(AbstractSystem):
         self.tiles = game.world.current_area.tiles
         self._tiles = self.ecs.create_query(
             all_of=[ 'Renderable' ],
-            none_of=[ 'Actor' ])
+            none_of=[ 'Actor', 'Item' ])
 
         self._actors = self.ecs.create_query(
             all_of=[ 'Actor' ])
@@ -37,7 +35,8 @@ class RenderSystem(AbstractSystem):
         for actor in self._actors.result:
             x, y, z = actor['Position'].xyz
 
-            self.terminal.clear_area(x, y, 1, 1)
+            # self.terminal.clear_area(x, y, 1, 1)
+            self.terminal.clear_area(Rect(Point(x, y), Size(1, 1)))
 
             self.terminal.layer(z)
             self.terminal.color(actor['Renderable'].fore)

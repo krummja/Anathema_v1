@@ -1,6 +1,7 @@
 from __future__ import annotations
 from typing import TYPE_CHECKING
-from bearlibterminal import terminal
+# from bearlibterminal import terminal
+from clubsandwich.blt.nice_terminal import terminal
 
 from anathema.abstracts import AbstractManager
 

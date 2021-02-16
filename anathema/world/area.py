@@ -18,6 +18,7 @@ class Area:
         self.height = 64
         self.tiles = np.zeros((64, 64, 11), dtype=object, order="F")
 
+    def fill(self):
         for x in range(64):
             for y in range(64):
                 z = Depth.GROUND.value
