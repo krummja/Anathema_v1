@@ -1,0 +1,21 @@
+{
+    "name": "unformed",
+    "inherit": "",
+    "components": [
+        {
+            "type": "Renderable",
+            "properties": {
+                "char": "?",
+                "fore": "0x55FF00FF"
+            }
+        },
+        {
+            "type": "Position",
+            "properties": {}
+        },
+        {
+            "type": "Blocker",
+            "properties": {}
+        }
+    ]
+}

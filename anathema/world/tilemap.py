@@ -15,6 +15,7 @@ class TileFactory:
     def build(self, x: int, y: int):
         tile = self.ecs.create_entity()
         self.ecs.prefabs.apply_to_entity(tile, 'unformed', {'Position': {'x': x, 'y': y}})
+        return tile
 
 
 class TileMap(Tiles2D, InitTiles):

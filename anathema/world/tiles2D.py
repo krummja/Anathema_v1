@@ -33,3 +33,6 @@ class Tiles2D(AbstractInitTiles, ABC):
         self.height = height
         super().__init__()
 
+    def get_entity_at_pos(self, x: int, y: int):
+        tile = self.tiles[x][y]
+        # TODO Figure out a good way to query the map to get uids at pos

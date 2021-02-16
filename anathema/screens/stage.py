@@ -20,6 +20,7 @@ class Stage(AbstractScreen):
         self.game: Game = manager.game
 
     def on_enter(self) -> None:
+        self.game.fov_system.update(100)
         self.game.render_system.update(100)
 
     def on_update(self, dt) -> None:

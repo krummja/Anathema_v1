@@ -14,6 +14,7 @@ from anathema.core.player import PlayerManager
 from anathema.systems.render_system import RenderSystem
 from anathema.systems.action_system import ActionSystem
 from anathema.systems.physics_system import PhysicsSystem
+from anathema.systems.fov_system import FOVSystem
 
 
 class Game:
@@ -36,7 +37,7 @@ class Game:
 
         self.action_system = ActionSystem(self)
         self.physics_system = PhysicsSystem(self)
-        # self.fov_system = FOVSystem(self)
+        self.fov_system = FOVSystem(self)
         self.render_system = RenderSystem(self)
 
     @property
@@ -59,6 +60,7 @@ class Game:
 
     def update_player_systems(self, dt) -> None:
         self.physics_system.update(dt)
+        self.fov_system.update(dt)
         self.render_system.update(dt)
 
     def loop(self) -> None:
