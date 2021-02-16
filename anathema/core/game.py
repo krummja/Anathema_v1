@@ -8,6 +8,12 @@ from anathema.core.screens import ScreenManager
 from anathema.core.fps import FPSManager
 from anathema.core.clock import ClockManager
 from anathema.core.ecs import ECSManager
+from anathema.core.world import WorldManager
+from anathema.core.player import PlayerManager
+
+from anathema.systems.render_system import RenderSystem
+from anathema.systems.action_system import ActionSystem
+from anathema.systems.physics_system import PhysicsSystem
 
 
 class Game:
@@ -20,17 +26,18 @@ class Game:
         self.clock = ClockManager(self)
         self.renderer = RenderManager(self)
         # self.camera = CameraManager(self)
-        # self.player = PlayerManager(self)
+        self.world = WorldManager(self)
+        self.player = PlayerManager(self)
         self.screens = ScreenManager(self)
         self.input = InputController(self)
         # self.ui = UIManager(self)
         # self.log = LogManager(self)
         self.fps = FPSManager(self)
 
-        # self.action_system = ActionSystem(self)
-        # self.physics_system = PhysicSystem(self)
+        self.action_system = ActionSystem(self)
+        self.physics_system = PhysicsSystem(self)
         # self.fov_system = FOVSystem(self)
-        # self.render_system = RenderSystem(self)
+        self.render_system = RenderSystem(self)
 
     @property
     def engine(self):
@@ -42,11 +49,17 @@ class Game:
         self.loop()
         self.renderer.teardown()
 
-    def update_engine_systems(self) -> None:
-        pass
+    def update_engine_systems(self, dt) -> None:
+        for _ in range(20):
+            self.clock.update(dt)
+            player_turn = self.action_system.update(dt)
+            if player_turn:
+                self.update_player_systems(dt)
+                return
 
-    def update_player_systems(self) -> None:
-        pass
+    def update_player_systems(self, dt) -> None:
+        self.physics_system.update(dt)
+        self.render_system.update(dt)
 
     def loop(self) -> None:
         while True:

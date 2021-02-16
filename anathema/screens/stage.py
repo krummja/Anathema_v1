@@ -20,13 +20,11 @@ class Stage(AbstractScreen):
         self.game: Game = manager.game
 
     def on_enter(self) -> None:
-        print("Entered Stage")
-
-    def on_leave(self) -> None:
-        print("Leaving Stage")
+        self.game.render_system.update(100)
 
     def on_update(self, dt) -> None:
         self.handle_input()
+        self.game.update_engine_systems(dt)
 
     def cmd_move(self, x: int, y: int) -> Optional[T]:
-        pass
+        self.game.player.move((x, y))
