@@ -14,16 +14,23 @@ T = TypeVar("T")
 class CommandLibrary:
 
     COMMAND_KEYS: Dict[str, Dict[int, str]] = {
+        'SCREEN1': {
+            blt.TK_RETURN: "confirm",
+            blt.TK_ESCAPE: "escape",
+            },
+        'SCREEN2': {
+            blt.TK_RETURN: "confirm",
+            blt.TK_ESCAPE: "escape",
+            },
         'DEFAULT': {
             blt.TK_RETURN: "confirm",
             blt.TK_KP_ENTER: "confirm",
             blt.TK_ESCAPE: "escape",
             },
         'MAIN MENU': {
-            blt.TK_ESCAPE: "escape",
-            # blt.TK_Q: "quit",
             blt.TK_TAB: "next",
             blt.TK_RETURN: "confirm",
+            blt.TK_ESCAPE: "escape"
             },
         'STAGE': {
             blt.TK_D: "drop",
@@ -31,6 +38,7 @@ class CommandLibrary:
             blt.TK_G: "pickup",
             blt.TK_I: "inventory",
             blt.TK_L: "examine",
+            blt.TK_RETURN: "confirm",
             blt.TK_ESCAPE: "escape",
             }
         }
@@ -67,7 +75,7 @@ class InputController(AbstractManager):
 
     def __init__(self, game: Game) -> None:
         super().__init__(game)
-        self._current_screen = game.screens.current_screen
+        self._current_screen = self.game.screens.current_screen
 
     def handle_input(self) -> Optional[Callable[[], Optional[T]]]:
         key = self.game.renderer.terminal.read()
@@ -79,6 +87,7 @@ class InputController(AbstractManager):
             return command
 
     def command_lookup(self, key):
+        # print("INPUT CONTROLLER -- CURRENT SCREEN: " + self._current_screen.name)
         if key in CommandLibrary.MOVE_KEYS:
             return self._current_screen.cmd_move(*CommandLibrary.MOVE_KEYS[key])
         try:
@@ -93,3 +102,6 @@ class InputController(AbstractManager):
                 return command
         else:
             return None
+
+    def change_input_source(self):
+        self._current_screen = self.game.screens.current_screen

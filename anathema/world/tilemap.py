@@ -41,8 +41,8 @@ class TileFactory:
                 {'Position': {'x': x, 'y': y, 'z': z}})
         else:
             if fore is None:
-                fore = 0xFFFFFF
-            tile.add('Position', {'x': x, 'y': y, 'z': 0})
+                fore = "0xFFFFFF"
+            tile.add('Position', {'x': x, 'y': y, 'z': z})
             tile.add('Renderable', {'char': char, 'fore': fore})
             if blocker is not None:
                 tile.add('Blocker', {})

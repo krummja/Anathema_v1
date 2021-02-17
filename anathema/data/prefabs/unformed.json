@@ -5,8 +5,8 @@
         {
             "type": "Renderable",
             "properties": {
-                "char": "?",
-                "fore": "0x00FF00FF"
+                "char": "·",
+                "fore": "0x00CCFFCC"
             }
         },
         {
