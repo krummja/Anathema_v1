@@ -4,6 +4,7 @@ from dataclasses import dataclass
 from typing import TYPE_CHECKING, Optional
 from enum import Enum
 
+from anathema.utils.debug import debugmethods
 from anathema.abstracts import AbstractScreen, T
 
 if TYPE_CHECKING:
@@ -11,6 +12,7 @@ if TYPE_CHECKING:
     from anathema.core.game import Game
 
 
+@debugmethods
 class Stage(AbstractScreen):
 
     name: str = "STAGE"
@@ -20,6 +22,7 @@ class Stage(AbstractScreen):
         self.game: Game = manager.game
 
     def on_enter(self) -> None:
+        print("Entering Stage")
         self.game.fov_system.update(100)
         self.game.render_system.update(100)
 
@@ -29,3 +32,6 @@ class Stage(AbstractScreen):
 
     def cmd_move(self, x: int, y: int) -> Optional[T]:
         self.game.player.move((x, y))
+
+    def cmd_escape(self):
+        self.game.screens.replace_screen('MAIN MENU')

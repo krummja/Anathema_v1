@@ -3,6 +3,7 @@ from typing import TYPE_CHECKING
 import numpy as np
 
 from anathema.world.tilemap import TileFactory, Depth
+from anathema.core.options import Options
 
 if TYPE_CHECKING:
     from anathema.world.region import Region
@@ -14,13 +15,13 @@ class Area:
         self.factory = TileFactory(region.world.ecs)
         self.name = name
         self.region = region
-        self.width = 64
-        self.height = 64
+        self.width = Options.STAGE_WIDTH
+        self.height = Options.STAGE_HEIGHT
         self.tiles = np.zeros((64, 64, 11), dtype=object, order="F")
 
     def fill(self):
-        for x in range(64):
-            for y in range(64):
+        for x in range(Options.STAGE_WIDTH):
+            for y in range(Options.STAGE_HEIGHT):
                 z = Depth.GROUND.value
                 self.tiles[x, y, z] = self.factory.build(x, y, Depth.GROUND)
 

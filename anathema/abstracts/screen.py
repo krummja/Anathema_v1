@@ -2,7 +2,6 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Optional
 from abc import ABC
 
-
 from anathema.core.input import T, StateBreak
 
 if TYPE_CHECKING:
@@ -10,7 +9,7 @@ if TYPE_CHECKING:
     from anathema.core.game import Game
 
 
-class AbstractScreen(ABC):
+class AbstractScreen:
 
     name: str
 

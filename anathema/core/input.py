@@ -19,15 +19,19 @@ class CommandLibrary:
             blt.TK_KP_ENTER: "confirm",
             blt.TK_ESCAPE: "escape",
             },
-        'MAIN_MENU': {
-            blt.TK_Q: "quit",
+        'MAIN MENU': {
+            blt.TK_ESCAPE: "escape",
+            # blt.TK_Q: "quit",
+            blt.TK_TAB: "next",
+            blt.TK_RETURN: "confirm",
             },
-        'PLAYER_READY': {
+        'STAGE': {
             blt.TK_D: "drop",
             blt.TK_E: "equipment",
             blt.TK_G: "pickup",
             blt.TK_I: "inventory",
             blt.TK_L: "examine",
+            blt.TK_ESCAPE: "escape",
             }
         }
 

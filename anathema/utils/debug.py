@@ -9,6 +9,7 @@ def debug(func=None, *, prefix=''):
     @wraps(func)
     def wrapper(*args, **kwargs):
         print(msg)
+        print("---------------------------------------")
         return func(*args, **kwargs)
     return wrapper
 

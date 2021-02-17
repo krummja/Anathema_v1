@@ -1,6 +1,7 @@
 from __future__ import annotations
 from typing import TYPE_CHECKING, List, Dict
 
+from anathema.utils.debug import debugmethods
 from anathema.abstracts import AbstractManager, AbstractScreen
 from anathema.screens import MainMenu, Stage
 
@@ -8,6 +9,7 @@ if TYPE_CHECKING:
     from anathema.core import Game
 
 
+@debugmethods
 class ScreenManager(AbstractManager):
 
     def __init__(self, game: Game) -> None:
@@ -35,7 +37,7 @@ class ScreenManager(AbstractManager):
         """Equivalent to a pop_screen followed by a push_screen."""
         self.current_screen.on_leave()
         self._stack.pop()
-        self._stack.push(self._screens[screen])
+        self._stack.append(self._screens[screen])
         self.current_screen.on_enter()
 
     def push_screen(self, screen: str) -> None:
