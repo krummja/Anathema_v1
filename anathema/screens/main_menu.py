@@ -25,7 +25,7 @@ class MainMenu(AbstractScreen):
         self.game.renderer.clear()
 
     def on_update(self, dt) -> None:
-        self.on_draw(100)
+        self.on_draw(dt)
         self.handle_input()
 
     def cmd_move(self, x: int, y: int) -> Optional[T]:

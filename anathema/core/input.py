@@ -14,14 +14,6 @@ T = TypeVar("T")
 class CommandLibrary:
 
     COMMAND_KEYS: Dict[str, Dict[int, str]] = {
-        'SCREEN1': {
-            blt.TK_RETURN: "confirm",
-            blt.TK_ESCAPE: "escape",
-            },
-        'SCREEN2': {
-            blt.TK_RETURN: "confirm",
-            blt.TK_ESCAPE: "escape",
-            },
         'DEFAULT': {
             blt.TK_RETURN: "confirm",
             blt.TK_KP_ENTER: "confirm",
@@ -29,8 +21,6 @@ class CommandLibrary:
             },
         'MAIN MENU': {
             blt.TK_TAB: "next",
-            blt.TK_RETURN: "confirm",
-            blt.TK_ESCAPE: "escape"
             },
         'STAGE': {
             blt.TK_D: "drop",
@@ -38,8 +28,6 @@ class CommandLibrary:
             blt.TK_G: "pickup",
             blt.TK_I: "inventory",
             blt.TK_L: "examine",
-            blt.TK_RETURN: "confirm",
-            blt.TK_ESCAPE: "escape",
             }
         }
 
@@ -87,19 +75,16 @@ class InputController(AbstractManager):
             return command
 
     def command_lookup(self, key):
-        # print("INPUT CONTROLLER -- CURRENT SCREEN: " + self._current_screen.name)
         if key in CommandLibrary.MOVE_KEYS:
             return self._current_screen.cmd_move(*CommandLibrary.MOVE_KEYS[key])
-        try:
-            if key in CommandLibrary.COMMAND_KEYS[self._current_screen.name]:
-                commands = CommandLibrary.COMMAND_KEYS[self._current_screen.name]
-                command = getattr(self._current_screen, f"cmd_{commands[key]}")
-                return command
-        except KeyError:
-            if key in CommandLibrary.COMMAND_KEYS['DEFAULT']:
-                commands = CommandLibrary.COMMAND_KEYS['DEFAULT']
-                command = getattr(self._current_screen, f"cmd_{commands[key]}")
-                return command
+        if key in CommandLibrary.COMMAND_KEYS[self._current_screen.name]:
+            commands = CommandLibrary.COMMAND_KEYS[self._current_screen.name]
+            command = getattr(self._current_screen, f"cmd_{commands[key]}")
+            return command
+        elif key in CommandLibrary.COMMAND_KEYS['DEFAULT']:
+            commands = CommandLibrary.COMMAND_KEYS['DEFAULT']
+            command = getattr(self._current_screen, f"cmd_{commands[key]}")
+            return command
         else:
             return None
 

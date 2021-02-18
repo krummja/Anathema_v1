@@ -1,10 +1,7 @@
 
 from __future__ import annotations
-from dataclasses import dataclass
 from typing import TYPE_CHECKING, Optional
-from enum import Enum
 
-from anathema.utils.debug import debugmethods
 from anathema.abstracts import AbstractScreen, T
 
 if TYPE_CHECKING:
@@ -25,8 +22,14 @@ class Stage(AbstractScreen):
         self.game.render_system.update(100)
 
     def on_update(self, dt) -> None:
+        self.on_draw(dt)
         self.handle_input()
         self.game.update_engine_systems(dt)
+
+    def on_draw(self, dt) -> None:
+        ui = self.game.ui
+        for panel in ui.panels:
+            panel.draw()
 
     def cmd_move(self, x: int, y: int) -> Optional[T]:
         self.game.player.move((x, y))
