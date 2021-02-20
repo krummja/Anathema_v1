@@ -19,6 +19,9 @@ class RenderManager(AbstractManager):
     def terminal(self) -> terminal:
         return self._terminal
 
+    def refresh(self) -> None:
+        self._terminal.refresh()
+
     def clear(self) -> None:
         self._terminal.clear()
         self._terminal.bkcolor(0xFF2A2A2A)
@@ -35,7 +38,9 @@ class RenderManager(AbstractManager):
     def fill(self, char: str = "█", color: int = 0xFF2A2A2A) -> None:
         self._terminal.layer(0)
         self._terminal.color(color)
-
         for x in range(96):
             for y in range(64):
                 self._terminal.put(x, y, char)
+
+    def draw(self, dt) -> None:
+        self._terminal.refresh()

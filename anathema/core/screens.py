@@ -57,18 +57,16 @@ class ScreenManager(AbstractManager):
 
     def __init__(self, game: Game) -> None:
         super().__init__(game)
-        self._stack: List[AbstractScreen] = []
+        self._stack: List[AbstractScreen] = [MainMenu(self)]
         self._screens: Dict[str, AbstractScreen] = {
-            # 'SCREEN1': Screen_1,
-            # 'SCREEN2': Screen_2,
             'MAIN MENU': MainMenu,
             'STAGE': Stage,
-        }
-        self.set_screen('MAIN MENU')
+            }
 
     @property
     def current_screen(self) -> AbstractScreen:
-        return self._stack[-1]
+        if len(self._stack) > 0:
+            return self._stack[-1]
 
     def set_screen(self, screen: str) -> None:
         """Dump the current stack if there is one and push a new screen."""

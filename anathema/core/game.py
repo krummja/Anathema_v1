@@ -6,6 +6,7 @@ from anathema.core.renderer import RenderManager
 from anathema.core.input import InputController
 from anathema.core.screens import ScreenManager
 from anathema.core.fps import FPSManager
+from anathema.core.camera import CameraManager
 from anathema.core.clock import ClockManager
 from anathema.core.ecs import ECSManager
 from anathema.core.world import WorldManager
@@ -27,13 +28,11 @@ class Game:
 
         self.clock = ClockManager(self)
         self.renderer = RenderManager(self)
-        # self.camera = CameraManager(self)
         self.world = WorldManager(self)
         self.player = PlayerManager(self)
         self.ui = UIManager(self)
         self.screens = ScreenManager(self)
         self.input = InputController(self)
-        # self.log = LogManager(self)
         self.fps = FPSManager(self)
 
         self.action_system = ActionSystem(self)
@@ -68,8 +67,8 @@ class Game:
         while True:
             now = time.time()
             dt = now - self._last_update
-            self.ui.update(dt)
-            self.screens.update(dt)
+            self.renderer.clear()
             self.fps.update(dt)
-            self.renderer.terminal.refresh()
+            self.screens.update(dt)  # stage screen calls "self.update_player_systems"
+            self.renderer.draw(dt)
             self._last_update = now

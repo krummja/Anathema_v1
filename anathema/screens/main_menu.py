@@ -1,6 +1,7 @@
 from __future__ import annotations
 from typing import TYPE_CHECKING, Optional
 
+from anathema.core.options import Options
 from anathema.utils.debug import debugmethods
 from anathema.abstracts import AbstractScreen, T, StateBreak
 from clubsandwich.geom import Point
@@ -22,10 +23,9 @@ class MainMenu(AbstractScreen):
         pass
 
     def on_leave(self) -> None:
-        self.game.renderer.clear()
+        pass
 
     def on_update(self, dt) -> None:
-        self.on_draw(dt)
         self.handle_input()
 
     def cmd_move(self, x: int, y: int) -> Optional[T]:
@@ -39,14 +39,3 @@ class MainMenu(AbstractScreen):
 
     def cmd_escape(self) -> None:
         raise SystemExit()
-
-    def on_draw(self, dt) -> None:
-        ui = self.game.ui
-        self.game.renderer.clear()
-        self.game.renderer.fill()
-        self.game.renderer.terminal.layer(1)
-        self.game.renderer.terminal.color(0xFFFFFFFF)
-        self.game.renderer.terminal.puts(2, 2, "Anathema: Main Menu")
-        for panel in ui.panels:
-            panel.draw()
-        self.game.renderer.terminal.refresh()
