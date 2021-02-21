@@ -7,7 +7,6 @@ if TYPE_CHECKING:
     from anathema.core.world import WorldManager
 
 
-
 class Region:
 
     def __init__(self, name: str, world: WorldManager) -> None:

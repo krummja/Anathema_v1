@@ -5,13 +5,17 @@
         {
             "type": "Renderable",
             "properties": {
-                "char": "·",
+                "char": "?",
                 "fore": "0x00CCFFCC"
             }
         },
         {
             "type": "Position",
             "properties": {"z": 5}
+        },
+        {
+            "type": "Unformed",
+            "properties": {}
         }
     ]
 }

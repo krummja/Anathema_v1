@@ -4,7 +4,7 @@ from collections import deque
 
 from anathema.data.actions.action import Action
 from anathema.abstracts import AbstractManager
-from anathema.world.tilemap import Depth
+from anathema.world.tile_factory import Depth
 
 if TYPE_CHECKING:
     from anathema.core import Game

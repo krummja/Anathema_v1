@@ -13,6 +13,8 @@
         {   "type": "Legs",
             "properties": {}},
         {   "type": "Name",
-            "properties": {}}
+            "properties": {}},
+        {   "type": "Health",
+            "properties": {"base": 100}}
     ]
 }

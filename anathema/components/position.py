@@ -2,7 +2,7 @@ from __future__ import annotations
 from typing import Tuple, Union
 
 from ecstremity import Component, Entity
-from anathema.world.tilemap import Depth
+from anathema.world.tile_factory import Depth
 
 
 class Position(Component):

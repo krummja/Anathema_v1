@@ -1,10 +1,7 @@
 from __future__ import annotations
 from typing import TYPE_CHECKING, Optional
 
-from anathema.core.options import Options
-from anathema.utils.debug import debugmethods
-from anathema.abstracts import AbstractScreen, T, StateBreak
-from clubsandwich.geom import Point
+from anathema.abstracts import AbstractScreen, T
 
 if TYPE_CHECKING:
     from anathema.core.screens import ScreenManager
@@ -29,7 +26,8 @@ class MainMenu(AbstractScreen):
 
     def on_draw(self, dt) -> None:
         self.game.renderer.clear()
-        self.game.renderer.print(1, 1, 0xFFFF00FF, "test string")
+        self.game.renderer.print(1, 1, 0xFFFFFFFF, "ANATHEMA")
+        self.game.renderer.print(1, 2, 0xFFFFFFFF, "An Adventure Roguelike")
 
     def on_update(self, dt) -> None:
         self.handle_input()

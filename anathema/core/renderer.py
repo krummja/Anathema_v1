@@ -28,6 +28,9 @@ class RenderManager(AbstractManager):
         self._terminal.clear()
         self._terminal.bkcolor(0xFF2A2A2A)
 
+    def clear_area(self, x: int, y: int, w: int, h: int) -> None:
+        self._terminal.clear_area(x, y, w, h)
+
     def setup(self) -> None:
         self._terminal.open()
         self._terminal.composition(True)
@@ -66,12 +69,12 @@ class RenderManager(AbstractManager):
         # upper border
         self.terminal.layer(100)
         self.terminal.color(color)
-        border = '┌' + '─' * (w) + '┐'
+        border = '┌' + '─' * (w - 2) + '┐'
         self.terminal.print(x - 1, y - 1, border)
         # sides
-        for i in range(h):
+        for i in range(h - 2):
             self.terminal.print(x - 1, y + i, '│')
-            self.terminal.print(x + w, y + i, '│')
+            self.terminal.print(x + (w - 2), y + i, '│')
         # lower border
-        border = '└' + '─' * (w) + '┘'
-        self.terminal.print(x - 1, y + h, border)
+        border = '└' + '─' * (w - 2) + '┘'
+        self.terminal.print(x - 1, y + (h - 2), border)

@@ -26,9 +26,18 @@ class Stage(AbstractScreen):
         self.game.renderer.terminal.refresh()
 
     def on_draw(self, dt) -> None:
-        pos = self.game.player.position
-        self.game.renderer.print(1, 1, 0xFFFF00FF, str(pos))
-        self.game.renderer.draw_box(65, 1, 30, 62, 0xFFFFFFFF)
+        self.game.renderer.clear_area(65, 1, 32, 64)
+        self.game.renderer.clear_area(1, 49, 64, 16)
+
+        #! Side Panel
+        self.game.renderer.draw_box(65, 1, 32, 64, 0xFFFFFFFF)
+
+        #! Log Panel
+        self.game.renderer.draw_box(1, 49, 64, 16, 0xFFFFFFFF)
+
+        #! Health
+        hp = self.game.player.entity['Health']
+        self.game.renderer.print(67, 3, 0xFFFF0000, f"HP: {hp}")
 
     def on_update(self, dt) -> None:
         self.handle_input()
@@ -36,6 +45,9 @@ class Stage(AbstractScreen):
 
     def cmd_move(self, x: int, y: int) -> Optional[T]:
         self.game.player.move((x, y))
+
+    def cmd_confirm(self) -> Optional[T]:
+        self.game.player.entity['Health'].apply_damage(5)
 
     def cmd_escape(self):
         self.game.screens.replace_screen('MAIN MENU')

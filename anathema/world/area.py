@@ -3,7 +3,7 @@ from typing import TYPE_CHECKING
 import numpy as np
 
 import random
-from anathema.world.tilemap import TileFactory, Depth
+from anathema.world.tile_factory import TileFactory, Depth
 from anathema.core.options import Options
 
 if TYPE_CHECKING:
@@ -27,11 +27,13 @@ class Area:
         for x in range(self.width):
             for y in range(self.height):
                 z = Depth.GROUND.value
-
                 roll = random.randrange(0, 100)
-
                 if roll < 50:
-                    self.tiles[x, y, z] = self.factory.build(x, y, Depth.GROUND)
+                    self.tiles[x, y, z] = self.factory.build(
+                        x, y, Depth.GROUND, opaque=True, blocker=True)
+                else:
+                    self.tiles[x, y, z] = self.factory.build(
+                        x, y, Depth.GROUND, char="·", opaque=False, blocker=False)
 
     def is_blocked(self, x: int, y: int) -> bool:
         if not (0 <= x < self.width and 0 <= y < self.height):
@@ -39,3 +41,6 @@ class Area:
         if not self.region.world.game.physics_system.passable[x][y]:
             return True
         return False
+
+    def get_tile_uid(self, x: int, y: int) -> str:
+        return self.tiles[x, y]
