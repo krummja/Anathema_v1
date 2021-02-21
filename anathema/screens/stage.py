@@ -39,6 +39,10 @@ class Stage(AbstractScreen):
         hp = self.game.player.entity['Health']
         self.game.renderer.print(67, 3, 0xFFFF0000, f"HP: {hp}")
 
+        #! Mana
+        mp = self.game.player.entity['Mana']
+        self.game.renderer.print(67, 5, 0xFF5C9BED, f"MP: {mp}")
+
     def on_update(self, dt) -> None:
         self.handle_input()
         self.game.update_engine_systems(dt)

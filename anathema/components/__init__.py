@@ -9,6 +9,7 @@ from anathema.components.portal import Portal
 from anathema.components.position import Position
 from anathema.components.renderable import Renderable
 from anathema.components.unformed import Unformed
+from anathema.components.mana import Mana
 
 def all_components():
     return [
@@ -23,4 +24,5 @@ def all_components():
         Position,
         Renderable,
         Unformed,
+        Mana,
         ]

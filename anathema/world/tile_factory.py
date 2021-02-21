@@ -4,6 +4,7 @@ from dataclasses import dataclass
 from enum import Enum
 import numpy as np
 
+from anathema.utils.color import Color
 from anathema.utils.geometry import Rect, Point, Size
 
 
@@ -59,39 +60,51 @@ class TileType:
         return self
 
 
-light_cool_gray = "0x7492b5"
-cool_gray = "0x3f4b73"
-light_blue = "0x40a3e5"
-
-
 class Tiles:
 
     @staticmethod
     def unformed():
-        return Tiles.tile("unformed", "?", light_cool_gray).open()
+        return Tiles.tile("unformed", "?", Color.light_cool_gray()).open()
 
     @staticmethod
     def unformed_wet():
-        return Tiles.tile("unformed_wet", "≈", cool_gray).open()
+        return Tiles.tile("unformed_wet", "≈", Color.cool_gray()).open()
 
     @staticmethod
     def open():
-        return Tiles.tile("open", "·", light_cool_gray).open()
+        return Tiles.tile("open", "·", Color.light_cool_gray()).open()
 
     @staticmethod
     def solid():
-        return Tiles.tile("solid", "#", light_cool_gray).solid()
+        return Tiles.tile("solid", "#", Color.light_cool_gray()).solid()
 
     @staticmethod
     def passage():
-        return Tiles.tile("passage", "-", light_cool_gray).open()
+        return Tiles.tile("passage", "-", Color.light_cool_gray()).open()
 
     @staticmethod
     def solid_wet():
-        return Tiles.tile("solid_wet", "≈", light_blue).solid()
+        return Tiles.tile("solid_wet", "≈", Color.light_blue()).solid()
 
     @staticmethod
-    def tile(name: str, char: str, fore: int):
+    def passage_wet():
+        return Tiles.tile("passage_wet", "-", Color.light_blue()).open()
+
+    @staticmethod
+    def doorway():
+        return Tiles.tile("doorway", "○", Color.light_cool_gray()).open()
+
+    @staticmethod
+    def flagstone_wall():
+        return Tiles.tile("flagstone_wall", "▒", Color.light_warm_gray()).solid()
+
+    @staticmethod
+    def flagstone_floor():
+        return Tiles.tile("flagstone_floor", "·", Color.warm_gray()).open()
+
+    @staticmethod
+    def tile(name: str, char: str, fore: Color):
+
         return TileType(name, char, fore)
 
 
@@ -103,12 +116,12 @@ class TileSpace:
 
         #! Point where specific generators may intervene.
 
-        tile_space[:, :] = Tiles.open()
+        tile_space[:, :] = Tiles.flagstone_floor()
 
         room = Rect(Point(5, 5), Size(10, 10))
-        tile_space[room.outer] = Tiles.solid()
-        tile_space[room.inner] = Tiles.open()
-        tile_space[room.top_left.x+3:room.top_left.x+6] = Tiles.open()
+        tile_space[room.outer] = Tiles.flagstone_wall()
+        tile_space[room.inner] = Tiles.flagstone_floor()
+        tile_space[room.top_left.x+3:room.top_left.x+6, room.top] = Tiles.flagstone_floor()
 
         return tile_space
 

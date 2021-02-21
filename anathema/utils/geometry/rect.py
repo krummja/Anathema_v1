@@ -102,7 +102,7 @@ class Rect(tuple):
         """Get a NumPy IndexExpression for the inner portion + the border
         of the Rect.
         """
-        return np.s_[self.left:(self.right), self.top:(self.bottom)]
+        return np.s_[self.left:self.right, self.top:self.bottom]
 
     @property
     def indices(self) -> np.IndexExpression:
