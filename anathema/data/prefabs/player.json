@@ -14,9 +14,13 @@
             "properties": {}},
         {   "type": "Name",
             "properties": {}},
+        {   "type": "Background",
+            "properties": {}},
         {   "type": "Health",
             "properties": {"base": 100}},
         {   "type": "Mana",
+            "properties": {"base": 100}},
+        {   "type": "Stamina",
             "properties": {"base": 100}}
     ]
 }

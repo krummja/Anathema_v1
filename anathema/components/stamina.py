@@ -3,12 +3,11 @@ from __future__ import annotations
 from ecstremity import Component
 
 
-class Health(Component):
+class Stamina(Component):
 
     def __init__(self, base: int) -> None:
         self._BASE = base
         self._EXPENDED: int = 0
-        self._ALIVE: bool = True    # TODO: Split this off into a separate flag cmp
 
     @property
     def current(self) -> int:
@@ -19,10 +18,7 @@ class Health(Component):
         return self._BASE
 
     def expend(self, value: int) -> None:
-        if self._ALIVE:
-            self._EXPENDED += value
-        if self._EXPENDED == self._BASE:
-            self._ALIVE = False
+        self._EXPENDED += value
 
     def recoup(self, value: int) -> None:
         self.expend(value * -1)

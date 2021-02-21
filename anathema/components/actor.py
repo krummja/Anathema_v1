@@ -32,3 +32,6 @@ class Actor(Component):
 
     def __lt__(self, other: Actor) -> bool:
         return self._energy < other._energy
+
+    def __str__(self) -> str:
+        return f"{self._energy}"

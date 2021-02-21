@@ -1,4 +1,5 @@
 from anathema.components.actor import Actor
+from anathema.components.background import Background
 from anathema.components.blocker import Blocker
 from anathema.components.health import Health
 from anathema.components.isplayer import IsPlayer
@@ -10,10 +11,12 @@ from anathema.components.position import Position
 from anathema.components.renderable import Renderable
 from anathema.components.unformed import Unformed
 from anathema.components.mana import Mana
+from anathema.components.stamina import Stamina
 
 def all_components():
     return [
         Actor,
+        Background,
         Blocker,
         Health,
         IsPlayer,
@@ -25,4 +28,5 @@ def all_components():
         Renderable,
         Unformed,
         Mana,
+        Stamina,
         ]

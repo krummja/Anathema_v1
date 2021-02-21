@@ -12,11 +12,13 @@ class Impossible(Exception):
 
 @dataclass
 class Action:
+    # TODO: Make this an Abstract and then extend
+
     entity: Entity
     event: str
     data: Any
     condition: Callable[[], bool] = None
-    cost: int = 0
+    cost: int = (20 / 20) * 1000  # FIXME: Add skill-based mods here
 
     @property
     def success(self) -> bool:
@@ -33,5 +35,5 @@ class Action:
 
     def act(self) -> None:
         """Act step, which fires the event for an action success."""
-        self.entity['Actor'].reduce_energy(self.cost)
+        self.entity.fire_event('energy_consumed', self.cost)
         self.entity.fire_event(self.event, (self.success, self.data))

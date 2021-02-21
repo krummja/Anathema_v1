@@ -1,5 +1,9 @@
 from __future__ import annotations
+from typing import Optional
+import numpy as np
+
 from dataclasses import dataclass
+
 
 @dataclass
 class Color:
@@ -32,6 +36,10 @@ class Color:
     @staticmethod
     def light_warm_gray():
         return Color(0x84, 0x7e, 0x87).make()
+
+    @staticmethod
+    def dark_cool_gray():
+        return Color(0x26, 0x2a, 0x42).make()
 
     @staticmethod
     def warm_gray():

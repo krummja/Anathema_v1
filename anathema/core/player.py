@@ -38,6 +38,8 @@ class PlayerManager(AbstractManager):
         player = self.game.ecs.engine.create_entity()
         self.game.ecs.engine.prefabs.apply_to_entity(
             player, 'Player', {'Position': {'x': 10, 'y': 10, 'z': Depth.ABOVE_1.value}})
+        player['Name'].noun_text = "Aulia Inuicta"
+
         self._player_uid = player.uid
         return player
 

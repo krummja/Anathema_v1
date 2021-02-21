@@ -1,6 +1,7 @@
 from __future__ import annotations
 from typing import TYPE_CHECKING
 
+import math
 from collections import deque
 from clubsandwich.blt.nice_terminal import terminal
 
@@ -66,15 +67,45 @@ class RenderManager(AbstractManager):
         self.terminal.print(x, y, string)
 
     def draw_box(self, x, y, w, h, color):
-        # upper border
         self.terminal.layer(100)
         self.terminal.color(color)
+
+        # upper border
         border = '┌' + '─' * (w - 2) + '┐'
         self.terminal.print(x - 1, y - 1, border)
+
         # sides
         for i in range(h - 2):
+            # left
             self.terminal.print(x - 1, y + i, '│')
+            # right
             self.terminal.print(x + (w - 2), y + i, '│')
+
         # lower border
         border = '└' + '─' * (w - 2) + '┘'
         self.terminal.print(x - 1, y + (h - 2), border)
+
+    def draw_bar(self, x, y, w, value, maximum, fore):
+        bar_width = round(w * 2 * (value / maximum))
+
+        if bar_width == 0 and value > 1:
+            bar_width = 1
+        if bar_width == w * 2 and value < maximum:
+            bar_width = w * 2 - 1
+
+        for i in range(w):
+            self.terminal.layer(99)
+            self.terminal.clear_area(x + i, y, w, 1)
+            self.terminal.color(0x88000000 + fore)
+            self.terminal.print(x + i, y, "█")
+
+        for i in range(w):
+            char = " "
+            if i < bar_width // 2:
+                char = "█"
+            elif i < (bar_width + 1) // 2:
+                char = "▌"
+
+            self.terminal.layer(100)
+            self.terminal.color(0xFF000000 + fore)
+            self.terminal.print(x + i, y, char)
