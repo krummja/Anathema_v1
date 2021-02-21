@@ -25,6 +25,16 @@ class TileType:
         self._opaque = True
         return self
 
+    def impassable(self):
+        self._blocker = True
+        self._opaque = False
+        return self
+
+    def obfuscated(self):
+        self._blocker = False
+        self._opaque = True
+        return self
+
     def on_open(self, func):
         self._on_open = func
         return self

@@ -27,7 +27,7 @@ class RenderManager(AbstractManager):
 
     def clear(self) -> None:
         self._terminal.clear()
-        self._terminal.bkcolor(0xFF2A2A2A)
+        self._terminal.bkcolor(0xFF151515)
 
     def clear_area(self, x: int, y: int, w: int, h: int) -> None:
         self._terminal.clear_area(x, y, w, h)
@@ -35,7 +35,7 @@ class RenderManager(AbstractManager):
     def setup(self) -> None:
         self._terminal.open()
         self._terminal.composition(True)
-        self._terminal.bkcolor(0xFF2A2A2A)
+        self._terminal.bkcolor(0xFF151515)
 
     def teardown(self) -> None:
         self._terminal.composition(False)

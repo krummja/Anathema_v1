@@ -16,7 +16,7 @@ class Tiles:
         """An unformed tile that can be turned into water of some kind when 'filled'
         or a bridge when used as a passage.
         """
-        return Tiles.tile("unformed_wet", "≈", Color.cool_gray()).open()
+        return Tiles.tile("unformed_wet", "≈", Color.light_blue()).open()
 
     @staticmethod
     def open():
@@ -36,7 +36,7 @@ class Tiles:
     @staticmethod
     def solid_wet():
         """An untraversable wet tile that has been filled in the passage generator."""
-        return Tiles.tile("solid_wet", "≈", Color.light_blue()).solid()
+        return Tiles.tile("solid_wet", "≈", Color.cool_gray()).impassable()
 
     @staticmethod
     def passage_wet():
@@ -71,6 +71,26 @@ class Tiles:
     @staticmethod
     def granite_floor():
         return Tiles.tile("granite_floor", "·", Color.dark_cool_gray()).open()
+
+    @staticmethod
+    def dirt_1():
+        return Tiles.tile("dirt_1", "·", Color.brown()).open()
+
+    @staticmethod
+    def dirt_2():
+        return Tiles.tile("dirt_2", "φ", Color.brown()).open()
+
+    @staticmethod
+    def grass():
+        return Tiles.tile("grass", "░", Color.lima()).open()
+
+    @staticmethod
+    def tall_grass():
+        return Tiles.tile("tall_grass", "√", Color.pea_green()).obfuscated()
+
+    @staticmethod
+    def tree_1():
+        return Tiles.tile("tree", "▲", Color.sherwood()).solid()
 
     # Functions
 
