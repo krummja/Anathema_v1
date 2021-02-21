@@ -14,7 +14,6 @@ class RenderSystem(AbstractSystem):
     def __init__(self, game: Game) -> None:
         super().__init__(game)
         self.terminal = game.renderer.terminal
-        self.tiles = game.world.current_area.tiles
         self._tiles = self.ecs.create_query(
             all_of=[ 'Renderable' ],
             none_of=[ 'Actor', 'Item' ])

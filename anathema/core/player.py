@@ -39,8 +39,6 @@ class PlayerManager(AbstractManager):
         self.game.ecs.engine.prefabs.apply_to_entity(
             player, 'Player', {'Position': {'x': 10, 'y': 10, 'z': Depth.ABOVE_1.value}})
         self._player_uid = player.uid
-
-        self.game.world.current_area.tiles[10, 10, Depth.ABOVE_1.value] = self._player_uid
         return player
 
     def get_next_action(self):
