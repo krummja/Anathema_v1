@@ -18,12 +18,18 @@ class MainMenu(AbstractScreen):
     def __init__(self, manager: ScreenManager) -> None:
         super().__init__(manager)
         self.game: Game = manager.game
+        self.panels = []
 
     def on_enter(self) -> None:
-        pass
+        self.game.renderer.clear()
+        self.game.renderer.refresh()
 
     def on_leave(self) -> None:
         pass
+
+    def on_draw(self, dt) -> None:
+        self.game.renderer.clear()
+        self.game.renderer.print(1, 1, 0xFFFF00FF, "test string")
 
     def on_update(self, dt) -> None:
         self.handle_input()

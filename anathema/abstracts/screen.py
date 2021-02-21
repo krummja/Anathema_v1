@@ -37,14 +37,12 @@ class AbstractScreen:
         [ENTER]
         Context: DEFAULT
         """
-        print("AbstractScreen -- COMMAND CONFIRM")
 
     def cmd_escape(self) -> Optional[T]:
         """
         [ESCAPE]
         Context: DEFAULT
         """
-        print("AbstractScreen -- COMMAND ESCAPE")
         raise StateBreak()
 
     def cmd_move(self, x: int, y: int) -> Optional[T]:
@@ -53,35 +51,35 @@ class AbstractScreen:
         Context: DEFAULT
         """
 
-    # def cmd_drop(self) -> Optional[T]:
-    #     """
-    #     Default: [D]
-    #     Context: STAGE
-    #     """
+    def cmd_drop(self) -> Optional[T]:
+        """
+        Default: [D]
+        Context: STAGE
+        """
 
-    # def cmd_equipment(self) -> Optional[T]:
-    #     """
-    #     Default: [E]
-    #     Context: STAGE
-    #     """
+    def cmd_equipment(self) -> Optional[T]:
+        """
+        Default: [E]
+        Context: STAGE
+        """
 
-    # def cmd_examine(self) -> Optional[T]:
-    #     """
-    #     Default: [L]
-    #     Context: STAGE
-    #     """
+    def cmd_examine(self) -> Optional[T]:
+        """
+        Default: [L]
+        Context: STAGE
+        """
 
-    # def cmd_inventory(self) -> Optional[T]:
-    #     """
-    #     Default: [I]
-    #     Context: STAGE
-    #     """
+    def cmd_inventory(self) -> Optional[T]:
+        """
+        Default: [I]
+        Context: STAGE
+        """
 
-    # def cmd_pickup(self) -> Optional[T]:
-    #     """
-    #     Default: [G]
-    #     Context: STAGE
-    #     """
+    def cmd_pickup(self) -> Optional[T]:
+        """
+        Default: [G]
+        Context: STAGE
+        """
 
     def cmd_quit(self) -> Optional[T]:
         """

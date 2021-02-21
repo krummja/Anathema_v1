@@ -1,6 +1,7 @@
 from __future__ import annotations
 from typing import TYPE_CHECKING
-# from bearlibterminal import terminal
+
+from collections import deque
 from clubsandwich.blt.nice_terminal import terminal
 
 from anathema.abstracts import AbstractManager
@@ -14,6 +15,7 @@ class RenderManager(AbstractManager):
     def __init__(self, game: Game) -> None:
         super().__init__(game)
         self._terminal = terminal
+        self._stack = deque([])
 
     @property
     def terminal(self) -> terminal:
@@ -42,5 +44,34 @@ class RenderManager(AbstractManager):
             for y in range(64):
                 self._terminal.put(x, y, char)
 
-    def draw(self, dt) -> None:
+    def push_to_stack(self, func) -> None:
+        self._stack.append(func)
+
+    def clear_stack(self) -> None:
+        self._stack.clear()
+
+    def update(self, dt) -> None:
+        while len(self._stack) > 0:
+            draw = self._stack.popleft()
+            draw(dt)
         self._terminal.refresh()
+        self.clear_stack()
+
+    def print(self, x, y, color, string):
+        self.terminal.layer(100)
+        self.terminal.color(color)
+        self.terminal.print(x, y, string)
+
+    def draw_box(self, x, y, w, h, color):
+        # upper border
+        self.terminal.layer(100)
+        self.terminal.color(color)
+        border = '┌' + '─' * (w) + '┐'
+        self.terminal.print(x - 1, y - 1, border)
+        # sides
+        for i in range(h):
+            self.terminal.print(x - 1, y + i, '│')
+            self.terminal.print(x + w, y + i, '│')
+        # lower border
+        border = '└' + '─' * (w) + '┘'
+        self.terminal.print(x - 1, y + h, border)

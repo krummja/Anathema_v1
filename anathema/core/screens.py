@@ -103,3 +103,4 @@ class ScreenManager(AbstractManager):
 
     def update(self, dt) -> None:
         self.current_screen.on_update(dt)
+        self.game.renderer.push_to_stack(self.current_screen.on_draw)

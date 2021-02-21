@@ -67,8 +67,10 @@ class Game:
         while True:
             now = time.time()
             dt = now - self._last_update
-            self.renderer.clear()
             self.fps.update(dt)
-            self.screens.update(dt)  # stage screen calls "self.update_player_systems"
-            self.renderer.draw(dt)
+
+            self.screens.update(dt)     # enque render_system on_draw methods
+            # self.ui.update(dt)
+            self.renderer.update(dt)    # run entire render stack
+
             self._last_update = now

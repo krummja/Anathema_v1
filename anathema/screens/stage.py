@@ -17,12 +17,18 @@ class Stage(AbstractScreen):
     def __init__(self, manager: ScreenManager) -> None:
         super().__init__(manager)
         self.game: Game = manager.game
+        self.panels = []
 
     def on_enter(self) -> None:
         self.game.renderer.clear()
         self.game.fov_system.update(100)
         self.game.render_system.update(100)
         self.game.renderer.terminal.refresh()
+
+    def on_draw(self, dt) -> None:
+        pos = self.game.player.position
+        self.game.renderer.print(1, 1, 0xFFFF00FF, str(pos))
+        self.game.renderer.draw_box(65, 1, 30, 62, 0xFFFFFFFF)
 
     def on_update(self, dt) -> None:
         self.handle_input()
