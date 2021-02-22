@@ -12,8 +12,9 @@ class TileType:
 
     _blocker: Optional[bool] = None
     _opaque: Optional[bool] = None
-    _on_open = None
-    _on_close = None
+    _interactable: Optional[bool] = None
+    _portal: Optional[bool] = None
+    _is_closed: Optional[bool] = None
 
     def open(self) -> TileType:
         self._blocker = False
@@ -35,13 +36,17 @@ class TileType:
         self._opaque = True
         return self
 
-    def on_open(self, func) -> TileType:
-        self._on_open = func
+    def openable(self) -> TileType:
+        self._is_closed = True
         return self
 
-    def on_close(self, func) -> TileType:
-        self._on_close = func
+    def closable(self) -> TileType:
+        self._is_closed = False
         return self
 
     def door(self) -> TileType:
+        self._interactable = True
+        self._portal = True
+        self._blocker = True
+        self._opaque = True
         return self

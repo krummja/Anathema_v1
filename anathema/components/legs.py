@@ -7,7 +7,7 @@ class Legs(Component):
 
     def on_try_move(self, evt):
         success = evt.data[0]
-        direction = evt.data[1]
+        direction = evt.data[1][0]
 
         if success:
             self.update_position(*direction)

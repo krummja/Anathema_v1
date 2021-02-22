@@ -19,6 +19,9 @@ class PhysicsSystem(AbstractSystem):
         self.passable = np.ones((64, 64), dtype=np.bool, order="F")
 
     def update(self, dt):
-        for blocker in self._query.result:
-            x, y = blocker['Position'].xy
-            self.passable[x][y] = False
+        for target in self._query.result:
+            x, y = target['Position'].xy
+            if target['Blocker'].impassable:
+                self.passable[x][y] = False
+            else:
+                self.passable[x][y] = True

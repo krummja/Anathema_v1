@@ -29,4 +29,11 @@ class TileFactory:
                 if tile_def._blocker:
                     tile.add('Blocker', {})
                 if tile_def._opaque:
-                    tile.add('Opaque', {})
+                    tile.add('Opacity', {})
+                if tile_def._interactable:
+                    tile.add('IsInteractable', {})
+                if tile_def._portal:
+                    if tile_def._is_closed:
+                        tile.add('Door', {'is_open': False})
+                    else:
+                        tile.add('Door', {})

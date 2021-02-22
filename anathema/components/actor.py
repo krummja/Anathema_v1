@@ -19,6 +19,14 @@ class Actor(Component):
     def on_energy_consumed(self, event) -> None:
         self.reduce_energy(event.data)
 
+    def on_get_interactions(self, event):
+        target = event.data[1][1]
+        event = target.fire_event('get_interactions', [])
+        interactions = event.data
+        # self.entity.fire_event(interactions["evt"])
+        for interaction in interactions:
+            target.fire_event(interaction["evt"])
+
     def on_tick(self, event) -> None:
         self.add_energy(1)
 

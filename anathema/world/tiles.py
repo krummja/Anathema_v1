@@ -92,6 +92,14 @@ class Tiles:
     def tree_1() -> TileType:
         return Tiles.tile("tree", "▲", Color.sherwood()).solid()
 
+    @staticmethod
+    def open_door() -> TileType:
+        return Tiles.tile("open_door", "○", Color.dark_brown()).door().closable()
+
+    @staticmethod
+    def closed_door() -> TileType:
+        return Tiles.tile("closed_door", "◙", Color.dark_brown()).door().openable()
+
     # Functions
 
     @staticmethod

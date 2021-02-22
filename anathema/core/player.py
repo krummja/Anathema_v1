@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import Tuple, TYPE_CHECKING
+from typing import Union, Tuple, TYPE_CHECKING
 from collections import deque
 
 from anathema.data.actions.action import Action
@@ -47,12 +47,27 @@ class PlayerManager(AbstractManager):
         return self.action_queue.popleft()
 
     def move(self, direction: Tuple[int, int]) -> None:
-        def blocked() -> bool:
+        def blocked_check() -> bool:
             if self.game.world.current_area.is_blocked(
                 self.position[0] + direction[0],
                 self.position[1] + direction[1]
                 ):
+                print("The way is blocked!")
                 return False
             return True
-        action = Action(self.entity, 'try_move', direction, blocked).plan()
+
+        def interactable_check() -> Union[bool, Tuple[bool, str]]:
+            target_x = self.position[0] + direction[0]
+            target_y = self.position[1] + direction[1]
+            if self.game.world.current_area.is_interactable(
+                target_x,
+                target_y
+                ):
+                interactable = self.game.interaction_system.get_interactables_at_pos(target_x, target_y)
+                return (True, interactable)
+            return False
+
+        action = Action(self.entity, 'try_move', [direction], blocked_check).plan()
+        if not action.success:
+            action = Action(self.entity, 'get_interactions', [direction], interactable_check).plan()
         self.action_queue.append(action.act)

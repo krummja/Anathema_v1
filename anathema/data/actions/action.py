@@ -1,5 +1,6 @@
 from __future__ import annotations
-from typing import Callable, Any, Optional, TYPE_CHECKING
+from collections import defaultdict
+from typing import Callable, Any, List, Optional, TYPE_CHECKING
 from dataclasses import dataclass
 
 if TYPE_CHECKING:
@@ -16,7 +17,7 @@ class Action:
 
     entity: Entity
     event: str
-    data: Any
+    data: List[Any]
     condition: Callable[[], bool] = None
     cost: int = (20 / 20) * 1000  # FIXME: Add skill-based mods here
 
@@ -30,7 +31,12 @@ class Action:
 
     def plan(self) -> Optional[Action]:
         if self.condition:
-            self.success = self.condition()
+            result = self.condition()
+            if isinstance(result, bool):
+                self.success = result
+            else:
+                self.success = result[0]
+                self.data.append(result[1])
         return self
 
     def act(self) -> None:

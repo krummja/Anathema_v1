@@ -14,27 +14,30 @@ class FOVSystem(AbstractSystem):
 
     def __init__(self, game: Game) -> None:
         super().__init__(game)
-        self._query = self.ecs.create_query(
+        self._pov = self.ecs.create_query(
             all_of=[ 'IsPlayer' ])
-        self._opaque = self.ecs.create_query(
-            all_of=[ 'Opaque' ])
+        self._query = self.ecs.create_query(
+            all_of=[ 'Opacity' ])
         self.transparent = np.ones((64, 64), dtype=np.bool, order="F")
         self.explored = np.zeros((64, 64), dtype=np.bool, order="F")
         self.visible = np.zeros((64, 64), dtype=np.bool, order="F")
 
-    def update_fov(self) -> None:
-        for opaque in self._opaque.result:
-            x, y = opaque['Position'].xy
-            self.transparent[x][y] = False
-
+    def compute_fov(self):
         self.visible = tcod.map.compute_fov(
             transparency=self.transparent,
-            pov=self._query.result[0]['POSITION'].xy,
-            radius=30,
+            pov=self._pov.result[0]['Position'].xy,
+            radius=8,
             light_walls=True,
             algorithm=tcod.FOV_RESTRICTIVE
             )
         self.explored |= self.visible
 
     def update(self, dt):
-        self.update_fov()
+        self.transparent[:] = True
+        for target in self._query.result:
+            x, y = target['Position'].xy
+            if target['Opacity'].opaque:
+                self.transparent[x][y] = False
+            else:
+                self.transparent[x][y] = True
+        self.compute_fov()

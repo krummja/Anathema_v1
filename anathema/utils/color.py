@@ -26,6 +26,10 @@ class Color:
         return Color(0x99, 0x6a, 0x56).make()
 
     @staticmethod
+    def dark_brown():
+        return Color(0x5c, 0x47, 0x3e).make()
+
+    @staticmethod
     def light_blue():
         return Color(0x40, 0xa3, 0xe5).make()
 
