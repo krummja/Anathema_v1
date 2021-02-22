@@ -15,33 +15,33 @@ class TileType:
     _on_open = None
     _on_close = None
 
-    def open(self):
+    def open(self) -> TileType:
         self._blocker = False
         self._opaque = False
         return self
 
-    def solid(self):
+    def solid(self) -> TileType:
         self._blocker = True
         self._opaque = True
         return self
 
-    def impassable(self):
+    def impassable(self) -> TileType:
         self._blocker = True
         self._opaque = False
         return self
 
-    def obfuscated(self):
+    def obfuscated(self) -> TileType:
         self._blocker = False
         self._opaque = True
         return self
 
-    def on_open(self, func):
+    def on_open(self, func) -> TileType:
         self._on_open = func
         return self
 
-    def on_close(self, func):
+    def on_close(self, func) -> TileType:
         self._on_close = func
         return self
 
-    def door(self):
+    def door(self) -> TileType:
         return self
