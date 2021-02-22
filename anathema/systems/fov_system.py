@@ -30,7 +30,7 @@ class FOVSystem(AbstractSystem):
         self.visible = tcod.map.compute_fov(
             transparency=self.transparent,
             pov=self._query.result[0]['POSITION'].xy,
-            radius=8,
+            radius=30,
             light_walls=True,
             algorithm=tcod.FOV_RESTRICTIVE
             )

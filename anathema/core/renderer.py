@@ -66,6 +66,11 @@ class RenderManager(AbstractManager):
         self.terminal.color(color)
         self.terminal.print(x, y, string)
 
+    def print_big(self, x, y, color, string):
+        self.terminal.layer(110)
+        self.terminal.color(color)
+        self.terminal.print(x, y, f"[font=title]{string}[/font]")
+
     def draw_box(self, x, y, w, h, color):
         self.terminal.layer(100)
         self.terminal.color(color)

@@ -68,9 +68,6 @@ class Game:
             now = time.time()
             dt = now - self._last_update
             self.fps.update(dt)
-
-            self.screens.update(dt)     # enque render_system on_draw methods
-            # self.ui.update(dt)
-            self.renderer.update(dt)    # run entire render stack
-
+            self.screens.update(dt)
+            self.renderer.update(dt)
             self._last_update = now

@@ -26,8 +26,7 @@ class MainMenu(AbstractScreen):
 
     def on_draw(self, dt) -> None:
         self.game.renderer.clear()
-        self.game.renderer.print(1, 1, 0xFFFFFFFF, "ANATHEMA")
-        self.game.renderer.print(1, 2, 0xFFFFFFFF, "An Adventure Roguelike")
+        self.game.renderer.print_big(5, 5, 0xFFFFFFFF, "Anathema")
 
     def on_update(self, dt) -> None:
         self.handle_input()
