@@ -30,7 +30,7 @@ class RenderManager(AbstractManager):
         self._terminal.bkcolor(0xFF151515)
 
     def clear_area(self, x: int, y: int, w: int, h: int) -> None:
-        self._terminal.clear_area(x, y, w, h)
+        self._terminal.clear_area(x-1, y-1, w, h)
 
     def setup(self) -> None:
         self._terminal.open()
@@ -41,7 +41,23 @@ class RenderManager(AbstractManager):
         self._terminal.composition(False)
         self._terminal.close()
 
-    def fill(self, char: str = "█", color: int = 0xFF2A2A2A) -> None:
+    def fill_area(
+            self,
+            x: int,
+            y: int,
+            width: int,
+            height: int,
+            char: str = "█",
+            color: int = 0xFF151515,
+            layer: int = 0
+        ) -> None:
+        self._terminal.layer(layer)
+        self._terminal.color(color)
+        for _x in range(x, x + width):
+            for _y in range(y, y + height):
+                self._terminal.put(_x, _y, char)
+
+    def fill(self, char: str = "█", color: int = 0xFF151515) -> None:
         self._terminal.layer(0)
         self._terminal.color(color)
         for x in range(96):
@@ -71,7 +87,10 @@ class RenderManager(AbstractManager):
         self.terminal.color(color)
         self.terminal.print(x, y, f"[font=title]{string}[/font]")
 
-    def draw_box(self, x, y, w, h, color):
+    def draw_box(self, x, y, w, h, color, back: int = 0xFF151515):
+        self.clear_area(x-1, y-1, w, h)
+        self.fill_area(x-1, y-1, w, h, color=back, layer=99)
+
         self.terminal.layer(100)
         self.terminal.color(color)
 

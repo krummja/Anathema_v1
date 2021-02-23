@@ -2,7 +2,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, List, Dict
 
 from anathema.abstracts import AbstractManager, AbstractScreen
-from anathema.screens import MainMenu, Stage
+from anathema.screens import MainMenu, PlayerReady, MenuOverlay
 
 if TYPE_CHECKING:
     from anathema.core import Game
@@ -15,7 +15,8 @@ class ScreenManager(AbstractManager):
         self._stack: List[AbstractScreen] = [MainMenu(self)]
         self._screens: Dict[str, AbstractScreen] = {
             'MAIN MENU': MainMenu,
-            'STAGE': Stage,
+            'PLAYER READY': PlayerReady,
+            'MENU OVERLAY': MenuOverlay
             }
 
     @property

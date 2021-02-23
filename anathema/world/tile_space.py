@@ -21,21 +21,21 @@ class TileSpace:
         automata = Anneal((64, 64), density=0.46)
         automata.generate(10)
         result = automata.board
-        result = np.where(result == 1, Tiles.unformed_wet(), Tiles.unformed())
+        result = np.where(result == 1, Tiles.shallow_water, Tiles.unformed)
         tile_space[:] = result
 
         TileSpace.rng_selection(
             tile_space,
-            Tiles.unformed(),
-            Tiles.dirt_2(),
-            [(10, Tiles.tree_1()), (20, Tiles.grass()), (40, Tiles.tall_grass())])
+            Tiles.unformed,
+            Tiles.dirt_2,
+            [(10, Tiles.tree_1), (20, Tiles.grass), (40, Tiles.tall_grass)])
 
         # TODO Break this out into a method
         room = Rect(Point(5, 5), Size(10, 10))
-        tile_space[room.outer] = Tiles.flagstone_wall()
-        tile_space[room.inner] = Tiles.flagstone_floor()
-        tile_space[room.top_left.x+4, room.top] = Tiles.closed_door()
-        tile_space[room.right-1, room.top+4] = Tiles.closed_door()
+        tile_space[room.outer] = Tiles.flagstone_wall
+        tile_space[room.inner] = Tiles.flagstone_floor
+        tile_space[room.top_left.x+4, room.top] = Tiles.closed_door
+        tile_space[room.right-1, room.top+4] = Tiles.closed_door
 
         return tile_space
 

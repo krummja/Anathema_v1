@@ -27,8 +27,6 @@ class RenderSystem(AbstractSystem):
     def draw_tiles(self, dt) -> None:
         for tile in self._tiles.result:
             x, y, z = tile['Position'].xyz
-            self.terminal.clear_area(x, y, 1, 1)
-            self.terminal.layer(z.value)
 
             if not self.game.fov_system.explored[x, y]:
                 alpha = 0x00000000
@@ -38,6 +36,11 @@ class RenderSystem(AbstractSystem):
             else:
                 alpha = 0xFF000000
 
+            if tile['Renderable'].back is not None:
+                back = alpha + tile['Renderable'].back
+                self.game.renderer.fill_area(x, y, 1, 1, color=back)
+
+            self.terminal.layer(z.value)
             self.terminal.color(alpha + tile['Renderable'].fore)
             self.terminal.put(x, y, tile['Renderable'].char)
 

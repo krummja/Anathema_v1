@@ -22,14 +22,15 @@ class CommandLibrary:
         'MAIN MENU': {
             blt.TK_TAB: "next",
             },
-        'STAGE': {
+        'PLAYER READY': {
             blt.TK_D: "drop",
             blt.TK_C: "close",
             blt.TK_E: "equipment",
             blt.TK_G: "pickup",
             blt.TK_I: "inventory",
             blt.TK_L: "examine",
-            }
+            },
+        "MENU OVERLAY": {}
         }
 
     MOVE_KEYS: Dict[int, Tuple[int, int]] = {

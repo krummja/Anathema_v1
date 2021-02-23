@@ -9,6 +9,7 @@ class TileType:
     name: str
     char: str
     fore: int
+    back: int
 
     _blocker: Optional[bool] = None
     _opaque: Optional[bool] = None
