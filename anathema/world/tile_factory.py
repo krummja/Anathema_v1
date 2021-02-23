@@ -34,6 +34,6 @@ class TileFactory:
                     tile.add('IsInteractable', {})
                 if tile_def._portal:
                     if tile_def._is_closed:
-                        tile.add('Door', {'is_open': False})
+                        tile.add('Door', {})
                     else:
                         tile.add('Door', {})

@@ -10,6 +10,8 @@
             "properties": {}},
         {   "type": "Actor",
             "properties": {}},
+        {   "type": "Eyes",
+            "properties": {}},
         {   "type": "Legs",
             "properties": {}},
         {   "type": "Name",

@@ -26,14 +26,13 @@ class FOVSystem(AbstractSystem):
         self.visible = tcod.map.compute_fov(
             transparency=self.transparent,
             pov=self._pov.result[0]['Position'].xy,
-            radius=8,
+            radius=self._pov.result[0]['Eyes'].vision,
             light_walls=True,
             algorithm=tcod.FOV_RESTRICTIVE
             )
         self.explored |= self.visible
 
     def update(self, dt):
-        self.transparent[:] = True
         for target in self._query.result:
             x, y = target['Position'].xy
             if target['Opacity'].opaque:

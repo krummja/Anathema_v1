@@ -80,5 +80,12 @@ class Stage(AbstractScreen):
     def cmd_confirm(self) -> Optional[T]:
         pass
 
+    def cmd_close(self) -> Optional[T]:
+        nearby = self.game.interaction_system.get_nearby_interactables()
+        if len(nearby) > 1:
+            pass
+        else:
+            self.game.player.close(nearby[0])
+
     def cmd_escape(self):
         self.game.screens.replace_screen('MAIN MENU')

@@ -35,7 +35,7 @@ class TileSpace:
         tile_space[room.outer] = Tiles.flagstone_wall()
         tile_space[room.inner] = Tiles.flagstone_floor()
         tile_space[room.top_left.x+4, room.top] = Tiles.closed_door()
-        tile_space[room.right-1, room.top+4] = Tiles.flagstone_floor()
+        tile_space[room.right-1, room.top+4] = Tiles.closed_door()
 
         return tile_space
 

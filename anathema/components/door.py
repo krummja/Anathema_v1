@@ -5,13 +5,16 @@ from ecstremity import Component
 
 class Door(Component):
 
-    def __init__(self, is_open: bool = True) -> None:
-        self._is_open = is_open
+    def __init__(self) -> None:
+        self._is_open = False
         self._open_char = "○"
         self._closed_char = "◙"
 
+    @property
+    def is_open(self) -> bool:
+        return self._is_open
+
     def open_door(self):
-        print(self._is_open)
         if self._is_open:
             return False
         self._is_open = True
@@ -21,7 +24,13 @@ class Door(Component):
         return True
 
     def close_door(self):
-        pass
+        if not self._is_open:
+            return False
+        self._is_open = False
+        self.entity['Renderable'].char = self._closed_char
+        self.entity['Blocker'].impassable = True
+        self.entity['Opacity'].opaque = True
+        return True
 
     def on_get_interactions(self, evt):
         if self._is_open:
@@ -29,7 +38,7 @@ class Door(Component):
                 "name": "close_door",
                 "evt": "try_close_door"
                 })
-        else:
+        elif not self._is_open:
             evt.data.append({
                 "name": "open_door",
                 "evt": "try_open_door"
@@ -37,10 +46,13 @@ class Door(Component):
         return evt
 
     def on_try_close_door(self, evt):
-        pass
+        _close = self.close_door()
+        if _close:
+            print("The door shuts.")
+        evt.handle()
 
     def on_try_open_door(self, evt):
-        open = self.open_door()
-        if open:
+        _open = self.open_door()
+        if _open:
             print("The door opens.")
         evt.handle()

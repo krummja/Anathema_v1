@@ -30,10 +30,4 @@ class Area:
     def is_interactable(self, x: int, y: int) -> bool:
         if self.region.world.game.interaction_system.interactable[x][y]:
             return True
-        # if self.region.world.game.portal_system.openable[x][y]:
-            # portal = self.region.world.game.portal_system.get_portal(x, y)
-            # if portal:
-            #     portal.fire_event('try_open', data=(True))
-            #     return True
-            # return False
         return False

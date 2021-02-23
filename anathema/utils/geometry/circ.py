@@ -1,6 +1,6 @@
 """ENGINE.GEOMETRY.Circ"""
 from __future__ import annotations
-from typing import Type
+from typing import Type, Union
 
 import math
 
@@ -96,16 +96,22 @@ class Circ(tuple):
     def shrink(self, *args):
         pass
 
-    def intersects(self, other: Circ) -> bool:
+    def intersects(self, other: Union[Circ, Point]) -> bool:
         """
         Return True if this Circ overlaps with another at any point.
         """
         x, y = self.center
-        other_x, other_y = other.center
-        dist_square = ((x - other_x) ** 2) + ((y - other_y) ** 2)
-        radii_sum_square = (self.radius + other.radius) ** 2
-        if dist_square >= radii_sum_square:
-            return False
+        if isinstance(other, Circ):
+            other_x, other_y = other.center
+            radii_sum_square = (self.radius + other.radius) ** 2
+            dist_square = ((x - other_x) ** 2) + ((y - other_y) ** 2)
+            if dist_square >= radii_sum_square:
+                return False
+        elif isinstance(other, Point):
+            other_x, other_y = other.xy
+            dist_square = ((x - other_x) ** 2) + ((y - other_y) ** 2)
+            if dist_square >= self.radius:
+                return False
         return True
 
     def __contains__(self, other: object) -> bool:

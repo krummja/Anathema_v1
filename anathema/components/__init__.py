@@ -15,6 +15,7 @@ from anathema.components.stamina import Stamina
 from anathema.components.door import Door
 from anathema.components.isinteractable import IsInteractable
 from anathema.components.isstatic import IsStatic
+from anathema.components.eyes import Eyes
 
 def all_components():
     return [
@@ -35,4 +36,5 @@ def all_components():
         Door,
         IsInteractable,
         IsStatic,
+        Eyes,
         ]

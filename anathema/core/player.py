@@ -71,3 +71,11 @@ class PlayerManager(AbstractManager):
         if not action.success:
             action = Action(self.entity, 'get_interactions', [direction], interactable_check).plan()
         self.action_queue.append(action.act)
+
+    def close(self, closable) -> None:
+        def open_check() -> bool:
+            if closable['Door'].is_open:
+                return (True, closable)
+            return False
+        action = Action(self.entity, 'get_interactions', [closable], open_check).plan()
+        self.action_queue.append(action.act)

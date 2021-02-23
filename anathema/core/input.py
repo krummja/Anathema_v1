@@ -24,6 +24,7 @@ class CommandLibrary:
             },
         'STAGE': {
             blt.TK_D: "drop",
+            blt.TK_C: "close",
             blt.TK_E: "equipment",
             blt.TK_G: "pickup",
             blt.TK_I: "inventory",
