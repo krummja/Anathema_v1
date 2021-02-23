@@ -1,56 +1,11 @@
 from __future__ import annotations
 from typing import TYPE_CHECKING, List, Dict
 
-from anathema.utils.debug import debugmethods
 from anathema.abstracts import AbstractManager, AbstractScreen
 from anathema.screens import MainMenu, Stage
 
 if TYPE_CHECKING:
     from anathema.core import Game
-
-
-class Screen_1(AbstractScreen):
-
-    name: str = "SCREEN1"
-
-    def __init__(self, manager: ScreenManager) -> None:
-        super().__init__(manager)
-        self.game: Game = manager.game
-
-    def on_enter(self):
-        print("ENTER >> Screen 1")
-
-    def on_exit(self):
-        print("Screen 1 >> EXIT")
-
-    def on_update(self, dt) -> None:
-        self.handle_input()
-
-    def cmd_confirm(self):
-        print("Screen 1 -- COMMAND CONFIRM")
-        self.manager.replace_screen('SCREEN2')
-
-
-class Screen_2(AbstractScreen):
-
-    name: str = "SCREEN2"
-
-    def __init__(self, manager: ScreenManager) -> None:
-        super().__init__(manager)
-        self.game: Game = manager.game
-
-    def on_enter(self):
-        print("ENTER >> Screen 2")
-
-    def on_exit(self):
-        print("Screen 2 >> EXIT")
-
-    def on_update(self, dt) -> None:
-        self.handle_input()
-
-    def cmd_escape(self):
-        print("Screen 2 -- COMMAND ESCAPE")
-        self.manager.replace_screen('SCREEN1')
 
 
 class ScreenManager(AbstractManager):
