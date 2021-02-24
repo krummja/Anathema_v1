@@ -33,13 +33,13 @@ class ScreenManager(AbstractManager):
         self._stack.append(screen)
         self.current_screen.on_enter()
 
-    def replace_screen(self, screen: str) -> None:
+    def replace_screen(self, screen: str, *args) -> None:
         """Equivalent to a pop_screen followed by a push_screen."""
         self.current_screen.on_leave()
         self._stack.pop()
         screen = self._screens[screen](self)
         self._stack.append(screen)
-        self.current_screen.on_enter()
+        self.current_screen.on_enter(*args)
         self.game.input.change_input_source()
 
     def push_screen(self, screen: str) -> None:

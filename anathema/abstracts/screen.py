@@ -23,7 +23,7 @@ class AbstractScreen:
             return
         command()
 
-    def on_enter(self):
+    def on_enter(self, *args):
         pass
 
     def on_leave(self):

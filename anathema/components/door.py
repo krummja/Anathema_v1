@@ -46,13 +46,11 @@ class Door(Component):
         return evt
 
     def on_try_close_door(self, evt):
-        _close = self.close_door()
-        if _close:
+        if self.close_door():
             print("The door shuts.")
         evt.handle()
 
     def on_try_open_door(self, evt):
-        _open = self.open_door()
-        if _open:
+        if self.open_door():
             print("The door opens.")
         evt.handle()

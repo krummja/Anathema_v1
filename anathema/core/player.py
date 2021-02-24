@@ -1,13 +1,21 @@
 from __future__ import annotations
-from typing import Union, Tuple, TYPE_CHECKING
+from dataclasses import dataclass
+from typing import Any, Union, Tuple, Optional, TYPE_CHECKING
 from collections import deque
 
+from anathema.abstracts.check_result import CheckResult
 from anathema.data.actions.action import Action
 from anathema.abstracts import AbstractManager
 from anathema.world.tile_factory import Depth
 
 if TYPE_CHECKING:
     from anathema.core import Game
+
+@dataclass
+class EventData:
+    plan: Optional[Any] = None
+    act: Optional[Any] = None
+    result: bool = False
 
 
 class PlayerManager(AbstractManager):
@@ -39,7 +47,6 @@ class PlayerManager(AbstractManager):
         self.game.ecs.engine.prefabs.apply_to_entity(
             player, 'Player', {'Position': {'x': 10, 'y': 10, 'z': Depth.ABOVE_1.value}})
         player['Name'].noun_text = "Aulia Inuicta"
-
         self._player_uid = player.uid
         return player
 
@@ -47,35 +54,46 @@ class PlayerManager(AbstractManager):
         return self.action_queue.popleft()
 
     def move(self, direction: Tuple[int, int]) -> None:
-        def blocked_check() -> bool:
+
+        def block_check() -> bool:
+            """Blocker check callback"""
             if self.game.world.current_area.is_blocked(
                 self.position[0] + direction[0],
                 self.position[1] + direction[1]
                 ):
                 print("The way is blocked!")
-                return False
-            return True
+                return CheckResult(False, [])
+            return CheckResult(True, [])
 
-        def interactable_check() -> Union[bool, Tuple[bool, str]]:
+        def interact_check() -> Union[bool, Tuple[bool, str]]:
+            """Interactable check callback."""
             target_x = self.position[0] + direction[0]
             target_y = self.position[1] + direction[1]
-            if self.game.world.current_area.is_interactable(
-                target_x,
-                target_y
-                ):
-                interactable = self.game.interaction_system.get_interactables_at_pos(target_x, target_y)
-                return (True, interactable)
-            return False
+            if self.game.world.current_area.is_interactable(target_x, target_y):
+                interactable = self.game.interaction_system \
+                    .get_interactables_at_pos(target_x, target_y)
+                return CheckResult(True, interactable)
+            return CheckResult(False)
 
-        action = Action(self.entity, 'try_move', [direction], blocked_check).plan()
+        # Check if the target position is blocked.
+        action = Action(self.entity, 'try_move', [direction], block_check).plan()
+
+        # If so...
         if not action.success:
-            action = Action(self.entity, 'get_interactions', [direction], interactable_check).plan()
+            # Try to see if we can interact with it.
+            action = Action(self.entity, 'get_interactions', [direction], interact_check).plan()
+
         self.action_queue.append(action.act)
 
     def close(self, closable) -> None:
+
         def open_check() -> bool:
+            """Open check callback."""
             if closable['Door'].is_open:
-                return (True, closable)
-            return False
+                return CheckResult(True, closable)
+            return CheckResult(False)
+
+        # Check if the target interactable is open, so that we can close it.
         action = Action(self.entity, 'get_interactions', [closable], open_check).plan()
+
         self.action_queue.append(action.act)

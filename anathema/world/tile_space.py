@@ -21,7 +21,7 @@ class TileSpace:
         automata = Anneal((64, 64), density=0.46)
         automata.generate(10)
         result = automata.board
-        result = np.where(result == 1, Tiles.shallow_water, Tiles.unformed)
+        result = np.where(result == 1, Tiles.dirt_1, Tiles.unformed)
         tile_space[:] = result
 
         TileSpace.rng_selection(

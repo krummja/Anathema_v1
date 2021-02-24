@@ -1,9 +1,9 @@
 from __future__ import annotations
-from collections import defaultdict
 from typing import Callable, Any, List, Optional, TYPE_CHECKING
 from dataclasses import dataclass
 
 if TYPE_CHECKING:
+    from anathema.core.player import CheckResult
     from ecstremity import Entity
 
 
@@ -15,11 +15,19 @@ class Impossible(Exception):
 class Action:
     # TODO: Make this an Abstract and then extend
 
-    entity: Entity
-    event: str
-    data: List[Any]
-    condition: Callable[[], bool] = None
-    cost: int = (20 / 20) * 1000  # FIXME: Add skill-based mods here
+    def __init__(
+            self,
+            entity: Entity,
+            event: str,
+            data: List[Any],
+            check: Optional[Callable[[], CheckResult]] = None,
+            cost: float = (20 / 20) * 1000
+        ) -> None:
+        self.entity = entity
+        self.event = event
+        self.data = data
+        self.check = check
+        self.cost = cost
 
     @property
     def success(self) -> bool:
@@ -29,14 +37,11 @@ class Action:
     def success(self, value: bool) -> None:
         self._success = value
 
-    def plan(self) -> Optional[Action]:
-        if self.condition:
-            result = self.condition()
-            if isinstance(result, bool):
-                self.success = result
-            else:
-                self.success = result[0]
-                self.data.append(result[1])
+    def plan(self) -> Action:
+        if self.check:
+            result = self.check()
+            self.success = result.success
+            self.data.append(result.data)
         return self
 
     def act(self) -> None:

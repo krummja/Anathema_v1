@@ -9,7 +9,7 @@ class PlayerReady(Stage):
 
     name: str = "PLAYER READY"
 
-    def on_enter(self) -> None:
+    def on_enter(self, *args) -> None:
         self.game.fov_system.update(100)
         self.game.render_system.update(100)
 
@@ -23,12 +23,7 @@ class PlayerReady(Stage):
         self.draw_stat_block(65, 10)
 
     def draw_panel_borders(self) -> None:
-        self.game.renderer.clear_area(64, 0, 33, 64)
-        self.game.renderer.clear_area(0, 48, 64, 17)
-
-        #! Side Panel
         self.game.renderer.draw_box(65, 1, 32, 64, 0x44FFFFFF)
-        #! Log Panel
         self.game.renderer.draw_box(1, 49, 64, 16, 0x44FFFFFF)
 
     def draw_character_info(self, x: int, y: int) -> None:
@@ -64,6 +59,7 @@ class PlayerReady(Stage):
     def cmd_close(self) -> None:
         nearby = self.game.interaction_system.get_nearby_interactables()
         if len(nearby) > 1:
+            # TODO: Handle multiple interactables - raise a selection menu
             pass
         else:
             self.game.player.close(nearby[0])
@@ -72,7 +68,7 @@ class PlayerReady(Stage):
         self.game.screens.replace_screen('MAIN MENU')
 
     def cmd_inventory(self) -> None:
-        self.game.screens.replace_screen("MENU OVERLAY")
+        self.game.screens.replace_screen("MENU OVERLAY", "inventory")
 
     def cmd_move(self, x: int, y: int) -> None:
         self.game.player.move((x, y))

@@ -28,6 +28,8 @@ class Area:
         return False
 
     def is_interactable(self, x: int, y: int) -> bool:
+        if not (0 <= x < self.width and 0 <= y < self.height):
+            return False
         if self.region.world.game.interaction_system.interactable[x][y]:
             return True
         return False

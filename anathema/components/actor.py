@@ -20,7 +20,6 @@ class Actor(Component):
         self.reduce_energy(event.data)
 
     def on_get_interactions(self, event):
-        # FIXME This is prone to bugs - fix this!
         target = event.data[1][1]
         event = target.fire_event('get_interactions', [])
         interactions = event.data

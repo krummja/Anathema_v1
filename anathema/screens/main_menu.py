@@ -17,7 +17,7 @@ class MainMenu(AbstractScreen):
         self.game: Game = manager.game
         self.panels = []
 
-    def on_enter(self) -> None:
+    def on_enter(self, *args) -> None:
         self.game.renderer.clear()
         self.game.renderer.refresh()
 

@@ -88,23 +88,20 @@ class RenderManager(AbstractManager):
         self.terminal.print(x, y, f"[font=title]{string}[/font]")
 
     def draw_box(self, x, y, w, h, color, back: int = 0xFF151515):
-        self.clear_area(x-1, y-1, w, h)
+        self.clear_area(x, y, w, h)
         self.fill_area(x-1, y-1, w, h, color=back, layer=99)
-
         self.terminal.layer(100)
         self.terminal.color(color)
 
         # upper border
         border = '┌' + '─' * (w - 2) + '┐'
         self.terminal.print(x - 1, y - 1, border)
-
         # sides
         for i in range(h - 2):
             # left
             self.terminal.print(x - 1, y + i, '│')
             # right
             self.terminal.print(x + (w - 2), y + i, '│')
-
         # lower border
         border = '└' + '─' * (w - 2) + '┘'
         self.terminal.print(x - 1, y + (h - 2), border)

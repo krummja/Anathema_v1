@@ -28,8 +28,8 @@ class Tiles:
     granite_1 = tile("granite_1", "▓", Palette.dark_cool_gray).solid()
 
     ## Floors
-    flagstone_floor = tile("flagstone_floor", "·", Palette.warm_gray).open()
-    granite_floor = tile("granite_floor", "·", Palette.dark_cool_gray).open()
+    flagstone_floor = tile("flagstone_floor", "·", Palette.warm_gray, Palette.dark_warm_gray).open()
+    granite_floor = tile("granite_floor", "·", Palette.dark_cool_gray, Palette.darker_cool_gray).open()
 
     dirt_1 = tile("dirt_1", "·", Palette.brown).open()
     dirt_2 = tile("dirt_2", "φ", Palette.brown).open()
@@ -38,7 +38,7 @@ class Tiles:
 
     tree_1 = tile("tree", "▲", Palette.sherwood).solid()
 
-    shallow_water = tile("shallow_water", "≈", Palette.light_blue, Palette.blue).open()
+    shallow_water = tile("shallow_water", "≈", Palette.light_blue).open()
 
     ## Doorways
     open_door = tile("open_door", "○", Palette.dark_brown).door().closable()
