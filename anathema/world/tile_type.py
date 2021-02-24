@@ -16,6 +16,7 @@ class TileType:
     _interactable: Optional[bool] = None
     _portal: Optional[bool] = None
     _is_closed: Optional[bool] = None
+    _container: Optional[bool] = None
 
     def open(self) -> TileType:
         self._blocker = False
@@ -27,7 +28,7 @@ class TileType:
         self._opaque = True
         return self
 
-    def impassable(self) -> TileType:
+    def obstacle(self) -> TileType:
         self._blocker = True
         self._opaque = False
         return self
@@ -38,16 +39,21 @@ class TileType:
         return self
 
     def openable(self) -> TileType:
+        self._interactable = True
         self._is_closed = True
         return self
 
     def closable(self) -> TileType:
+        self._interactable = True
         self._is_closed = False
         return self
 
     def door(self) -> TileType:
-        self._interactable = True
         self._portal = True
         self._blocker = True
         self._opaque = True
+        return self
+
+    def container(self) -> TileType:
+        self._container = True
         return self

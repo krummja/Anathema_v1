@@ -34,6 +34,7 @@ class TileSpace:
         room = Rect(Point(5, 5), Size(10, 10))
         tile_space[room.outer] = Tiles.flagstone_wall
         tile_space[room.inner] = Tiles.flagstone_floor
+        tile_space[8, 8] = Tiles.closed_chest
         tile_space[room.top_left.x+4, room.top] = Tiles.closed_door
         tile_space[room.right-1, room.top+4] = Tiles.closed_door
 

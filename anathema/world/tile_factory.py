@@ -37,3 +37,5 @@ class TileFactory:
                         tile.add('Door', {})
                     else:
                         tile.add('Door', {})
+                if tile_def._container:
+                    tile.add('Container', {'capacity': 10})

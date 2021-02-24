@@ -16,7 +16,7 @@ class Tiles:
     open_ground = tile("open", "·", Palette.light_cool_gray).open()
     solid = tile("solid", "#", Palette.light_cool_gray).solid()
     passage = tile("passage", "-", Palette.light_cool_gray).open()
-    solid_wet = tile("solid_wet", "≈", Palette.cool_gray).impassable()
+    solid_wet = tile("solid_wet", "≈", Palette.cool_gray).obstacle()
     passage_wet = tile("passage_wet", "-", Palette.light_blue).open()
     doorway = tile("doorway", "○", Palette.light_cool_gray).open()
 
@@ -43,3 +43,7 @@ class Tiles:
     ## Doorways
     open_door = tile("open_door", "○", Palette.dark_brown).door().closable()
     closed_door = tile("closed_door", "◙", Palette.dark_brown).door().openable()
+
+    # Chests
+    open_chest = tile("open_chest", "⌠", Palette.tan).obstacle().container().closable()
+    closed_chest = tile("closed_chest", "⌡", Palette.tan).obstacle().container().openable()

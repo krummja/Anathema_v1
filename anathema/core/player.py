@@ -1,9 +1,8 @@
 from __future__ import annotations
 from dataclasses import dataclass
-from typing import Any, Union, Tuple, Optional, TYPE_CHECKING
+from typing import Dict, Any, Union, Tuple, Optional, TYPE_CHECKING
 from collections import deque
 
-from anathema.abstracts.check_result import CheckResult
 from anathema.data.actions.action import Action
 from anathema.abstracts import AbstractManager
 from anathema.world.tile_factory import Depth
@@ -13,9 +12,14 @@ if TYPE_CHECKING:
 
 @dataclass
 class EventData:
-    plan: Optional[Any] = None
-    act: Optional[Any] = None
-    result: bool = False
+    # Did the Action succeed?
+    success: bool = False
+    # What does the Action require?
+    require: Dict[str, Any] = None
+    # What can I expect back from its completion?
+    expect: Dict[str, Any] = None
+    # Additional useful data to do something with
+    result: Dict[str, Any] = None
 
 
 class PlayerManager(AbstractManager):
@@ -53,47 +57,77 @@ class PlayerManager(AbstractManager):
     def get_next_action(self):
         return self.action_queue.popleft()
 
-    def move(self, direction: Tuple[int, int]) -> None:
+    # def move(self, direction: Tuple[int, int]) -> None:
 
-        def block_check() -> bool:
-            """Blocker check callback"""
-            if self.game.world.current_area.is_blocked(
-                self.position[0] + direction[0],
-                self.position[1] + direction[1]
-                ):
-                print("The way is blocked!")
-                return CheckResult(False, [])
-            return CheckResult(True, [])
+    #     def block_check() -> bool:
+    #         """Blocker check callback"""
+    #         if self.game.world.current_area.is_blocked(
+    #             self.position[0] + direction[0],
+    #             self.position[1] + direction[1]
+    #             ):
+    #             return EventData(success = False,
+    #                              result  = {'message': "The way is blocked!"})
+    #         return EventData(success = True)
 
-        def interact_check() -> Union[bool, Tuple[bool, str]]:
-            """Interactable check callback."""
-            target_x = self.position[0] + direction[0]
-            target_y = self.position[1] + direction[1]
-            if self.game.world.current_area.is_interactable(target_x, target_y):
-                interactable = self.game.interaction_system \
-                    .get_interactables_at_pos(target_x, target_y)
-                return CheckResult(True, interactable)
-            return CheckResult(False)
+    #     def interact_check() -> Union[bool, Tuple[bool, str]]:
+    #         """Interactable check callback."""
+    #         target_x = self.position[0] + direction[0]
+    #         target_y = self.position[1] + direction[1]
 
-        # Check if the target position is blocked.
-        action = Action(self.entity, 'try_move', [direction], block_check).plan()
+    #         if self.game.world.current_area.is_interactable(target_x, target_y):
+    #             interactable = self.game.interaction_system \
+    #                 .get_interactables_at_pos(target_x, target_y)
 
-        # If so...
-        if not action.success:
-            # Try to see if we can interact with it.
-            action = Action(self.entity, 'get_interactions', [direction], interact_check).plan()
+    #             return EventData(success = True,
+    #                              require = {'target': interactable},
+    #                              expect  = {'interactions': []})
 
-        self.action_queue.append(action.act)
+    #         return EventData(
+    #             success = False
+    #             )
 
-    def close(self, closable) -> None:
+    #     # Check if the target position is blocked.
+    #     action = Action(
+    #         entity = self.entity,
+    #         event  = 'try_move',
+    #         data   = {'to': direction},
+    #         check  = block_check
+    #         ).plan()
 
-        def open_check() -> bool:
-            """Open check callback."""
-            if closable['Door'].is_open:
-                return CheckResult(True, closable)
-            return CheckResult(False)
+    #     # If so...
+    #     if not action.success:
+    #         # Try to see if we can interact with it.
+    #         action = Action(
+    #             entity = self.entity,
+    #             event  = 'get_interactions',
+    #             data   = {'to': direction,
+    #                       'interactions': []},
+    #             check  = interact_check
+    #             ).plan()
 
-        # Check if the target interactable is open, so that we can close it.
-        action = Action(self.entity, 'get_interactions', [closable], open_check).plan()
+    #     self.action_queue.append(action)
 
-        self.action_queue.append(action.act)
+    # def close(self, closable) -> None:
+
+    #     def open_check() -> bool:
+    #         """Open check callback."""
+    #         if closable.has('Door') and closable['Door'].is_open:
+    #             return EventData(success = True,
+    #                              expect  = {'interactions': []})
+
+    #         if closable.has('Container') and closable['Container'].is_open:
+    #             return EventData(success = True,
+    #                              expect  = {'interactions': []})
+
+    #         return EventData(success = False)
+
+    #     # Check if the target interactable is open, so that we can close it.
+    #     action = Action(
+    #         entity = self.entity,
+    #         event  = 'get_interactions',
+    #         data   = {'target': closable,
+    #                   'interactions': []},
+    #         check  = open_check
+    #         ).plan()
+
+    #     self.action_queue.append(action)

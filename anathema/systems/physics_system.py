@@ -21,7 +21,7 @@ class PhysicsSystem(AbstractSystem):
     def update(self, dt):
         for target in self._query.result:
             x, y = target['Position'].xy
-            if target['Blocker'].impassable:
+            if target.has('Blocker'):
                 self.passable[x][y] = False
             else:
                 self.passable[x][y] = True

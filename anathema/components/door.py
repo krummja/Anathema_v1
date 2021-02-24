@@ -19,8 +19,8 @@ class Door(Component):
             return False
         self._is_open = True
         self.entity['Renderable'].char = self._open_char
-        self.entity['Blocker'].impassable = False
-        self.entity['Opacity'].opaque = False
+        self.entity.remove('Blocker')
+        self.entity.remove('Opacity')
         return True
 
     def close_door(self):
@@ -28,18 +28,18 @@ class Door(Component):
             return False
         self._is_open = False
         self.entity['Renderable'].char = self._closed_char
-        self.entity['Blocker'].impassable = True
-        self.entity['Opacity'].opaque = True
+        self.entity.add('Blocker', {})
+        self.entity.add('Opacity', {})
         return True
 
     def on_get_interactions(self, evt):
         if self._is_open:
-            evt.data.append({
+            evt.data.expect['interactions'].append({
                 "name": "close_door",
                 "evt": "try_close_door"
                 })
         elif not self._is_open:
-            evt.data.append({
+            evt.data.expect['interactions'].append({
                 "name": "open_door",
                 "evt": "try_open_door"
                 })
