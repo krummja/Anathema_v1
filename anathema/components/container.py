@@ -35,13 +35,13 @@ class Container(Component):
 
     def on_get_interactions(self, evt):
         if self._is_open:
-            evt.data.append({
-                "name": "close_chest",
+            evt.data.expect['interactions'].append({
+                "name": "Close",
                 "evt": "try_close_chest"
                 })
         elif not self._is_open:
-            evt.data.append({
-                "name": "open_chest",
+            evt.data.expect['interactions'].append({
+                "name": "Open",
                 "evt": "try_open_chest"
                 })
         return evt

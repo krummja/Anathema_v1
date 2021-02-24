@@ -14,6 +14,7 @@ if TYPE_CHECKING:
 class EventData:
     # Did the Action succeed?
     success: bool = False
+    done: bool = False
     # What does the Action require?
     require: Dict[str, Any] = None
     # What can I expect back from its completion?
@@ -57,77 +58,69 @@ class PlayerManager(AbstractManager):
     def get_next_action(self):
         return self.action_queue.popleft()
 
-    # def move(self, direction: Tuple[int, int]) -> None:
+    def move(self, direction: Tuple[int, int]) -> None:
 
-    #     def block_check() -> bool:
-    #         """Blocker check callback"""
-    #         if self.game.world.current_area.is_blocked(
-    #             self.position[0] + direction[0],
-    #             self.position[1] + direction[1]
-    #             ):
-    #             return EventData(success = False,
-    #                              result  = {'message': "The way is blocked!"})
-    #         return EventData(success = True)
+        target_x = self.position[0] + direction[0]
+        target_y = self.position[1] + direction[1]
 
-    #     def interact_check() -> Union[bool, Tuple[bool, str]]:
-    #         """Interactable check callback."""
-    #         target_x = self.position[0] + direction[0]
-    #         target_y = self.position[1] + direction[1]
+        def block_check() -> bool:
+            """Blocker check callback"""
+            if self.game.world.current_area.is_blocked(target_x, target_y):
+                return EventData(success = False)
+            return EventData(success = True,
+                             require = {'to': direction})
 
-    #         if self.game.world.current_area.is_interactable(target_x, target_y):
-    #             interactable = self.game.interaction_system \
-    #                 .get_interactables_at_pos(target_x, target_y)
+        def interact_check() -> Union[bool, Tuple[bool, str]]:
+            """Interactable check callback."""
+            if self.game.world.current_area.is_interactable(target_x, target_y):
+                interactable = self.game.interaction_system \
+                    .get_interactables_at_pos(target_x, target_y)
+                return EventData(success = True,
+                                 require = {'target': interactable},
+                                 expect  = {'interactions': []})
+            return EventData(success = False,
+                             result  = {'message': "The way is blocked!"})
 
-    #             return EventData(success = True,
-    #                              require = {'target': interactable},
-    #                              expect  = {'interactions': []})
+        # Check if the target position is blocked.
+        action = Action(
+            entity = self.entity,
+            event  = 'try_move',
+            check  = block_check
+            ).plan()
 
-    #         return EventData(
-    #             success = False
-    #             )
+        # If so...
+        if not action.data.success:
+            # Try to see if we can interact with it.
+            action = Action(
+                entity = self.entity,
+                event  = 'try_get_interactions',
+                check  = interact_check
+                ).plan()
 
-    #     # Check if the target position is blocked.
-    #     action = Action(
-    #         entity = self.entity,
-    #         event  = 'try_move',
-    #         data   = {'to': direction},
-    #         check  = block_check
-    #         ).plan()
+        self.action_queue.append(action)
 
-    #     # If so...
-    #     if not action.success:
-    #         # Try to see if we can interact with it.
-    #         action = Action(
-    #             entity = self.entity,
-    #             event  = 'get_interactions',
-    #             data   = {'to': direction,
-    #                       'interactions': []},
-    #             check  = interact_check
-    #             ).plan()
+    def close(self, closable) -> None:
 
-    #     self.action_queue.append(action)
+        def open_check() -> bool:
+            """Open check callback."""
+            if closable.has('Door') and closable['Door'].is_open:
+                return EventData(success = True,
+                                 require = {'target': closable},
+                                 expect  = {'interactions': []})
 
-    # def close(self, closable) -> None:
+            if closable.has('Container') and closable['Container'].is_open:
+                return EventData(success = True,
+                                 require = {'target': closable},
+                                 expect  = {'interactions': []})
 
-    #     def open_check() -> bool:
-    #         """Open check callback."""
-    #         if closable.has('Door') and closable['Door'].is_open:
-    #             return EventData(success = True,
-    #                              expect  = {'interactions': []})
+            return EventData(success = False,
+                             result  = {'message': "Close what?"})
 
-    #         if closable.has('Container') and closable['Container'].is_open:
-    #             return EventData(success = True,
-    #                              expect  = {'interactions': []})
+        # Check if the target interactable is open, so that we can close it.
+        action = Action(
+            entity = self.entity,
+            event  = 'try_get_interactions',
+            check  = open_check
+            ).plan()
 
-    #         return EventData(success = False)
-
-    #     # Check if the target interactable is open, so that we can close it.
-    #     action = Action(
-    #         entity = self.entity,
-    #         event  = 'get_interactions',
-    #         data   = {'target': closable,
-    #                   'interactions': []},
-    #         check  = open_check
-    #         ).plan()
-
-    #     self.action_queue.append(action)
+        self.action_queue.append(action)

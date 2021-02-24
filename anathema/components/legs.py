@@ -9,8 +9,8 @@ class Legs(Component):
         self._leg_count = leg_count
 
     def on_try_move(self, evt):
-        success = evt.data[0]
-        direction = evt.data[1][0]
+        success = evt.data.success
+        direction = evt.data.require['to']
 
         if success:
             self.update_position(*direction)

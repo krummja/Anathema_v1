@@ -19,7 +19,6 @@ class Action:
             self, *,
             entity: Entity,
             event: str,
-            data: Dict[str, Any] = None,
             check: Optional[Callable[[], EventData]] = None,
             cost: float = (20 / 20) * 1000
         ) -> None:
@@ -27,18 +26,7 @@ class Action:
         self.event = event
         self.check = check
         self.cost = cost
-        if data is None:
-            self._data = {}
-        else:
-            self._data = data
-
-    @property
-    def success(self) -> bool:
-        return self._success
-
-    @success.setter
-    def success(self, value: bool) -> None:
-        self._success = value
+        self.data = None
 
     def plan(self) -> Action:
         """Plan step, which allows for check callbacks and
@@ -61,19 +49,13 @@ class Action:
                   of the act step.
         `result`  is a dict that contains additional useful data for when the
                   Action finally concludes.
-
-        An Action very often passes in a dict as argument to its `data` parameter.
-        The data dict will have
         """
-
         if self.check:
-
-            event_data = self.check()
-
+            self.data = self.check()
         return self
 
     def act(self) -> None:
         """Act step, which fires the event for an action success."""
         self.entity.fire_event('energy_consumed', {'cost': self.cost})
-        result = self.entity.fire_event(self.event, (self.success, self.data))
+        result = self.entity.fire_event(self.event, self.data)
         return result

@@ -32,8 +32,9 @@ class ActionSystem(AbstractSystem):
                 try:
                     action = self.game.player.get_next_action()
                     if action:
-                        result = action.act()
-                    return True
+                        action.act()
+                        return True
+                    continue
                 except IndexError:
                     return False
 
