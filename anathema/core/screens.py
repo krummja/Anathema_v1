@@ -3,15 +3,21 @@ from typing import TYPE_CHECKING, List, Dict
 
 from anathema.abstracts import AbstractManager, AbstractScreen
 from anathema.screens import MainMenu, PlayerReady, MenuOverlay
+from anathema.utils.observer import Observer
 
 if TYPE_CHECKING:
+    from anathema.core.ui import UIManager
     from anathema.core import Game
 
 
-class ScreenManager(AbstractManager):
+class ScreenManager(AbstractManager, Observer):
 
     def __init__(self, game: Game) -> None:
-        super().__init__(game)
+        AbstractManager.__init__(self, game)
+        Observer.__init__(self)
+
+        self.game.ui.attach(self)
+
         self._stack: List[AbstractScreen] = [MainMenu(self)]
         self._screens: Dict[str, AbstractScreen] = {
             'MAIN MENU': MainMenu,
@@ -42,12 +48,12 @@ class ScreenManager(AbstractManager):
         self.current_screen.on_enter(*args)
         self.game.input.change_input_source()
 
-    def push_screen(self, screen: str) -> None:
+    def push_screen(self, screen: str, *args) -> None:
         """Push a screen onto the top of the stack."""
         self.current_screen.on_leave()
         screen = self._screens[screen](self)
         self._stack.append(screen)
-        self.current_screen.on_enter()
+        self.current_screen.on_enter(*args)
         self.game.input.change_input_source()
 
     def pop_screen(self) -> AbstractScreen:
@@ -56,6 +62,9 @@ class ScreenManager(AbstractManager):
         self._stack.pop()
         self.current_screen.on_enter()
         self.game.input.change_input_source()
+
+    def _update(self, subject: UIManager) -> None:
+        self.push_screen('MENU OVERLAY', 'interactions', subject.data)
 
     def update(self, dt) -> None:
         self.current_screen.on_update(dt)

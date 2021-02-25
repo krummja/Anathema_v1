@@ -53,13 +53,11 @@ class PlayerManager(AbstractManager):
             player, 'Player', {'Position': {'x': 10, 'y': 10, 'z': Depth.ABOVE_1.value}})
         player['Name'].noun_text = "Aulia Inuicta"
         self._player_uid = player.uid
-        return player
 
     def get_next_action(self):
         return self.action_queue.popleft()
 
     def move(self, direction: Tuple[int, int]) -> None:
-
         target_x = self.position[0] + direction[0]
         target_y = self.position[1] + direction[1]
 

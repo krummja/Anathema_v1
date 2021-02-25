@@ -2,7 +2,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 import os, json
-from ecstremity import Engine
+from ecstremity import EngineAdapter as Engine
 
 from anathema.abstracts import AbstractManager
 from anathema.components import all_components
@@ -19,7 +19,7 @@ class ECSManager(AbstractManager):
 
     def __init__(self, game: Game) -> None:
         self.game = game
-        self.engine = Engine()
+        self.engine = Engine(client=game)
 
         for component in all_components():
             self.engine.components.register(component)

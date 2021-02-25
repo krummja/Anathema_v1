@@ -65,10 +65,10 @@ class PlayerReady(Stage):
             self.game.player.close(nearby[0])
 
     def cmd_escape(self) -> None:
-        self.game.screens.replace_screen('MAIN MENU')
+        self.game.screens.pop_screen()
 
     def cmd_inventory(self) -> None:
-        self.game.screens.replace_screen("MENU OVERLAY", "inventory")
+        self.game.screens.push_screen("MENU OVERLAY", "inventory", [])
 
     def cmd_move(self, x: int, y: int) -> None:
         self.game.player.move((x, y))

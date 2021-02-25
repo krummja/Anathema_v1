@@ -1,0 +1,16 @@
+{
+    "name": "Small_Backpack",
+    "inherit": "",
+    "components": [
+        {   "type": "Item",
+            "properties": {}},
+        {   "type": "Name",
+            "properties": {}},
+        {   "type": "Position",
+            "properties": {"x": 1, "y": 1, "z": 5}},
+        {   "type": "Renderable",
+            "properties": {"char": "≤", "fore": "0xFF996A56"}},
+        {   "type": "Container",
+            "properties": {"capacity": 10}}
+    ]
+}

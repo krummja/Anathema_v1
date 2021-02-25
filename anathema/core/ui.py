@@ -1,28 +1,18 @@
 from __future__ import annotations
-import enum
-from typing import TYPE_CHECKING, Tuple, Optional
-from enum import Enum
+from typing import TYPE_CHECKING
 
-from collections import deque
-
-import tcod
 from anathema.abstracts import AbstractManager
-from anathema.core.options import Options
-from anathema.utils.geometry import Rect, Point, Size
+from anathema.utils.observer import Data
 
 if TYPE_CHECKING:
-    from tcod.bsp import BSP
     from anathema.core.game import Game
 
 
-class UIManager(AbstractManager):
+class UIManager(AbstractManager, Data):
 
     def __init__(self, game: Game) -> None:
-        super().__init__(game)
-        self.data_list = []
-
-    def push_data(self, data):
-        self.data_list.append(data)
+        AbstractManager.__init__(self, game)
+        Data.__init__(self)
 
     def clear_data(self):
-        self.data_list.clear()
+        self._data.clear()

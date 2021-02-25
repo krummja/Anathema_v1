@@ -38,7 +38,7 @@ class MainMenu(AbstractScreen):
         self.game.ui.next_panel()
 
     def cmd_confirm(self) -> Optional[T]:
-        self.manager.replace_screen('PLAYER READY')
+        self.manager.push_screen('PLAYER READY')
 
     def cmd_escape(self) -> None:
         raise SystemExit()

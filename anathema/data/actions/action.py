@@ -1,11 +1,7 @@
 from __future__ import annotations
-from typing import Dict, Callable, Any, List, Optional, TYPE_CHECKING
-from dataclasses import dataclass
-
-from ecstremity import EventData
+from typing import Callable, Any, Optional, TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from anathema.core.player import EventData
     from ecstremity import Entity
 
 
@@ -19,7 +15,7 @@ class Action:
             self, *,
             entity: Entity,
             event: str,
-            check: Optional[Callable[[], EventData]] = None,
+            check: Optional[Callable[[], Any]] = None,
             cost: float = (20 / 20) * 1000
         ) -> None:
         self.entity = entity

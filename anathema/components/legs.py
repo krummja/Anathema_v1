@@ -2,6 +2,10 @@ from __future__ import annotations
 
 from ecstremity import Component
 
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from .body import Body
+
 
 class Legs(Component):
 
@@ -24,3 +28,11 @@ class Legs(Component):
         target_y = pos_y + y
         self.entity['Position'].x = target_x
         self.entity['Position'].y = target_y
+
+    @property
+    def body(self) -> Body:
+        return self._body
+
+    @body.setter
+    def body(self, value: Body) -> None:
+        self._body = value

@@ -68,7 +68,18 @@ class InputController(AbstractManager):
         self._current_screen = self.game.screens.current_screen
 
     def handle_input(self) -> Optional[Callable[[], Optional[T]]]:
-        key = self.game.renderer.terminal.read()
+        terminal = self.game.renderer.terminal
+
+        # _input = []
+
+        # if terminal.check(blt.TK_SHIFT):
+        #     _input.append(blt.TK_SHIFT)
+        # if terminal.check(blt.TK_CONTROL):
+        #     _input.append(blt.TK_CONTROL)
+        # _input.append(terminal.read())
+
+        key = terminal.read()
+
         try:
             command = self.command_lookup(key)
         except StateBreak:
