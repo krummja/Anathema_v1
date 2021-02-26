@@ -23,7 +23,7 @@ class TileFactory:
                 tile_def = self.tile_space[x, y]
                 tile = self.ecs.create_entity()
 
-                tile.add('Position', {'x': x, 'y': y, 'z': Depth.GROUND})
+                tile.add('Position', {'x': x, 'y': y, 'z': Depth.GROUND.value})
                 tile.add('Renderable', {'char': tile_def.char, 'fore': tile_def.fore, 'back': tile_def.back})
 
                 if tile_def._blocker:

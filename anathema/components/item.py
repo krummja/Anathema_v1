@@ -5,3 +5,4 @@ from ecstremity import Component
 
 class Item(Component):
     """Flag component denoting an item."""
+

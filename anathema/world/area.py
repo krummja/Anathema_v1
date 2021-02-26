@@ -4,7 +4,7 @@ import numpy as np
 
 import random
 from anathema.world.tile_factory import TileFactory
-from anathema.data.spawners import ItemFactory, Spawners
+from anathema.data.items.item_spawners import ItemFactory, ItemSpawners
 from anathema.core.options import Options
 
 if TYPE_CHECKING:
@@ -24,7 +24,7 @@ class Area:
 
     def initialize_area(self) -> None:
         self.factory.build()
-        self.items.spawn(Spawners.small_backpack(9, 9))
+        self.items.spawn(ItemSpawners.small_backpack(9, 9))
 
     def is_blocked(self, x: int, y: int) -> bool:
         if not (0 <= x < self.width and 0 <= y < self.height):

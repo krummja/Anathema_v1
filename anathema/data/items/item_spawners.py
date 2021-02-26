@@ -2,7 +2,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 
 from typing import TYPE_CHECKING
-from anathema.world.tile_factory import Depth
+from anathema.world.depth import Depth
 
 
 if TYPE_CHECKING:
@@ -38,5 +38,5 @@ def spawner(name: str, prefab: str, x: int, y: int):
     return ItemType(name, prefab, x, y)
 
 
-class Spawners:
+class ItemSpawners:
     small_backpack = (lambda x, y : spawner('small_backpack', 'Small_Backpack', x, y))
