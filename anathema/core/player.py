@@ -134,6 +134,8 @@ class PlayerManager(AbstractManager):
 
     def pickup(self) -> None:
 
+        print(self.entity)
+
         target = self.game.interaction_system.get_interactables_at_pos(*self.position)
 
         def lift_check() -> bool:

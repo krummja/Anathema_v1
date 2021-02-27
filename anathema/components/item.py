@@ -8,7 +8,12 @@ class Item(Component):
 
     def on_lift(self, evt):
         item = self.entity.clone()
-        print(evt.data.require['instigator'])
+        instigator = evt.data.require['instigator']
+        if item['Equippable']:
+            slot = item['Equippable'].body_part
+            instigator['Body'].equip(slot, item)
+
+        print(instigator['Body'].torso._equip_slots)
 
         self.entity.destroy()
         print("You lift the item.")

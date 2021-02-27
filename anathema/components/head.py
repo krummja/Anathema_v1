@@ -1,18 +1,13 @@
 from __future__ import annotations
-
-from ecstremity import Component
-
 from typing import TYPE_CHECKING
+
+from .bases.body_part import BodyPart
+
 if TYPE_CHECKING:
     from .body import Body
 
 
-class Head(Component):
+class Head(BodyPart):
 
-    @property
-    def body(self) -> Body:
-        return self._body
-
-    @body.setter
-    def body(self, value: Body) -> None:
-        self._body = value
+    def __init__(self) -> None:
+        super().__init__()

@@ -1,18 +1,14 @@
 from __future__ import annotations
 
-from ecstremity import Component
+from .bases.body_part import BodyPart
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from .body import Body
 
 
-class Arms(Component):
+class Arms(BodyPart):
 
-    @property
-    def body(self) -> Body:
-        return self._body
-
-    @body.setter
-    def body(self, value: Body) -> None:
-        self._body = value
+    def __init__(self, arm_count: int = 2) -> None:
+        super().__init__()
+        self.arm_count = arm_count

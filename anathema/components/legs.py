@@ -1,15 +1,16 @@
 from __future__ import annotations
 
-from ecstremity import Component
+from .bases.body_part import BodyPart
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from .body import Body
 
 
-class Legs(Component):
+class Legs(BodyPart):
 
     def __init__(self, leg_count: int = 2) -> None:
+        super().__init__()
         self._leg_count = leg_count
 
     def on_try_move(self, evt):
@@ -29,10 +30,3 @@ class Legs(Component):
         self.entity['Position'].x = target_x
         self.entity['Position'].y = target_y
 
-    @property
-    def body(self) -> Body:
-        return self._body
-
-    @body.setter
-    def body(self, value: Body) -> None:
-        self._body = value

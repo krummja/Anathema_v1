@@ -13,6 +13,8 @@
         {   "type": "Renderable",
             "properties": {"char": "≤", "fore": "0xFF996A56"}},
         {   "type": "Container",
-            "properties": {"capacity": 10}}
+            "properties": {"capacity": 10}},
+        {   "type": "Equippable",
+            "properties": {"body_part": "torso"}}
     ]
 }

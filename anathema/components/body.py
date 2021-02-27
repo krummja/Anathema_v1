@@ -30,5 +30,6 @@ class Body(Component):
             self.eyes = self.entity['Eyes']
             self.eyes.body = self
 
-    def equip(self, where: str):
-        body_part = getattr(self, where)
+    def equip(self, where: str, item):
+        body_part = getattr(self, where.lower())
+        body_part.equip(item)

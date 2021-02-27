@@ -6,6 +6,7 @@ from anathema.components.body import Body
 from anathema.components.container import Container
 from anathema.components.door import Door
 from anathema.components.eyes import Eyes
+from anathema.components.equippable import Equippable
 from anathema.components.head import Head
 from anathema.components.health import Health
 from anathema.components.isinteractable import IsInteractable
@@ -35,6 +36,7 @@ def all_components():
         Container,
         Door,
         Eyes,
+        Equippable,
         Head,
         Health,
         Item,
