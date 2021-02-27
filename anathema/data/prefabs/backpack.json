@@ -4,6 +4,8 @@
     "components": [
         {   "type": "Item",
             "properties": {}},
+        {   "type": "IsInteractable",
+            "properties": {}},
         {   "type": "Name",
             "properties": {}},
         {   "type": "Position",

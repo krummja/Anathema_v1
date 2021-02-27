@@ -30,6 +30,10 @@ class Actor(Component):
         else:
             self.ecs.client.ui.data = interactions
 
+    def on_try_pickup(self, evt):
+        target = evt.data.require['target']
+        target.fire_event('lift', evt.data)
+
     def on_tick(self, evt) -> None:
         self.add_energy(1)
 

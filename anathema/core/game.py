@@ -11,7 +11,8 @@ from anathema.core.clock import ClockManager
 from anathema.core.ecs import ECSManager
 from anathema.core.world import WorldManager
 from anathema.core.player import PlayerManager
-from anathema.core.ui import UIManager
+from anathema.core.garbage import GarbageCollection
+from anathema.screens.interface.ui import UIManager
 
 from anathema.systems.render_system import RenderSystem
 from anathema.systems.action_system import ActionSystem
@@ -35,6 +36,7 @@ class Game:
         self.screens = ScreenManager(self)
         self.input = InputController(self)
         self.fps = FPSManager(self)
+        self.gc = GarbageCollection(self)
 
         self.action_system = ActionSystem(self)
         self.physics_system = PhysicsSystem(self)
@@ -73,4 +75,5 @@ class Game:
             self.fps.update(dt)
             self.screens.update(dt)
             self.renderer.update(dt)
+            self.gc.update(dt)
             self._last_update = now

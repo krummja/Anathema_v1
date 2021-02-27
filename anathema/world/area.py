@@ -26,6 +26,15 @@ class Area:
         self.factory.build()
         self.items.spawn(ItemSpawners.small_backpack(9, 9))
 
+    def get_entities_at(self, x: int, y: int):
+        entities = self.region.world.game.ecs.engine.entities
+        result = []
+        for entity in entities:
+            if entity.has('Position'):
+                if entity['Position'].xy == (x, y):
+                    result.append(entity.uid)
+        return result
+
     def is_blocked(self, x: int, y: int) -> bool:
         if not (0 <= x < self.width and 0 <= y < self.height):
             return True

@@ -63,19 +63,25 @@ class PlayerManager(AbstractManager):
 
         def block_check() -> bool:
             """Blocker check callback"""
+
             if self.game.world.current_area.is_blocked(target_x, target_y):
+
                 return EventData(success = False)
+
             return EventData(success = True,
                              require = {'to': direction})
 
         def interact_check() -> Union[bool, Tuple[bool, str]]:
             """Interactable check callback."""
+
             if self.game.world.current_area.is_interactable(target_x, target_y):
                 interactable = self.game.interaction_system \
                     .get_interactables_at_pos(target_x, target_y)
+
                 return EventData(success = True,
                                  require = {'target': interactable},
                                  expect  = {'interactions': []})
+
             return EventData(success = False,
                              result  = {'message': "The way is blocked!"})
 
@@ -101,12 +107,15 @@ class PlayerManager(AbstractManager):
 
         def open_check() -> bool:
             """Open check callback."""
+
             if closable.has('Door') and closable['Door'].is_open:
+
                 return EventData(success = True,
                                  require = {'target': closable},
                                  expect  = {'interactions': []})
 
             if closable.has('Container') and closable['Container'].is_open:
+
                 return EventData(success = True,
                                  require = {'target': closable},
                                  expect  = {'interactions': []})
@@ -119,6 +128,31 @@ class PlayerManager(AbstractManager):
             entity = self.entity,
             event  = 'try_get_interactions',
             check  = open_check
+            ).plan()
+
+        self.action_queue.append(action)
+
+    def pickup(self) -> None:
+
+        target = self.game.interaction_system.get_interactables_at_pos(*self.position)
+
+        def lift_check() -> bool:
+            """Lift check callback."""
+
+            if target and target.has('Item') and target.has('IsInteractable'):
+
+                return EventData(success = True,
+                                 require  = {'target': target,
+                                             'instigator': self.entity},
+                                 expect   = {'interactions': []})
+
+            return EventData(success = False,
+                             result  = {'message': 'You cannot lift that!'})
+
+        action = Action(
+            entity = self.entity,
+            event  = 'try_pickup',
+            check  = lift_check
             ).plan()
 
         self.action_queue.append(action)

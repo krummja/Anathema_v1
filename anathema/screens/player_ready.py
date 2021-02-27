@@ -72,3 +72,6 @@ class PlayerReady(Stage):
 
     def cmd_move(self, x: int, y: int) -> None:
         self.game.player.move((x, y))
+
+    def cmd_pickup(self) -> None:
+        self.game.player.pickup()

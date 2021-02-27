@@ -18,7 +18,7 @@ class ECSManager(AbstractManager):
     """Manager class that wraps the `ecstremity` ECS Engine."""
 
     def __init__(self, game: Game) -> None:
-        self.game = game
+        super().__init__(game)
         self.engine = Engine(client=game)
 
         for component in all_components():

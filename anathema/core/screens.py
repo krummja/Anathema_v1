@@ -3,20 +3,16 @@ from typing import TYPE_CHECKING, List, Dict
 
 from anathema.abstracts import AbstractManager, AbstractScreen
 from anathema.screens import MainMenu, PlayerReady, MenuOverlay
-from anathema.utils.observer import Observer
 
 if TYPE_CHECKING:
-    from anathema.core.ui import UIManager
+    from anathema.screens.interface.ui import UIManager
     from anathema.core import Game
 
 
-class ScreenManager(AbstractManager, Observer):
+class ScreenManager(AbstractManager):
 
     def __init__(self, game: Game) -> None:
-        AbstractManager.__init__(self, game)
-        Observer.__init__(self)
-
-        self.game.ui.attach(self)
+        super().__init__(game)
 
         self._stack: List[AbstractScreen] = [MainMenu(self)]
         self._screens: Dict[str, AbstractScreen] = {
@@ -62,9 +58,6 @@ class ScreenManager(AbstractManager, Observer):
         self._stack.pop()
         self.current_screen.on_enter()
         self.game.input.change_input_source()
-
-    def _update(self, subject: UIManager) -> None:
-        self.push_screen('MENU OVERLAY', 'interactions', subject.data)
 
     def update(self, dt) -> None:
         self.current_screen.on_update(dt)

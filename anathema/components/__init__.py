@@ -22,6 +22,7 @@ from anathema.components.renderable import Renderable
 from anathema.components.stamina import Stamina
 from anathema.components.torso import Torso
 from anathema.components.unformed import Unformed
+from anathema.components.isinventoried import IsInventoried
 
 
 def all_components():
@@ -38,6 +39,7 @@ def all_components():
         Health,
         Item,
         IsInteractable,
+        IsInventoried,
         IsPlayer,
         IsStatic,
         Legs,
