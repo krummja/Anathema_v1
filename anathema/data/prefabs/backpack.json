@@ -15,6 +15,6 @@
         {   "type": "Container",
             "properties": {"capacity": 10}},
         {   "type": "Equippable",
-            "properties": {"body_part": "torso"}}
+            "properties": {"body_part": "back", "is_container": 1}}
     ]
 }

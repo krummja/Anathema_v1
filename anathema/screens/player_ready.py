@@ -20,7 +20,8 @@ class PlayerReady(Stage):
     def on_draw(self, dt) -> None:
         self.draw_panel_borders()
         self.draw_character_info(65, 2)
-        self.draw_stat_block(65, 10)
+        self.draw_stat_block(65, 7)
+        # self.draw_equipment_overview(65, 15)
 
     def draw_panel_borders(self) -> None:
         self.game.renderer.draw_box(65, 1, 32, 64, 0x44FFFFFF)
@@ -56,6 +57,61 @@ class PlayerReady(Stage):
         self.game.renderer.print(x, y+4, 0xFFABEB34, f"SP: {sp}")
         self.game.renderer.draw_bar(x + bar_offset, y+4, 10, sp.current, sp.maximum, 0xABEB34)
 
+    def draw_equipment_overview(self, x: int, y: int) -> None:
+        x_margin = 2
+        x = x + x_margin
+
+        head = self.game.player.entity['Head']
+        torso = self.game.player.entity['Torso']
+        back = self.game.player.entity['Back']
+        arms = self.game.player.entity['Arms']
+        hands = self.game.player.entity['Hands']
+        legs = self.game.player.entity['Legs']
+        feet = self.game.player.entity['Feet']
+
+        self.game.renderer.print(x, y,    0xFFFFFFFF, ' Head')
+        self.game.renderer.print(x, y+2,  0xFFFFFFFF, 'Torso')
+        self.game.renderer.print(x, y+4,  0xFFFFFFFF, ' Back')
+        self.game.renderer.print(x, y+6,  0xFFFFFFFF, ' Arms')
+        self.game.renderer.print(x, y+8,  0xFFFFFFFF, 'Hands')
+        self.game.renderer.print(x, y+10, 0xFFFFFFFF, ' Legs')
+        self.game.renderer.print(x, y+12, 0xFFFFFFFF, ' Feet')
+
+        self.game.renderer.print(
+            x+8, y,
+            0xFFFFFFFF if head.equipped_name else 0x88FFFFFF,
+            head.equipped_name if head.equipped_name else "<empty>")
+
+        self.game.renderer.print(
+            x+8, y+2,
+            0xFFFFFFFF if torso.equipped_name else 0x88FFFFFF,
+            torso.equipped_name if torso.equipped_name else "<empty>")
+
+        self.game.renderer.print(
+            x+8, y+4,
+            0xFFFFFFFF if back.equipped_name else 0x88FFFFFF,
+            back.equipped_name if back.equipped_name else "<empty>")
+
+        self.game.renderer.print(
+            x+8, y+6,
+            0xFFFFFFFF if arms.equipped_name else 0x88FFFFFF,
+            arms.equipped_name if arms.equipped_name else "<empty>")
+
+        self.game.renderer.print(
+            x+8, y+8,
+            0xFFFFFFFF if hands.equipped_name else 0x88FFFFFF,
+            hands.equipped_name if hands.equipped_name else "<empty>")
+
+        self.game.renderer.print(
+            x+8, y+10,
+            0xFFFFFFFF if legs.equipped_name else 0x88FFFFFF,
+            legs.equipped_name if legs.equipped_name else "<empty>")
+
+        self.game.renderer.print(
+            x+8, y+12,
+            0xFFFFFFFF if feet.equipped_name else 0x88FFFFFF,
+            feet.equipped_name if feet.equipped_name else "<empty>")
+
     def cmd_close(self) -> None:
         nearby = self.game.interaction_system.get_nearby_interactables()
         if len(nearby) > 1:
@@ -68,7 +124,7 @@ class PlayerReady(Stage):
         self.game.screens.pop_screen()
 
     def cmd_inventory(self) -> None:
-        self.game.screens.push_screen("MENU OVERLAY", "inventory", [])
+        self.game.screens.push_screen("INVENTORY")
 
     def cmd_move(self, x: int, y: int) -> None:
         self.game.player.move((x, y))

@@ -8,8 +8,8 @@ class Name(Component):
     NAME_SET: bool = False
     ALLOW_CHANGE: bool = False
 
-    def __init__(self) -> None:
-        self._noun_text = ""
+    def __init__(self, noun_text = "") -> None:
+        self._noun_text = noun_text
 
     @property
     def noun_text(self) -> str:
@@ -22,3 +22,6 @@ class Name(Component):
             self.NAME_SET = True
         else:
             pass
+
+    def __str__(self) -> str:
+        return str(self._noun_text)

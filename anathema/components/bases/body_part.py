@@ -16,11 +16,12 @@ class EquipSlots:
 
     def __setitem__(self, key, item):
         if key not in self._dict:
-            return False
+            pass
         self._dict[key] = item
-        return True
 
     def __getitem__(self, key):
+        if key not in self._dict:
+            pass
         return self._dict[key]
 
     def __str__(self) -> str:
@@ -29,15 +30,17 @@ class EquipSlots:
 
 class BodyPart(Component):
 
-    _equip_slots = EquipSlots({
-        'A': None,
-        'B': None,
-        'C': None
-        })
+    _equipped = None
 
     @property
-    def equip_slots(self):
-        return self._equip_slots
+    def equipped(self):
+        return self._equipped
+
+    @property
+    def equipped_name(self):
+        if self._equipped is not None:
+            return self._equipped['Name'].noun_text
+        return None
 
     @property
     def body(self) -> Body:
@@ -48,7 +51,13 @@ class BodyPart(Component):
         self._body = value
 
     def equip(self, item):
-        slot = get_first_key(self._equip_slots._dict, None)
         if item.has('Equippable'):
             item['Equippable'].owner = self.entity
-            self._equip_slots[slot] = item
+            self._equipped = item
+
+    def on_get_equipped(self, evt):
+        evt.data.expect['equipped'].append({
+            "name": self._equipped['Name'].noun_text,
+            "evt": "try_select"
+            })
+        return evt

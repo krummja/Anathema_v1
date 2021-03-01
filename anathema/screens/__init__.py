@@ -1,5 +1,5 @@
-__all__ = ["MainMenu", "PlayerReady", "MenuOverlay"]
+__all__ = ["MainMenu", "PlayerReady", "InventoryMenu"]
 
 from anathema.screens.main_menu import MainMenu
 from anathema.screens.player_ready import PlayerReady
-from anathema.screens.menu_overlay import MenuOverlay
+from anathema.screens.inventory_menu import InventoryMenu

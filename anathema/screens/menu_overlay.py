@@ -1,7 +1,7 @@
 from __future__ import annotations
 from typing import TYPE_CHECKING
 
-from anathema.screens import PlayerReady
+from anathema.screens.player_ready import PlayerReady
 
 if TYPE_CHECKING:
     from anathema.core.screens import ScreenManager
@@ -14,9 +14,10 @@ class MenuOverlay(PlayerReady):
 
     def __init__(self, manager: ScreenManager) -> None:
         super().__init__(manager)
+        self.selection = (0, 0)
 
     def on_draw(self, dt) -> None:
-        pass
+        super().on_draw(dt)
 
     def cmd_escape(self) -> None:
         self.game.screens.pop_screen()

@@ -61,7 +61,7 @@ class PlayerManager(AbstractManager):
         target_x = self.position[0] + direction[0]
         target_y = self.position[1] + direction[1]
 
-        def block_check() -> bool:
+        def block_check() -> EventData:
             """Blocker check callback"""
 
             if self.game.world.current_area.is_blocked(target_x, target_y):
@@ -71,7 +71,7 @@ class PlayerManager(AbstractManager):
             return EventData(success = True,
                              require = {'to': direction})
 
-        def interact_check() -> Union[bool, Tuple[bool, str]]:
+        def interact_check() -> EventData:
             """Interactable check callback."""
 
             if self.game.world.current_area.is_interactable(target_x, target_y):
@@ -105,7 +105,7 @@ class PlayerManager(AbstractManager):
 
     def close(self, closable) -> None:
 
-        def open_check() -> bool:
+        def open_check() -> EventData:
             """Open check callback."""
 
             if closable.has('Door') and closable['Door'].is_open:
@@ -134,11 +134,9 @@ class PlayerManager(AbstractManager):
 
     def pickup(self) -> None:
 
-        print(self.entity)
-
         target = self.game.interaction_system.get_interactables_at_pos(*self.position)
 
-        def lift_check() -> bool:
+        def lift_check() -> EventData:
             """Lift check callback."""
 
             if target and target.has('Item') and target.has('IsInteractable'):
@@ -146,7 +144,8 @@ class PlayerManager(AbstractManager):
                 return EventData(success = True,
                                  require  = {'target': target,
                                              'instigator': self.entity},
-                                 expect   = {'interactions': []})
+                                 expect   = {'interactions': []},
+                                 result   = {'message': 'You take the %s', 'a': target})
 
             return EventData(success = False,
                              result  = {'message': 'You cannot lift that!'})

@@ -16,14 +16,14 @@ class Container(Component):
     def is_open(self) -> bool:
         return self._is_open
 
-    def open_chest(self):
+    def open_container(self):
         if self._is_open:
             return False
         self._is_open = True
         self.entity['Renderable'].char = self._open_char
         return True
 
-    def close_chest(self):
+    def close_container(self):
         if not self._is_open:
             return False
         self._is_open = False
@@ -37,22 +37,22 @@ class Container(Component):
         if self._is_open:
             evt.data.expect['interactions'].append({
                 "name": "Close",
-                "evt": "try_close_chest"
+                "evt": "try_close_container"
                 })
         elif not self._is_open:
             evt.data.expect['interactions'].append({
                 "name": "Open",
-                "evt": "try_open_chest"
+                "evt": "try_open_container"
                 })
         return evt
 
-    def on_try_close_chest(self, evt):
-        if self.close_chest():
+    def on_try_close_container(self, evt):
+        if self.close_container():
             print("The chest shuts.")
         evt.handle()
 
-    def on_try_open_chest(self, evt):
-        if self.open_chest():
+    def on_try_open_container(self, evt):
+        if self.open_container():
             print("The chest opens.")
         evt.data.append(self.display_contents())
         evt.handle()

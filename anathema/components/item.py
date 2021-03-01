@@ -11,10 +11,7 @@ class Item(Component):
         instigator = evt.data.require['instigator']
         if item['Equippable']:
             slot = item['Equippable'].body_part
-            instigator['Body'].equip(slot, item)
-
-        print(instigator['Body'].torso._equip_slots)
+            instigator[slot].equip(item)
 
         self.entity.destroy()
-        print("You lift the item.")
         evt.handle()

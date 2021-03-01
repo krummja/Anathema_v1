@@ -30,7 +30,7 @@ class CommandLibrary:
             blt.TK_I: "inventory",
             blt.TK_L: "examine",
             },
-        "MENU OVERLAY": {}
+        "INVENTORY": {}
         }
 
     MOVE_KEYS: Dict[int, Tuple[int, int]] = {

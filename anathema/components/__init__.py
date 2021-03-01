@@ -14,6 +14,9 @@ from anathema.components.isplayer import IsPlayer
 from anathema.components.isstatic import IsStatic
 from anathema.components.item import Item
 from anathema.components.legs import Legs
+from anathema.components.back import Back
+from anathema.components.hands import Hands
+from anathema.components.feet import Feet
 from anathema.components.mana import Mana
 from anathema.components.name import Name
 from anathema.components.opacity import Opacity
@@ -45,6 +48,9 @@ def all_components():
         IsPlayer,
         IsStatic,
         Legs,
+        Back,
+        Hands,
+        Feet,
         Mana,
         Name,
         Opacity,
