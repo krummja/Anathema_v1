@@ -29,4 +29,3 @@ class Legs(BodyPart):
         target_y = pos_y + y
         self.entity['Position'].x = target_x
         self.entity['Position'].y = target_y
-

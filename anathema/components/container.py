@@ -57,3 +57,10 @@ class Container(Component):
         evt.data.append(self.display_contents())
         evt.handle()
         return evt.data
+
+    def on_get_inventories(self, evt):
+        inventories = evt.data.require['inventories']
+        inventories[self.entity['Name'].noun_text] = self
+        evt.data.require['inventories'] = inventories
+        print(inventories)
+        return evt

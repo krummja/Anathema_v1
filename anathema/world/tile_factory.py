@@ -25,6 +25,7 @@ class TileFactory:
 
                 tile.add('Position', {'x': x, 'y': y, 'z': Depth.GROUND.value})
                 tile.add('Renderable', {'char': tile_def.char, 'fore': tile_def.fore, 'back': tile_def.back})
+                tile.add('Name', {'noun_text': tile_def.name})
 
                 if tile_def._blocker:
                     tile.add('Blocker', {})

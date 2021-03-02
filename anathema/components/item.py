@@ -9,9 +9,8 @@ class Item(Component):
     def on_lift(self, evt):
         item = self.entity.clone()
         instigator = evt.data.require['instigator']
-        if item['Equippable']:
-            slot = item['Equippable'].body_part
-            instigator[slot].equip(item)
-
+        # if item['Equippable']:
+        #     slot = item['Equippable'].body_part
+        #     instigator[slot].equip(item)
         self.entity.destroy()
         evt.handle()

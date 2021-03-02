@@ -57,10 +57,10 @@ class Game:
             self.clock.update(dt)
             player_turn = self.action_system.update(dt)
             if player_turn:
-                self.update_player_systems(dt)
+                self.update_game_systems(dt)
                 return
 
-    def update_player_systems(self, dt) -> None:
+    def update_game_systems(self, dt) -> None:
         self.physics_system.update(dt)
         self.interaction_system.update(dt)
         self.fov_system.update(dt)

@@ -22,10 +22,13 @@ class Selector:
     @selection.setter
     def selection(self, value: int) -> None:
         self._selection = clamp(value, 0, len(self.data) - 1)
-        # if self._selection < 0:
-        #     self._selection = 0
-        # if self._selection >= len(self.data) - 1:
-        #     self._selection = len(self.data) - 1
+
+
+class MenuData(defaultdict):
+
+    def __init__(self) -> None:
+        self['name'] = ''
+        self['data'] = None
 
 
 class TestData(defaultdict):
@@ -43,6 +46,9 @@ class InventoryMenu(MenuOverlay):
     data = TestData()
     selector = Selector(data)
 
+    def on_enter(self) -> None:
+        pass
+
     def on_draw(self, dt) -> None:
         self.manager.game.renderer.draw_box(33, 1, 32, 48, 0x44FFFFFF)
         self.draw_data(38, 3)
@@ -54,6 +60,7 @@ class InventoryMenu(MenuOverlay):
         for i in range(0, len(self.data) * 2, 2):
             self.manager.game.renderer.print(x, y+i, unselected, self.data[i//2])
             if self.selector.selection == i//2:
+                self.manager.game.renderer.print(x - 3, y+i, selected, ">")
                 self.manager.game.renderer.print(x, y+i, selected, self.data[self.selector.selection])
 
     def cmd_move(self, x: int, y: int) -> None:

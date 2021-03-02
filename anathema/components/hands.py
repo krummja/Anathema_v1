@@ -11,3 +11,6 @@ class Hands(BodyPart):
 
     def __init__(self) -> None:
         super().__init__()
+
+    def on_try_grab(self, evt) -> None:
+        pass

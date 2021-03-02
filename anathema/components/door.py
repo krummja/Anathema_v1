@@ -43,10 +43,6 @@ class Door(Component):
                 "name": "Open",
                 "evt": "try_open_door"
                 })
-            # evt.data.expect['interactions'].append({
-            #     "name": "Bash",
-            #     "evt": "try_bash_door"
-            #     })
         return evt
 
     def on_try_close_door(self, evt):

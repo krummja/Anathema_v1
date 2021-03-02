@@ -3,24 +3,13 @@ from dataclasses import dataclass
 from typing import Dict, Any, Union, Tuple, Optional, TYPE_CHECKING
 from collections import deque
 
+from anathema.data.actions.event_data import EventData
 from anathema.data.actions.action import Action
 from anathema.abstracts import AbstractManager
 from anathema.world.tile_factory import Depth
 
 if TYPE_CHECKING:
     from anathema.core import Game
-
-@dataclass
-class EventData:
-    # Did the Action succeed?
-    success: bool = False
-    done: bool = False
-    # What does the Action require?
-    require: Dict[str, Any] = None
-    # What can I expect back from its completion?
-    expect: Dict[str, Any] = None
-    # Additional useful data to do something with
-    result: Dict[str, Any] = None
 
 
 class PlayerManager(AbstractManager):

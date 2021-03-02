@@ -14,12 +14,23 @@ class PhysicsSystem(AbstractSystem):
 
     def __init__(self, game: Game) -> None:
         super().__init__(game)
-        self._query = self.ecs.create_query(
+        self._blockers = self.ecs.create_query(
             all_of=[ 'Blocker' ])
+
+        self._entities = self.ecs.create_query(
+            all_of=[ 'Position' ])
+
         self.passable = np.ones((64, 64), dtype=np.bool, order="F")
 
+    def entity_at_pos(self, x: int, y: int) -> str:
+        entities = []
+        for target in self._entities.result:
+            if target['Position'].xy == (x, y):
+                entities.append(target.uid)
+        return entities
+
     def update(self, dt):
-        for target in self._query.result:
+        for target in self._blockers.result:
             x, y = target['Position'].xy
             if target.has('Blocker'):
                 self.passable[x][y] = False

@@ -20,7 +20,7 @@ class ActionSystem(AbstractSystem):
         entities = sorted(entities, key=lambda e: e['Actor'])
         entities = deque(entities)
 
-        entity = entities[0]
+        entity = entities.popleft()
 
         if entity and not entity['Actor'].has_energy:
             self.game.clock.increment(-1 * entity['Actor'].energy)

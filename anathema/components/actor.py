@@ -37,6 +37,9 @@ class Actor(Component):
     def on_try_get_equipped(self, evt):
         self.fire_event('get_equipped', evt.data)
 
+    def on_try_get_inventories(self, evt):
+        self.fire_event('get_inventories', evt.data)
+
     def on_tick(self, evt) -> None:
         self.add_energy(1)
 
