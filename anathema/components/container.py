@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from anathema.data.message import Message
 from ecstremity import Component
 
 
@@ -48,12 +49,14 @@ class Container(Component):
 
     def on_try_close_container(self, evt):
         if self.close_container():
-            print("The chest shuts.")
+            self.ecs.client.log.report(Message(f"The {0} shut[s].",
+                                               noun1=self.entity['Noun']))
         evt.handle()
 
     def on_try_open_container(self, evt):
         if self.open_container():
-            print("The chest opens.")
+            self.ecs.client.log.report(Message(f"The {0} open[s].",
+                                               noun1=self.entity['Noun']))
         evt.data.append(self.display_contents())
         evt.handle()
         return evt.data

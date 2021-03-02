@@ -55,9 +55,10 @@ class BodyPart(Component):
             item['Equippable'].owner = self.entity
             self._equipped = item
 
-    def on_get_equipped(self, evt):
+    def on_try_get_equipped(self, evt):
         evt.data.expect['equipped'].append({
             "name": self._equipped['Noun'].noun_text,
-            "evt": "try_select"
+            "uid": self._equipped.uid,
+            "evt": "get_equipment_opts"
             })
         return evt

@@ -17,16 +17,10 @@ class Legs(BodyPart):
 
         if evt.data.success:
             self.update_position(*evt.data.require['to'])
+            evt.handle()
         else:
             self.ecs.client.log.log.report(evt.data.result)
-        # success = evt.data.success
-        # direction = evt.data.require['to']
-
-        # if success:
-        #     self.update_position(*direction)
-        #     evt.handle()
-        # else:
-        #     evt.prevent()
+            evt.prevent()
 
     def update_position(self, x, y):
         pos_x, pos_y = self.entity['Position'].xy

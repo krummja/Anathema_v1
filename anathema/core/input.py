@@ -31,6 +31,7 @@ class CommandLibrary:
             blt.TK_L: "examine",
             },
         "INVENTORY": {},
+        "EQUIPMENT": {},
         "PICK LOCATION": {}
         }
 

@@ -18,7 +18,7 @@ class PickLocation(PlayerReady):
     def on_enter(self):
         self.start_xy = self.manager.game.player.position
         self.cursor_xy = self.start_xy
-        self.desc = "-----"
+        self.make_description()
 
     def on_draw(self, dt) -> None:
         x = self.cursor_xy[0]

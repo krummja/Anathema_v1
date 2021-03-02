@@ -36,7 +36,7 @@ class PlayerReady(Stage):
         self.game.renderer.clear_area(2, 50, 62, 14)
         self.game.renderer.clear_area(2, 63, 62, 1)
         messages = [msg for msg in self.game.log.log[::1]]
-        # for text in messages:
+
         if messages:
             message = messages[-1]
             self.game.renderer.print(x, y, 0xFFFFFFFF, str(message))
@@ -47,6 +47,7 @@ class PlayerReady(Stage):
             if y_index >= 14:
                 break
             self.game.renderer.print(x, y - y_index, 0x66FFFFFF, str(text))
+        # NOTE Use "terminal.measure" to get line length for wrapping
 
     def draw_character_info(self, x: int, y: int) -> None:
         x_margin = 2
@@ -150,6 +151,9 @@ class PlayerReady(Stage):
 
         inventories = self.game.player.entity.fire_event('try_get_inventories', data)
         self.game.screens.push_screen("INVENTORY")
+
+    def cmd_equipment(self) -> None:
+        self.game.screens.push_screen("EQUIPMENT")
 
     def cmd_examine(self):
         self.game.screens.push_screen("PICK LOCATION")

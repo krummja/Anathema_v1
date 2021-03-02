@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from anathema.data.message import Message
 from ecstremity import Component
 
 
@@ -47,10 +48,12 @@ class Door(Component):
 
     def on_try_close_door(self, evt):
         if self.close_door():
-            print("The door shuts.")
+            self.ecs.client.log.report(Message(f"The {0} shut[s].",
+                                               noun1=self.entity['Noun']))
         evt.handle()
 
     def on_try_open_door(self, evt):
         if self.open_door():
-            print("The door opens.")
+            self.ecs.client.log.report(Message(f"The {0} open[s].",
+                                               noun1=self.entity['Noun']))
         evt.handle()

@@ -11,7 +11,6 @@ from anathema.core.clock import ClockManager
 from anathema.core.ecs import ECSManager
 from anathema.core.world import WorldManager
 from anathema.core.player import PlayerManager
-from anathema.screens.interface.ui import UIManager
 
 from anathema.systems.render_system import RenderSystem
 from anathema.systems.action_system import ActionSystem
@@ -31,7 +30,6 @@ class Game:
         self.renderer = RenderManager(self)
         self.world = WorldManager(self)
         self.player = PlayerManager(self)
-        self.ui = UIManager(self)
         self.screens = ScreenManager(self)
         self.input = InputController(self)
         self.log = LogManager(self)
