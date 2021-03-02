@@ -6,7 +6,7 @@
             "properties": {}},
         {   "type": "IsInteractable",
             "properties": {}},
-        {   "type": "Name",
+        {   "type": "Noun",
             "properties": {}},
         {   "type": "Position",
             "properties": {"x": 1, "y": 1, "z": 6}},

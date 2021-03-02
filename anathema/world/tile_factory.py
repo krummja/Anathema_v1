@@ -7,7 +7,7 @@ from anathema.world.depth import Depth
 
 if TYPE_CHECKING:
     from anathema.world.area import Area
-    from ecstremity import Engine, Entity
+    from ecstremity import Engine
 
 
 class TileFactory:
@@ -25,7 +25,7 @@ class TileFactory:
 
                 tile.add('Position', {'x': x, 'y': y, 'z': Depth.GROUND.value})
                 tile.add('Renderable', {'char': tile_def.char, 'fore': tile_def.fore, 'back': tile_def.back})
-                tile.add('Name', {'noun_text': tile_def.name})
+                tile.add('Noun', {'noun_text': tile_def.name})
 
                 if tile_def._blocker:
                     tile.add('Blocker', {})

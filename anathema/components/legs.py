@@ -14,14 +14,19 @@ class Legs(BodyPart):
         self._leg_count = leg_count
 
     def on_try_move(self, evt):
-        success = evt.data.success
-        direction = evt.data.require['to']
 
-        if success:
-            self.update_position(*direction)
-            evt.handle()
+        if evt.data.success:
+            self.update_position(*evt.data.require['to'])
         else:
-            evt.prevent()
+            self.ecs.client.log.log.report(evt.data.result)
+        # success = evt.data.success
+        # direction = evt.data.require['to']
+
+        # if success:
+        #     self.update_position(*direction)
+        #     evt.handle()
+        # else:
+        #     evt.prevent()
 
     def update_position(self, x, y):
         pos_x, pos_y = self.entity['Position'].xy

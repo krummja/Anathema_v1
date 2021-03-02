@@ -60,7 +60,7 @@ class Container(Component):
 
     def on_get_inventories(self, evt):
         inventories = evt.data.require['inventories']
-        inventories[self.entity['Name'].noun_text] = self
+        inventories[self.entity['Noun'].noun_text] = self
         evt.data.require['inventories'] = inventories
         print(inventories)
         return evt

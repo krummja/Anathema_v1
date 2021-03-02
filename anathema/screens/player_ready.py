@@ -1,6 +1,7 @@
 from __future__ import annotations
 from typing import Optional
 
+from anathema.core.options import Options
 from anathema.data.actions.event_data import EventData
 from anathema.screens.stage import Stage
 
@@ -21,17 +22,37 @@ class PlayerReady(Stage):
         self.draw_panel_borders()
         self.draw_character_info(65, 2)
         self.draw_stat_block(65, 7)
+        self.draw_log()
         # self.draw_equipment_overview(65, 15)
 
     def draw_panel_borders(self) -> None:
         self.game.renderer.draw_box(65, 1, 32, 64, 0x44FFFFFF)
         self.game.renderer.draw_box(1, 49, 64, 16, 0x44FFFFFF)
 
+    def draw_log(self) -> None:
+        y_index = 0
+        x, y = 1, Options.SCREEN_HEIGHT - 2
+
+        self.game.renderer.clear_area(2, 50, 62, 14)
+        self.game.renderer.clear_area(2, 63, 62, 1)
+        messages = [msg for msg in self.game.log.log[::1]]
+        # for text in messages:
+        if messages:
+            message = messages[-1]
+            self.game.renderer.print(x, y, 0xFFFFFFFF, str(message))
+
+        messages = [msg for msg in self.game.log.log[-2::-1]]
+        for text in messages:
+            y_index += 1
+            if y_index >= 14:
+                break
+            self.game.renderer.print(x, y - y_index, 0x66FFFFFF, str(text))
+
     def draw_character_info(self, x: int, y: int) -> None:
         x_margin = 2
         x = x + x_margin
 
-        name = self.game.player.entity['Name']
+        name = self.game.player.entity['Noun']
         self.game.renderer.print(x, y, 0xFFFFFFFF, name.noun_text)
 
         background = self.game.player.entity['Background']

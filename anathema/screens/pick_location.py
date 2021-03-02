@@ -1,8 +1,8 @@
 from __future__ import annotations
 from typing import Tuple
+import math
 
 from anathema.screens.player_ready import PlayerReady
-from anathema.core.input import StateBreak
 from anathema.core.options import Options
 
 
@@ -53,11 +53,19 @@ class PickLocation(PlayerReady):
 
         desc_list = []
         for entity in target_list:
-            if entity.has('Name'):
-                desc_list.append(entity['Name'].noun_text)
+            if entity.has('Noun'):
+                desc_list.append(entity['Noun'].noun_text)
         self.desc = "\n".join(desc_list)
 
     def cmd_confirm(self) -> Tuple[int, int]:
+        dx = abs(self.cursor_xy[0] - self.manager.game.player.position[0])
+        dy = abs(self.cursor_xy[1] - self.manager.game.player.position[1])
+
+        if dx <= 1 and dy <= 1:
+            data = (dx, dy)
+        else:
+            data = None
+
         self.manager.game.screens.pop_screen()
         return self.cursor_xy
 

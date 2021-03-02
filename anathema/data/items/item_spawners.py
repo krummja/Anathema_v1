@@ -25,7 +25,7 @@ class ItemFactory:
                 'x': definition.x,
                 'y': definition.y,
                 'z': Depth.ABOVE_1.value},
-             'Name': {
+             'Noun': {
                  'noun_text': definition.name}})
 
 @dataclass

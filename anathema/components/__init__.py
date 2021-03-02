@@ -18,7 +18,7 @@ from anathema.components.back import Back
 from anathema.components.hands import Hands
 from anathema.components.feet import Feet
 from anathema.components.mana import Mana
-from anathema.components.name import Name
+from anathema.components.noun import Noun
 from anathema.components.opacity import Opacity
 from anathema.components.portal import Portal
 from anathema.components.position import Position
@@ -52,7 +52,7 @@ def all_components():
         Hands,
         Feet,
         Mana,
-        Name,
+        Noun,
         Opacity,
         Portal,
         Position,

@@ -39,7 +39,7 @@ class BodyPart(Component):
     @property
     def equipped_name(self):
         if self._equipped is not None:
-            return self._equipped['Name'].noun_text
+            return self._equipped['Noun'].noun_text
         return None
 
     @property
@@ -57,7 +57,7 @@ class BodyPart(Component):
 
     def on_get_equipped(self, evt):
         evt.data.expect['equipped'].append({
-            "name": self._equipped['Name'].noun_text,
+            "name": self._equipped['Noun'].noun_text,
             "evt": "try_select"
             })
         return evt

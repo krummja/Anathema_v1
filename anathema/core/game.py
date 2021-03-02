@@ -6,7 +6,7 @@ from anathema.core.renderer import RenderManager
 from anathema.core.input import InputController
 from anathema.core.screens import ScreenManager
 from anathema.core.fps import FPSManager
-from anathema.core.camera import CameraManager
+from anathema.core.log import LogManager
 from anathema.core.clock import ClockManager
 from anathema.core.ecs import ECSManager
 from anathema.core.world import WorldManager
@@ -34,6 +34,7 @@ class Game:
         self.ui = UIManager(self)
         self.screens = ScreenManager(self)
         self.input = InputController(self)
+        self.log = LogManager(self)
         self.fps = FPSManager(self)
 
         self.action_system = ActionSystem(self)

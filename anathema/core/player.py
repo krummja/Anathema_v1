@@ -1,10 +1,10 @@
 from __future__ import annotations
-from dataclasses import dataclass
-from typing import Dict, Any, Union, Tuple, Optional, TYPE_CHECKING
+from typing import Tuple, TYPE_CHECKING
 from collections import deque
 
 from anathema.data.actions.event_data import EventData
 from anathema.data.actions.action import Action
+from anathema.data.message import Message, THEM
 from anathema.abstracts import AbstractManager
 from anathema.world.tile_factory import Depth
 
@@ -40,7 +40,7 @@ class PlayerManager(AbstractManager):
         player = self.game.ecs.engine.create_entity()
         self.game.ecs.engine.prefabs.apply_to_entity(
             player, 'Player', {'Position': {'x': 10, 'y': 10, 'z': Depth.ABOVE_1.value}})
-        player['Name'].noun_text = "Aulia Inuicta"
+        player['Noun'].noun_text = "Aulia Inuicta"
         self._player_uid = player.uid
 
     def get_next_action(self):
@@ -55,7 +55,8 @@ class PlayerManager(AbstractManager):
 
             if self.game.world.current_area.is_blocked(target_x, target_y):
 
-                return EventData(success = False)
+                return EventData(success = False,
+                                 result  = Message("The way is blocked!"))
 
             return EventData(success = True,
                              require = {'to': direction})
@@ -72,7 +73,7 @@ class PlayerManager(AbstractManager):
                                  expect  = {'interactions': []})
 
             return EventData(success = False,
-                             result  = {'message': "The way is blocked!"})
+                             result  = Message("The way is blocked!"))
 
         # Check if the target position is blocked.
         action = Action(
@@ -134,10 +135,16 @@ class PlayerManager(AbstractManager):
                                  require  = {'target': target,
                                              'instigator': self.entity},
                                  expect   = {'interactions': []},
-                                 result   = {'message': 'You take the %s', 'a': target})
+                                #  result   = {'message': 'You take the %s', 'a': target})
+                                 result   = Message(
+                                     f"{0} pick[s] up the {1} and stow[s] {1, THEM}.",
+                                     noun1=self.entity['Noun'],
+                                     noun2=target['Noun']))
 
             return EventData(success = False,
-                             result  = {'message': 'You cannot lift that!'})
+                             result  = Message(
+                                 f"{0} cannot lift that!",
+                                 noun1=self.entity['Noun']))
 
         action = Action(
             entity = self.entity,

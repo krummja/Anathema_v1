@@ -20,6 +20,9 @@ class Actor(Component):
         self.reduce_energy(evt.data)
 
     def on_try_get_interactions(self, evt):
+        if evt.data.result:
+            self.ecs.client.log.report(evt.data.result)
+
         target = evt.data.require['target']
         evt = target.fire_event('get_interactions', evt.data)
         interactions = evt.data.expect['interactions']
@@ -31,6 +34,8 @@ class Actor(Component):
             self.ecs.client.ui.data = interactions
 
     def on_try_pickup(self, evt):
+        message = evt.data.result
+        self.ecs.client.log.report(message)
         target = evt.data.require['target']
         target.fire_event('lift', evt.data)
 
