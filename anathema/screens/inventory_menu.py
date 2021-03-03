@@ -13,9 +13,14 @@ if TYPE_CHECKING:
 class MenuData(defaultdict):
 
     def __init__(self, data_source: List) -> None:
-        self.data_source = data_source
-        for i, d in enumerate(self.data_source):
-            self[i] = d
+        for i, d in enumerate(data_source):
+            menu_opts = d.fire_event('get_interactions',
+                                     EventData(success = True,
+                                               require = {'target': d},
+                                               expect  = {'interactions': []}))
+
+            self[i] = { 'name': d['Noun'].noun_text,
+                        'menu_opts': menu_opts }
 
 
 class InventoryMenu(MenuOverlay):
@@ -23,11 +28,7 @@ class InventoryMenu(MenuOverlay):
     name: str = "INVENTORY"
 
     def on_enter(self) -> None:
-        data = EventData(success = True,
-                         require = {'instigator': self.manager.game.player.entity},
-                         expect  = {'inventories': []})
-        inventories = self.manager.game.player.entity.fire_event('try_get_inventories', data)
-        self.menu = MenuList(33, 1, 32, 48, MenuData(inventories))
+        self.menu = MenuList(33, 1, 32, 48, " Inventory ", MenuData(self.game.player.entity['Inventory'].contents))
 
     def on_draw(self, dt) -> None:
         self.menu.draw(self.manager.game.renderer)
@@ -37,7 +38,9 @@ class InventoryMenu(MenuOverlay):
         self.menu.selector.selection += y
 
     def cmd_confirm(self) -> None:
-        print(self.menu.select())
+        menu_opts = self.menu.select()
+        print(menu_opts.data)
+        # raise a menu to select opts
 
     def cmd_pickup(self) -> None:
         pass

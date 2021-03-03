@@ -18,7 +18,8 @@ class PhysicsSystem(AbstractSystem):
             all_of=[ 'Blocker' ])
 
         self._entities = self.ecs.create_query(
-            all_of=[ 'Position' ])
+            all_of=[ 'Position' ],
+            none_of=[ 'IsInventoried', 'IsDestroying' ])
 
         self.passable = np.ones((64, 64), dtype=np.bool, order="F")
 

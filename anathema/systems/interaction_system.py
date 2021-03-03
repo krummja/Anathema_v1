@@ -19,7 +19,8 @@ class InteractionSystem(AbstractSystem):
         self._instigator = self.ecs.create_query(
             all_of=[ 'IsPlayer' ])
         self._interactables = self.ecs.create_query(
-            all_of=[ 'IsInteractable' ])
+            all_of=[ 'IsInteractable' ],
+            none_of=[ 'IsInventoried', 'IsDestroying' ])
         self._statics = self.ecs.create_query(
             all_of=[ 'IsStatic' ])
         self.interactable = np.zeros((64, 64), dtype=np.bool, order="F")

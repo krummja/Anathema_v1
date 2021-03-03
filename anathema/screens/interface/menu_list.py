@@ -19,18 +19,19 @@ class MenuList:
     selected = 0xFFFF00FF
     unselected = 0xFFFFFFFF
 
-    def __init__(self, x: int, y: int, w: int, h: int, data, spread: int = 2) -> None:
+    def __init__(self, x: int, y: int, w: int, h: int, title: str, data, spread: int = 2) -> None:
         self.x = x
         self.y = y
         self.w = w
         self.h = h
+        self.title = title
         self.data = data
         self.spread = spread
         self.selector = Selector(data)
 
     def draw(self, renderer):
         renderer.draw_box(self.x, self.y, self.w, self.h, 0x44FFFFFF)
-        renderer.print(self.x, self.y, 0xFFFFFFFF, " Equipment ")
+        renderer.print(self.x-1, self.y, 0xFFFFFFFF, self.title)
         self.draw_menu_list(renderer)
 
     def draw_menu_list(self, renderer) -> None:
@@ -41,4 +42,4 @@ class MenuList:
                 renderer.print(self.x+5, self.y+3+i, self.selected, self.data[self.selector.selection]['name'])
 
     def select(self):
-        return self.data[self.selector.selection]
+        return self.data[self.selector.selection]['menu_opts']

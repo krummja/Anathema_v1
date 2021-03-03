@@ -24,7 +24,7 @@ class ItemFactory:
             {'Position': {
                 'x': definition.x,
                 'y': definition.y,
-                'z': Depth.ABOVE_1.value},
+                'z': Depth.GROUND.value},
              'Noun': {
                  'noun_text': definition.name}})
 

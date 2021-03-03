@@ -37,13 +37,10 @@ class Actor(Component):
         message = evt.data.result
         self.ecs.client.log.report(message)
         target = evt.data.require['target']
-        target.fire_event('lift', evt.data)
+        self.entity['Inventory'].add_to(target)
 
     def on_try_get_equipped(self, evt):
         self.fire_event('get_equipped', evt.data)
-
-    def on_try_get_inventories(self, evt):
-        self.fire_event('get_inventories', evt.data)
 
     def on_tick(self, evt) -> None:
         self.add_energy(1)

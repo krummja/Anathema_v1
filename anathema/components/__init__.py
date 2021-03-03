@@ -9,6 +9,7 @@ from anathema.components.eyes import Eyes
 from anathema.components.equippable import Equippable
 from anathema.components.head import Head
 from anathema.components.health import Health
+from anathema.components.isdestroying import IsDestroying
 from anathema.components.isinteractable import IsInteractable
 from anathema.components.isplayer import IsPlayer
 from anathema.components.isstatic import IsStatic
@@ -27,6 +28,7 @@ from anathema.components.stamina import Stamina
 from anathema.components.torso import Torso
 from anathema.components.unformed import Unformed
 from anathema.components.isinventoried import IsInventoried
+from anathema.components.inventory import Inventory
 
 
 def all_components():
@@ -43,6 +45,7 @@ def all_components():
         Head,
         Health,
         Item,
+        IsDestroying,
         IsInteractable,
         IsInventoried,
         IsPlayer,
@@ -60,4 +63,5 @@ def all_components():
         Stamina,
         Torso,
         Unformed,
+        Inventory,
         ]

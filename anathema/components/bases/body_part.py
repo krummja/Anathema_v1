@@ -57,8 +57,20 @@ class BodyPart(Component):
 
     def on_try_get_equipped(self, evt):
         evt.data.expect['equipped'].append({
-            "name": self._equipped['Noun'].noun_text,
+            "name": self.equipped_name,
             "uid": self._equipped.uid,
             "evt": "get_equipment_opts"
             })
         return evt
+
+    def on_try_get_inventories(self, evt):
+        if self._equipped and self._equipped.has('Container'):
+            evt.data.expect['inventories'].append({
+                "name": self.equipped_name,
+                "uid": self._equipped.uid,
+                "evt": "get_inventories"
+                })
+            # evt.data.expect['inventories'].append({
+            #     self.equipped_name: self._equipped['Container']
+            #     })
+            # return evt

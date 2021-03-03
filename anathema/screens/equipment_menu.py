@@ -10,8 +10,7 @@ from anathema.screens.menu_overlay import MenuOverlay
 class MenuData(defaultdict):
 
     def __init__(self, data_source: List) -> None:
-        self.data_source = data_source
-        for i, d in enumerate(self.data_source):
+        for i, d in enumerate(data_source):
             self[i] = d
 
 
@@ -23,8 +22,8 @@ class EquipmentMenu(MenuOverlay):
         data = EventData(success = True,
                          require = {'instigator': self.manager.game.player.entity},
                          expect  = {'equipped': []})
-        inventories = self.manager.game.player.entity.fire_event('try_get_equipped', data)
-        self.menu = MenuList(33, 1, 32, 48, MenuData(inventories.data.expect['equipped']))
+        evt = self.manager.game.player.entity.fire_event('try_get_equipped', data)
+        self.menu = MenuList(33, 1, 32, 48, " Equipped ", MenuData(evt.data.expect['equipped']))
 
     def on_draw(self, dt) -> None:
         self.menu.draw(self.manager.game.renderer)

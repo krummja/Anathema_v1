@@ -17,6 +17,12 @@ class Container(Component):
     def is_open(self) -> bool:
         return self._is_open
 
+    def add_to(self, item) -> None:
+        pass
+
+    def take_from(self, item) -> None:
+        pass
+
     def open_container(self):
         if self._is_open:
             return False
@@ -61,9 +67,8 @@ class Container(Component):
         evt.handle()
         return evt.data
 
-    def on_get_inventories(self, evt):
-        inventories = evt.data.require['inventories']
-        inventories[self.entity['Noun'].noun_text] = self
-        evt.data.require['inventories'] = inventories
-        print(inventories)
-        return evt
+    # def on_get_inventories(self, evt):
+    #     inventories = evt.data.require['inventories']
+    #     inventories[self.entity['Noun'].noun_text] = self
+    #     evt.data.require['inventories'] = inventories
+    #     return evt

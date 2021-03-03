@@ -146,10 +146,6 @@ class PlayerReady(Stage):
         self.game.screens.pop_screen()
 
     def cmd_inventory(self) -> None:
-        data = EventData(require = {'instigator': self.game.player.entity},
-                         expect  = {'inventories': {}})
-
-        inventories = self.game.player.entity.fire_event('try_get_inventories', data)
         self.game.screens.push_screen("INVENTORY")
 
     def cmd_equipment(self) -> None:

@@ -17,6 +17,7 @@ from anathema.systems.action_system import ActionSystem
 from anathema.systems.physics_system import PhysicsSystem
 from anathema.systems.fov_system import FOVSystem
 from anathema.systems.interaction_system import InteractionSystem
+from anathema.systems.destroy_system import DestroySystem
 
 
 class Game:
@@ -40,6 +41,7 @@ class Game:
         self.fov_system = FOVSystem(self)
         self.render_system = RenderSystem(self)
         self.interaction_system = InteractionSystem(self)
+        self.destroy_system = DestroySystem(self)
 
     @property
     def engine(self):
@@ -64,6 +66,7 @@ class Game:
         self.interaction_system.update(dt)
         self.fov_system.update(dt)
         self.render_system.update(dt)
+        self.destroy_system.update(dt)
 
     def loop(self) -> None:
         while True:

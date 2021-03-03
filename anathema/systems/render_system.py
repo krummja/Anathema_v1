@@ -23,7 +23,7 @@ class RenderSystem(AbstractSystem):
 
         self._items = self.ecs.create_query(
             all_of=[ 'Item' ],
-            none_of=[ 'IsInventoried' ])
+            none_of=[ 'IsInventoried', 'IsDestroying' ])
 
     def draw_tiles(self, dt) -> None:
         for tile in self._tiles.result:
@@ -68,7 +68,7 @@ class RenderSystem(AbstractSystem):
     def draw_actors(self, dt) -> None:
         for actor in self._actors.result:
             x, y, z = actor['Position'].xyz
-            # self.terminal.clear_area(x, y, 1, 1)
+            self.terminal.clear_area(x, y, 1, 1)
             self.terminal.layer(z)
             self.terminal.color(actor['Renderable'].fore)
             self.terminal.put(x, y, actor['Renderable'].char)
