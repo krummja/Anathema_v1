@@ -38,7 +38,7 @@ class ActionSystem(AbstractSystem):
                 except IndexError:
                     return False
 
-            entity.fire_event('take-action')
+            entity.fire_event('take_action')
             entity = entities.popleft()
 
         return False

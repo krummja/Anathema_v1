@@ -42,12 +42,12 @@ class Container(Component):
 
     def on_get_interactions(self, evt):
         if self._is_open:
-            evt.data.expect['interactions'].append({
+            evt.data['expect'].append({
                 "name": "Close",
                 "evt": "try_close_container"
                 })
         elif not self._is_open:
-            evt.data.expect['interactions'].append({
+            evt.data['expect'].append({
                 "name": "Open",
                 "evt": "try_open_container"
                 })
@@ -66,9 +66,3 @@ class Container(Component):
         evt.data.append(self.display_contents())
         evt.handle()
         return evt.data
-
-    # def on_get_inventories(self, evt):
-    #     inventories = evt.data.require['inventories']
-    #     inventories[self.entity['Noun'].noun_text] = self
-    #     evt.data.require['inventories'] = inventories
-    #     return evt

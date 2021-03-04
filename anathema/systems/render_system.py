@@ -57,9 +57,9 @@ class RenderSystem(AbstractSystem):
             else:
                 alpha = 0xFF000000
 
-            if item['Renderable'].back is not None:
-                back = alpha + item['Renderable'].back
-                self.game.renderer.fill_area(x, y, 1, 1, color=back)
+            # if item['Renderable'].back is not None:
+            #     back = alpha + item['Renderable'].back
+            #     self.game.renderer.fill_area(x, y, 1, 1, color=back)
 
             self.terminal.layer(z)
             self.terminal.color(alpha + item['Renderable'].fore)

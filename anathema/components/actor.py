@@ -1,6 +1,10 @@
 from __future__ import annotations
+from typing import TYPE_CHECKING
 
 from ecstremity import Component
+
+if TYPE_CHECKING:
+    from ecstremity import EntityEvent
 
 
 class Actor(Component):
@@ -16,33 +20,34 @@ class Actor(Component):
     def has_energy(self) -> bool:
         return self._energy >= 0
 
-    def on_energy_consumed(self, evt) -> None:
+    def on_energy_consumed(self, evt: EntityEvent) -> None:
         self.reduce_energy(evt.data)
 
-    def on_try_get_interactions(self, evt):
-        if evt.data.result:
-            self.ecs.client.log.report(evt.data.result)
+    def on_try_get_interactions(self, evt: EntityEvent) -> None:
+        """Attempt to interact with a target object."""
 
-        target = evt.data.require['target']
+        target = evt.data['target']
         evt = target.fire_event('get_interactions', evt.data)
-        interactions = evt.data.expect['interactions']
+        interactions = evt.data['expect']
+        print(interactions)
+        if interactions:
+            if len(interactions) == 1:
+                interaction = interactions.pop()
+                target.fire_event(interaction["evt"])
+            else:
+                #! Route to the UI
+                pass
 
-        if len(interactions) == 1:
-            interaction = interactions.pop()
-            target.fire_event(interaction["evt"])
-        else:
-            self.ecs.client.ui.data = interactions
+    def on_try_pickup(self, evt: EntityEvent) -> None:
+        """Try to pick up a target object."""
 
-    def on_try_pickup(self, evt):
-        message = evt.data.result
-        self.ecs.client.log.report(message)
-        target = evt.data.require['target']
+        target = evt.data['target']
         self.entity['Inventory'].add_to(target)
 
-    def on_try_get_equipped(self, evt):
+    def on_try_get_equipped(self, evt: EntityEvent) -> None:
         self.fire_event('get_equipped', evt.data)
 
-    def on_tick(self, evt) -> None:
+    def on_tick(self, evt: EntityEvent) -> None:
         self.add_energy(1)
 
     def add_energy(self, value: int) -> None:
@@ -50,7 +55,7 @@ class Actor(Component):
         if self._energy >= 0:
             self._energy = 0
 
-    def reduce_energy(self, value: int):
+    def reduce_energy(self, value: int) -> None:
         self.add_energy(value * -1)
 
     def __lt__(self, other: Actor) -> bool:

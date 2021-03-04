@@ -35,12 +35,12 @@ class Door(Component):
 
     def on_get_interactions(self, evt):
         if self._is_open:
-            evt.data.expect['interactions'].append({
+            evt.data['expect'].append({
                 "name": "Close",
                 "evt": "try_close_door"
                 })
         elif not self._is_open:
-            evt.data.expect['interactions'].append({
+            evt.data['expect'].append({
                 "name": "Open",
                 "evt": "try_open_door"
                 })

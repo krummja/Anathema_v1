@@ -33,7 +33,7 @@ class InteractionSystem(AbstractSystem):
             x, y = static['Position'].xy
             self.interactable[x][y] = False
 
-    def get_interactables_at_pos(self, x: int, y: int) -> Entity:
+    def get(self, x: int, y: int) -> Entity:
         for interactable in self._interactables.result:
             if interactable.has('Position') and interactable['Position'].xy == (x, y):
                 return interactable

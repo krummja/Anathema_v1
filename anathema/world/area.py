@@ -24,7 +24,7 @@ class Area:
 
     def initialize_area(self) -> None:
         self.factory.build()
-        self.items.spawn(ItemSpawners.small_backpack(9, 9))
+        self.items.spawn(ItemSpawners.short_sword(9, 9))
 
     def get_entities_at(self, x: int, y: int):
         entities = self.region.world.game.ecs.engine.entities

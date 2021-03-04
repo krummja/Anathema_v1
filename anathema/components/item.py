@@ -13,6 +13,6 @@ class Item(Component):
             self.entity.add('IsInventoried', {'owner': new_owner})
 
     def on_lift(self, evt):
-        instigator = evt.data.require['instigator']
+        instigator = evt.data['instigator']
         self.take(instigator)
         evt.handle()

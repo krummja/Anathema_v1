@@ -1,0 +1,18 @@
+{
+    "name": "Short_Sword",
+    "inherit": "",
+    "components": [
+        {   "type": "Item",
+            "properties": {}},
+        {   "type": "Noun",
+            "properties": {"noun_text": "Short Sword"}},
+        {   "type": "Position",
+            "properties": {"x": 1, "y": 1, "z": 6}},
+        {   "type": "Renderable",
+            "properties": {"char": "Ñ", "fore": "0xFF996A56"}},
+        {   "type": "IsInteractable",
+            "properties": {}},
+        {   "type": "Equippable",
+            "properties": {"body_part": "hands"}}
+    ]
+}

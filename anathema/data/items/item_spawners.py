@@ -24,7 +24,7 @@ class ItemFactory:
             {'Position': {
                 'x': definition.x,
                 'y': definition.y,
-                'z': Depth.GROUND.value},
+                'z': Depth.ABOVE_1.value},
              'Noun': {
                  'noun_text': definition.name}})
 
@@ -41,4 +41,4 @@ def spawner(name: str, prefab: str, x: int, y: int):
 
 
 class ItemSpawners:
-    small_backpack = (lambda x, y : spawner('Small Backpack', 'Small_Backpack', x, y))
+    short_sword = (lambda x, y : spawner('Short Sword', 'Short_Sword', x, y))
