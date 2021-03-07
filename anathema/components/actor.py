@@ -29,7 +29,7 @@ class Actor(Component):
         target = evt.data['target']
         evt = target.fire_event('get_interactions', evt.data)
         interactions = evt.data['expect']
-        print(interactions)
+
         if interactions:
             if len(interactions) == 1:
                 interaction = interactions.pop()
@@ -45,7 +45,7 @@ class Actor(Component):
         self.entity['Inventory'].add_to(target)
 
     def on_try_get_equipped(self, evt: EntityEvent) -> None:
-        self.fire_event('get_equipped', evt.data)
+        self.entity.fire_event('get_equipped', evt.data)
 
     def on_tick(self, evt: EntityEvent) -> None:
         self.add_energy(1)

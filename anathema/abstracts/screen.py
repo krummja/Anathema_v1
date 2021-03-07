@@ -29,6 +29,9 @@ class AbstractScreen:
     def on_leave(self):
         pass
 
+    def on_draw(self, dt) -> None:
+        pass
+
     def on_update(self, dt):
         pass
 

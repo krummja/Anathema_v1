@@ -12,7 +12,7 @@ class Impossible(Exception):
 class Action:
 
     def __init__(
-            self,
+            self, *,
             entity: Entity,
             event: str,
             data: Dict[str, Any],

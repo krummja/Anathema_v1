@@ -15,3 +15,9 @@ class Equippable(Component):
     @owner.setter
     def owner(self, value) -> None:
         self._owner = value
+
+    def on_get_interactions(self, evt):
+        evt.data['expect'].append({
+            'name': 'Equip',
+            'evt': 'try_equip'
+            })

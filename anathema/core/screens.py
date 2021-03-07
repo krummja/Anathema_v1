@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import TYPE_CHECKING, List, Dict
+from typing import TYPE_CHECKING, List, Dict, Type
 
 from anathema.abstracts import AbstractManager, AbstractScreen
 from anathema.screens import MainMenu, PlayerReady, InventoryMenu, PickLocation, EquipmentMenu
@@ -14,7 +14,7 @@ class ScreenManager(AbstractManager):
         super().__init__(game)
 
         self._stack: List[AbstractScreen] = [MainMenu(self)]
-        self._screens: Dict[str, AbstractScreen] = {
+        self._screens: Dict[str, Type[AbstractScreen]] = {
             'MAIN MENU': MainMenu,
             'PLAYER READY': PlayerReady,
             'INVENTORY': InventoryMenu,
@@ -53,7 +53,7 @@ class ScreenManager(AbstractManager):
         self.current_screen.on_enter(*args)
         self.game.input.change_input_source()
 
-    def pop_screen(self) -> AbstractScreen:
+    def pop_screen(self) -> None:
         """Remove the highest screen from the stack."""
         self.current_screen.on_leave()
         self._stack.pop()

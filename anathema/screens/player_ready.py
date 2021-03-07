@@ -64,17 +64,17 @@ class PlayerReady(Stage):
         x = x + x_margin
         bar_offset = 15
 
-        #! Health
+        # Health
         hp = self.game.player.entity['Health']
         self.game.renderer.print(x, y, 0xFFFF0000, f"HP: {hp}")
         self.game.renderer.draw_bar(x + bar_offset, y, 10, hp.current, hp.maximum, 0xFF0000)
 
-        #! Mana
+        # Mana
         mp = self.game.player.entity['Mana']
         self.game.renderer.print(x, y+2, 0xFF5C9BED, f"MP: {mp}")
         self.game.renderer.draw_bar(x + bar_offset, y+2, 10, mp.current, mp.maximum, 0x5C9BED)
 
-        #! Stamina
+        # Stamina
         sp = self.game.player.entity['Stamina']
         self.game.renderer.print(x, y+4, 0xFFABEB34, f"SP: {sp}")
         self.game.renderer.draw_bar(x + bar_offset, y+4, 10, sp.current, sp.maximum, 0xABEB34)

@@ -10,6 +10,7 @@ from anathema.screens.menu_overlay import MenuOverlay
 class MenuData(defaultdict):
 
     def __init__(self, data_source: List) -> None:
+        super().__init__()
         for i, d in enumerate(data_source):
             self[i] = d
 
