@@ -14,16 +14,25 @@ class MenuData(defaultdict):
 
 class InventoryMenu(MenuOverlay):
     name: str = "INVENTORY"
-    menu: MenuList
-    active = None
+    menus = []
+
+    @property
+    def active(self):
+        return self.menus[-1]
+
+    def push_menu(self, menu):
+        self.menus.append(menu)
+
+    def pop_menu(self):
+        self.menus.pop()
 
     def on_enter(self) -> None:
         data = self.game.player.entity['Inventory'].contents
-        self.menu = MenuList(33, 1, 32, 48, " Inventory ", MenuData(data))
-        self.active = self.menu
+        menu = MenuList(33, 1, 32, 48, " Inventory ", MenuData(data))
+        self.push_menu(menu)
 
     def on_draw(self, dt) -> None:
-        self.menu.draw(self.manager.game.renderer)
+        self.active.draw(self.manager.game.renderer)
         super().on_draw(dt)
 
     def cmd_move(self, x: int, y: int) -> None:
@@ -33,6 +42,8 @@ class InventoryMenu(MenuOverlay):
         selection = self.active.select()
         evt = selection.fire_event('get_interactions',
                                    {'expect': []})
+        options = MenuList(33, 1, 32, 48, " Test ", MenuData(evt.data))
+        self.push_menu(options)
 
     def cmd_pickup(self) -> None:
         pass

@@ -1,9 +1,7 @@
 from __future__ import annotations
+from typing import TYPE_CHECKING
 
 from ecstremity import Component
-from anathema.utils.data_utils import get_first_key
-
-from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from anathema.components.body import Body
@@ -31,6 +29,7 @@ class EquipSlots:
 class BodyPart(Component):
 
     _equipped = None
+    _body = None
 
     @property
     def equipped(self):
@@ -62,15 +61,3 @@ class BodyPart(Component):
             "evt": "get_equipment_opts"
             })
         return evt
-
-    def on_try_get_inventories(self, evt):
-        if self._equipped and self._equipped.has('Container'):
-            evt.data.expect['inventories'].append({
-                "name": self.equipped_name,
-                "uid": self._equipped.uid,
-                "evt": "get_inventories"
-                })
-            # evt.data.expect['inventories'].append({
-            #     self.equipped_name: self._equipped['Container']
-            #     })
-            # return evt

@@ -17,8 +17,7 @@ class ActionSystem(AbstractSystem):
 
     def update(self, dt) -> bool:
         entities = self._query.result
-        entities = sorted(entities, key=lambda e: e['Actor'])
-        entities = deque(entities)
+        entities = deque(sorted(entities, key=lambda e: e['Actor']))
 
         entity = entities.popleft()
 

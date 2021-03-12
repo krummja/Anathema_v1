@@ -1,7 +1,8 @@
 from __future__ import annotations
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, List
 
 import numpy as np
+from ecstremity import Entity
 
 from anathema.abstracts import AbstractSystem
 
@@ -23,7 +24,7 @@ class PhysicsSystem(AbstractSystem):
 
         self.passable = np.ones((64, 64), dtype=np.bool, order="F")
 
-    def entity_at_pos(self, x: int, y: int) -> str:
+    def entity_at_pos(self, x: int, y: int) -> List[Entity]:
         entities = []
         for target in self._entities.result:
             if target['Position'].xy == (x, y):

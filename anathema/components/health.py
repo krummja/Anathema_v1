@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-from ecstremity import Component
 from .bases.core_stat import CoreStat
 
 
@@ -10,7 +9,7 @@ class Health(CoreStat):
 
     def __init__(self, base: int) -> None:
         super().__init__(base)
-        self._ALIVE: bool = True    # TODO: Split this off into a separate flag cmp
+        self._ALIVE: bool = True
 
     def expend(self, value: int) -> None:
         if self._ALIVE:

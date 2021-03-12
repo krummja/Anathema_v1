@@ -16,5 +16,5 @@ class AbstractSystem(ABC):
         self._query: Optional[Query] = None
 
     @abstractmethod
-    def update(self) -> None:
+    def update(self, dt) -> None:
         pass

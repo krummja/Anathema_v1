@@ -36,10 +36,14 @@ class MenuList:
 
     def draw_menu_list(self, renderer) -> None:
         for i in range(0, len(self.data) * 2, self.spread):
+            print(self.data[i//self.spread])
             renderer.print(self.x+5, self.y+3+i, self.unselected, self.data[i//self.spread]['Noun'].noun_text)
             if self.selector.selection == i//2:
                 renderer.print(self.x+2, self.y+3+i, self.selected, ">")
                 renderer.print(self.x+5, self.y+3+i, self.selected, self.data[self.selector.selection]['Noun'].noun_text)
+
+    def draw_option_list(self, renderer) -> None:
+        pass
 
     def select(self):
         return self.data[self.selector.selection]

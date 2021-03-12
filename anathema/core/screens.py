@@ -2,7 +2,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, List, Dict, Type
 
 from anathema.abstracts import AbstractManager, AbstractScreen
-from anathema.screens import MainMenu, PlayerReady, InventoryMenu, PickLocation, EquipmentMenu
+from anathema.screens import MainMenu, PlayerReady, InventoryMenu, PickLocation, EquipmentMenu, ItemOptions
 
 if TYPE_CHECKING:
     from anathema.core import Game
@@ -19,7 +19,8 @@ class ScreenManager(AbstractManager):
             'PLAYER READY': PlayerReady,
             'INVENTORY': InventoryMenu,
             'EQUIPMENT': EquipmentMenu,
-            'PICK LOCATION': PickLocation
+            'PICK LOCATION': PickLocation,
+            'ITEM OPTIONS': ItemOptions
             }
 
     @property

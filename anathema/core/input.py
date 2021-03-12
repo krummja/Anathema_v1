@@ -6,6 +6,7 @@ from bearlibterminal import terminal as blt
 
 if TYPE_CHECKING:
     from anathema.core import Game
+    import clubsandwich.blt.nice_terminal as NiceTerminal
 
 
 T = TypeVar("T")
@@ -69,8 +70,8 @@ class InputController(AbstractManager):
         super().__init__(game)
         self._current_screen = self.game.screens.current_screen
 
-    def handle_input(self) -> Optional[Callable[[], Optional[T]]]:
-        terminal = self.game.renderer.terminal
+    def handle_input(self) -> Optional[Callable[[], None]]:
+        terminal: NiceTerminal = self.game.renderer.terminal
 
         # _input = []
 
@@ -80,7 +81,7 @@ class InputController(AbstractManager):
         #     _input.append(blt.TK_CONTROL)
         # _input.append(terminal.read())
 
-        key = terminal.read()
+        key: int = terminal.read()
 
         try:
             command = self.command_lookup(key)
@@ -89,7 +90,7 @@ class InputController(AbstractManager):
         if command is not None:
             return command
 
-    def command_lookup(self, key):
+    def command_lookup(self, key: int) -> Optional[Callable[[], None]]:
         if key in CommandLibrary.MOVE_KEYS:
             return self._current_screen.cmd_move(*CommandLibrary.MOVE_KEYS[key])
         if key in CommandLibrary.COMMAND_KEYS[self._current_screen.name]:

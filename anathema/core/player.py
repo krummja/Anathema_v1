@@ -2,13 +2,13 @@ from __future__ import annotations
 from typing import Tuple, TYPE_CHECKING
 from collections import deque
 
-from anathema.data.actions.event_data import EventData
 from anathema.data.actions.action import Action
 from anathema.data.message import Message, THEM
 from anathema.abstracts import AbstractManager
 from anathema.world.tile_factory import Depth
 
 if TYPE_CHECKING:
+    from ecstremity import Entity
     from anathema.core import Game
 
 
@@ -21,11 +21,11 @@ class PlayerManager(AbstractManager):
         self.initialize_player()
 
     @property
-    def entity(self):
+    def entity(self) -> Entity:
         return self.game.ecs.engine.get_entity(self._player_uid)
 
     @property
-    def uid(self):
+    def uid(self) -> str:
         return self._player_uid
 
     @property
@@ -68,7 +68,7 @@ class PlayerManager(AbstractManager):
             self.action_queue.append(
                 Action(entity = self.entity,
                        event  = 'try_move',
-                       data   = {'target': direction}))
+                       data   = {'target': (target_x, target_y)}))
 
     def close(self, closable) -> None:
         if ((closable.has('Door') and closable['Door'].is_open) or
@@ -89,6 +89,7 @@ class PlayerManager(AbstractManager):
                    data   = {'target': target,
                              'instigator': self.entity}))
 
+        # noinspection PyTypeChecker
         self.game.log.report(Message(f"{0} pick[s] up the {1} and stow[s] {1, THEM}.",
                                      noun1=self.entity['Noun'],
                                      noun2=target['Noun']))

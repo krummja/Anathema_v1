@@ -46,12 +46,11 @@ class Inventory(Component):
         pass
 
     def add_to(self, item):
-        if item.has('Stackable'):
-            existing = self.get_stackable(item['Stackable'].identifier)
-            if existing:
-                existing['Stackable'].add_other(item)
-                return
-
+        # if item.has('Stackable'):
+        #     existing = self.get_stackable(item['Stackable'].identifier)
+        #     if existing:
+        #         existing['Stackable'].add_other(item)
+        #         return
         item.add('IsInventoried', {'owner': self.entity})
         self.contents.append(item)
 

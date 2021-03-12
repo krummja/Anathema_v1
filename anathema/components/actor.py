@@ -25,7 +25,7 @@ class Actor(Component):
 
     def on_try_get_interactions(self, evt: EntityEvent) -> None:
         """Attempt to interact with a target object."""
-
+        # TODO: refactor/components
         target = evt.data['target']
         evt = target.fire_event('get_interactions', evt.data)
         interactions = evt.data['expect']
@@ -35,16 +35,17 @@ class Actor(Component):
                 interaction = interactions.pop()
                 target.fire_event(interaction["evt"])
             else:
-                #! Route to the UI
+                # Route to the UI
                 pass
 
     def on_try_pickup(self, evt: EntityEvent) -> None:
         """Try to pick up a target object."""
-
+        # TODO: refactor/components
         target = evt.data['target']
         self.entity['Inventory'].add_to(target)
 
     def on_try_get_equipped(self, evt: EntityEvent) -> None:
+        # TODO: refactor/components
         self.entity.fire_event('get_equipped', evt.data)
 
     def on_tick(self, evt: EntityEvent) -> None:
