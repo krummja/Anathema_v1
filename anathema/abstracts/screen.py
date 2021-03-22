@@ -1,21 +1,52 @@
 from __future__ import annotations
-from typing import TYPE_CHECKING, Optional
-from abc import ABC
+from typing import TYPE_CHECKING, Optional, Callable
+import weakref
 
-from anathema.core.input import T, StateBreak
+from anathema.core.options import Options
+
+from morphism import Point, Size
+from anathema.screens.views.rectview import RectView
 
 if TYPE_CHECKING:
     from anathema.core.screens import ScreenManager
-    from anathema.core.game import Game
 
 
 class AbstractScreen:
 
     name: str
 
-    def __init__(self, manager: ScreenManager) -> None:
-        self.manager = manager
-        self.game: Game = manager.game
+    def __init__(self, *args, **kwargs) -> None:
+        self._manager: Callable[[], Optional[ScreenManager]] = lambda: None
+        self.covers_screen: bool = True
+
+    @property
+    def manager(self):
+        return self._manager()
+
+    @manager.setter
+    def manager(self, value):
+        if value:
+            self._manager = weakref.ref(value)
+        else:
+            self._manager = lambda: None
+
+    # noinspection PyUnresolvedReferences
+    @property
+    def game(self) -> Game:
+        if self._manager():
+            return self._manager().game
+
+    def on_enter(self, *args):
+        pass
+
+    def on_leave(self, *args):
+        pass
+
+    def become_active(self):
+        pass
+
+    def resign_active(self):
+        pass
 
     def handle_input(self) -> None:
         command = self.game.input.handle_input()
@@ -23,70 +54,26 @@ class AbstractScreen:
             return
         command()
 
-    def on_enter(self, *args):
+    def on_draw(self) -> None:
         pass
 
-    def on_leave(self):
+    def on_update(self, is_active=False):
         pass
 
-    def on_draw(self, dt) -> None:
-        pass
 
-    def on_update(self, dt):
-        pass
+class UIScreen(AbstractScreen):
 
-    def cmd_confirm(self) -> Optional[T]:
-        """
-        [ENTER]
-        Context: DEFAULT
-        """
+    def __init__(self, views, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if not isinstance(views, list):
+            views = [views]
 
-    def cmd_escape(self) -> Optional[T]:
-        """
-        [ESCAPE]
-        Context: DEFAULT
-        """
-        raise StateBreak()
+        self.view = RectView(screen=self)
 
-    def cmd_move(self, x: int, y: int) -> Optional[T]:
-        """
-        Arrow Keys, Keypad
-        Context: DEFAULT
-        """
-
-    def cmd_drop(self) -> Optional[T]:
-        """
-        Default: [D]
-        Context: STAGE
-        """
-
-    def cmd_equipment(self) -> Optional[T]:
-        """
-        Default: [E]
-        Context: STAGE
-        """
-
-    def cmd_examine(self) -> Optional[T]:
-        """
-        Default: [L]
-        Context: STAGE
-        """
-
-    def cmd_inventory(self) -> Optional[T]:
-        """
-        Default: [I]
-        Context: STAGE
-        """
-
-    def cmd_pickup(self) -> Optional[T]:
-        """
-        Default: [G]
-        Context: STAGE
-        """
-
-    def cmd_quit(self) -> Optional[T]:
-        """
-        Default: [Q],
-        Context: MAIN_MENU
-        """
-        raise SystemExit()
+    def on_update(self, is_active=False):
+        self.game.renderer.bkcolor = 0xFF151515
+        self.view.frame = self.view.frame.with_size(
+            Size(Options.SCREEN_WIDTH, Options.SCREEN_HEIGHT))
+        self.view.perform_layout()
+        self.view.perform_draw(self.manager.game.renderer)
+        self.game.renderer.print(Point(1, 1), "Hello, world!")

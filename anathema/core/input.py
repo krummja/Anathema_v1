@@ -6,7 +6,6 @@ from bearlibterminal import terminal as blt
 
 if TYPE_CHECKING:
     from anathema.core import Game
-    import clubsandwich.blt.nice_terminal as NiceTerminal
 
 
 T = TypeVar("T")
@@ -20,20 +19,6 @@ class CommandLibrary:
             blt.TK_KP_ENTER: "confirm",
             blt.TK_ESCAPE: "escape",
             },
-        'MAIN MENU': {
-            blt.TK_TAB: "next",
-            },
-        'PLAYER READY': {
-            blt.TK_D: "drop",
-            blt.TK_C: "close",
-            blt.TK_E: "equipment",
-            blt.TK_G: "pickup",
-            blt.TK_I: "inventory",
-            blt.TK_L: "examine",
-            },
-        "INVENTORY": {},
-        "EQUIPMENT": {},
-        "PICK LOCATION": {}
         }
 
     MOVE_KEYS: Dict[int, Tuple[int, int]] = {
@@ -68,19 +53,10 @@ class InputController(AbstractManager):
 
     def __init__(self, game: Game) -> None:
         super().__init__(game)
-        self._current_screen = self.game.screens.current_screen
+        self._current_screen = self.game.screens.active_screen
 
     def handle_input(self) -> Optional[Callable[[], None]]:
-        terminal: NiceTerminal = self.game.renderer.terminal
-
-        # _input = []
-
-        # if terminal.check(blt.TK_SHIFT):
-        #     _input.append(blt.TK_SHIFT)
-        # if terminal.check(blt.TK_CONTROL):
-        #     _input.append(blt.TK_CONTROL)
-        # _input.append(terminal.read())
-
+        terminal: blt = self.game.renderer.terminal
         key: int = terminal.read()
 
         try:
@@ -105,4 +81,4 @@ class InputController(AbstractManager):
             return None
 
     def change_input_source(self):
-        self._current_screen = self.game.screens.current_screen
+        self._current_screen = self.game.screens.active_screen

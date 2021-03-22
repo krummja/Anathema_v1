@@ -1,9 +1,12 @@
 from __future__ import annotations
 from typing import TYPE_CHECKING
+from contextlib import contextmanager
 
-from collections import deque
-from clubsandwich.blt.nice_terminal import terminal
+from bearlibterminal import terminal
+from morphism import Point, Rect
 
+from anathema.core.options import Options
+from anathema.core.terminal import BaseTerminal
 from anathema.abstracts import AbstractManager
 
 if TYPE_CHECKING:
@@ -11,99 +14,176 @@ if TYPE_CHECKING:
 
 
 class RenderManager(AbstractManager):
+    """
+    General purpose renderer for roguelike games.
+    Access RenderManager.terminal to use the usual BearLibTerminal
+    methods for drawing to screen, or directly access the methods on
+    this class to access offset support and to use geometry classes
+    for all positional parameters.
+    """
 
     def __init__(self, game: Game) -> None:
         super().__init__(game)
-        self._terminal = terminal
-        self._stack = deque([])
+        self._terminal = BaseTerminal()
+        self._crop_rect = None
+        self._offset = Point(0, 0)
+        self._fg = 0xFFFFFFFF
+        self._bg = 0xFF151515
 
     @property
     def terminal(self) -> terminal:
         return self._terminal
 
+    @property
+    def color(self):
+        return self._fg
+
+    @property
+    def bkcolor(self):
+        return self._bg
+
+    @color.setter
+    def color(self, value):
+        self._fg = value
+        self._terminal.color(value)
+
+    @bkcolor.setter
+    def bkcolor(self, value):
+        self._bg = value
+        self._terminal.bkcolor(value)
+
+    @contextmanager
+    def translate(self, offset: Point):
+        """Translate all positional renderer calls by the given `offset` by
+        using the following syntax:
+
+            offset = Point(x, y)  # let x = 2, y = 2
+            with RenderManager.translate(offset):
+                RenderManager.put(Point(0, 0), '@')  # puts at (2, 2)
+        """
+        previous = self._offset
+        self._offset = self._offset + offset
+        yield
+        self._offset = previous
+
     def refresh(self) -> None:
         self._terminal.refresh()
-
-    def clear(self) -> None:
-        self._terminal.clear()
-        self._terminal.bkcolor(0xFF151515)
-
-    def clear_area(self, x: int, y: int, w: int, h: int) -> None:
-        self._terminal.clear_area(x-1, y-1, w, h)
 
     def setup(self) -> None:
         self._terminal.open()
         self._terminal.composition(True)
-        self._terminal.bkcolor(0xFF151515)
+        self._terminal.bkcolor(self.bkcolor)
 
     def teardown(self) -> None:
         self._terminal.composition(False)
         self._terminal.close()
 
-    def fill_area(
-            self,
-            x: int,
-            y: int,
-            width: int,
-            height: int,
-            char: str = "█",
-            color: int = 0xFF151515,
-            layer: int = 0
-        ) -> None:
+    def update(self) -> None:
+        self.refresh()
+
+    def clear(self) -> None:
+        self._terminal.clear()
+        self._terminal.bkcolor(self.bkcolor)
+
+    def clear_area(self, rect: Rect, *args) -> None:
+        computed_rect = Rect(rect.origin + self._offset, rect.size)
+        if self._crop_rect and not self._crop_rect.intersects(computed_rect):
+            return
+        return self._terminal.clear_area(computed_rect, *args)
+
+    def crop(self, rect: Rect, *args) -> None:
+        computed_rect = Rect(rect.origin + self._offset, rect.size)
+        if self._crop_rect and not self._crop_rect.intersects(computed_rect):
+            return
+        return self._terminal.crop(computed_rect, *args)
+
+    def put(self, point, char):
+        computed_point = point + self._offset
+        if self._crop_rect and computed_point not in self._crop_rect:
+            return
+        return self._terminal.pick(computed_point, char)
+
+    def print(self, point: Point, *args):
+        computed_point = point + self._offset
+        if self._crop_rect and computed_point not in self._crop_rect:
+            return
+        return self._terminal.puts(computed_point, *args)
+
+    def print_big(self, point: Point, string: str):
+        computed_point = point + self._offset
+        if self._crop_rect and computed_point not in self._crop_rect:
+            return
+        self.terminal.print(computed_point, f"[font=title]{string}[/font]")
+
+    def pick(self, point, *args):
+        computed_point = point + self._offset
+        if self._crop_rect and computed_point not in self._crop_rect:
+            return
+        return self._terminal.pick(computed_point, *args)
+
+    def pick_color(self, point, *args):
+        computed_point = point + self._offset
+        if self._crop_rect and computed_point not in self._crop_rect:
+            return
+        return self._terminal.pick_color(computed_point, *args)
+
+    def pick_bkcolor(self, point, *args):
+        computed_point = point + self._offset
+        if self._crop_rect and computed_point not in self._crop_rect:
+            return
+        return self._terminal.pick_bkcolor(computed_point, *args)
+
+    def put_ext(self, point, *args):
+        computed_point = point + self._offset
+        if self._crop_rect and computed_point not in self._crop_rect:
+            return
+        return self._terminal.put_ext(computed_point, *args)
+
+    def read_str(self, point, *args):
+        computed_point = point + self._offset
+        if self._crop_rect and computed_point not in self._crop_rect:
+            return
+        return self._terminal.read_str(computed_point, *args)
+
+    def fill_area(self, rect: Rect, char: str = "█", layer: int = 0) -> None:
         self._terminal.layer(layer)
-        self._terminal.color(color)
-        for _x in range(x, x + width):
-            for _y in range(y, y + height):
+        self._terminal.color(self._bg)
+        for _x in range(rect.left, rect.right):
+            for _y in range(rect.top, rect.bottom):
                 self._terminal.put(_x, _y, char)
 
     def fill(self, char: str = "█", color: int = 0xFF151515) -> None:
         self._terminal.layer(0)
         self._terminal.color(color)
-        for x in range(96):
-            for y in range(64):
+        for x in range(Options.SCREEN_WIDTH):
+            for y in range(Options.SCREEN_HEIGHT):
                 self._terminal.put(x, y, char)
 
-    def push_to_stack(self, func) -> None:
-        self._stack.append(func)
-
-    def clear_stack(self) -> None:
-        self._stack.clear()
-
-    def update(self, dt) -> None:
-        while len(self._stack) > 0:
-            draw = self._stack.popleft()
-            draw(dt)
-        self._terminal.refresh()
-        self.clear_stack()
-
-    def print(self, x, y, color, string):
+    def draw_box(self, rect: Rect, color):
+        self.clear_area(rect)
+        self.fill_area(rect, layer=99)
         self.terminal.layer(100)
         self.terminal.color(color)
-        self.terminal.print(x, y, string)
 
-    def print_big(self, x, y, color, string):
-        self.terminal.layer(110)
-        self.terminal.color(color)
-        self.terminal.print(x, y, f"[font=title]{string}[/font]")
-
-    def draw_box(self, x, y, w, h, color, back: int = 0xFF151515):
-        self.clear_area(x, y, w, h)
-        self.fill_area(x-1, y-1, w, h, color=back, layer=99)
-        self.terminal.layer(100)
-        self.terminal.color(color)
+        x = rect.left
+        y = rect.top
+        w = rect.width
+        h = rect.height
 
         # upper border
         border = '┌' + '─' * (w - 2) + '┐'
-        self.terminal.print(x - 1, y - 1, border)
+        self.terminal.print(x, y, border)
+
         # sides
         for i in range(h - 2):
             # left
-            self.terminal.print(x - 1, y + i, '│')
+            self.terminal.print(x, y + 1 + i, '│')
             # right
-            self.terminal.print(x + (w - 2), y + i, '│')
+            self.terminal.print(x + (w - 1), y + 1 + i, '│')
+
         # lower border
         border = '└' + '─' * (w - 2) + '┘'
-        self.terminal.print(x - 1, y + (h - 2), border)
+        self.terminal.print(x, y + (h - 1), border)
 
     def draw_bar(self, x, y, w, value, maximum, fore):
         bar_width = round(w * 2 * (value / maximum))
