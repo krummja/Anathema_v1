@@ -4,7 +4,7 @@ from typing import Tuple
 
 from enum import Enum
 
-from simulacra.utils.classproperty import classproperty
+from anathema.utils.classproperty import classproperty
 
 
 class Direction(Enum):

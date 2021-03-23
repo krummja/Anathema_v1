@@ -68,15 +68,27 @@ class InputController(AbstractManager):
 
     def command_lookup(self, key: int) -> Optional[Callable[[], None]]:
         if key in CommandLibrary.MOVE_KEYS:
-            return self._current_screen.cmd_move(*CommandLibrary.MOVE_KEYS[key])
-        if key in CommandLibrary.COMMAND_KEYS[self._current_screen.name]:
-            commands = CommandLibrary.COMMAND_KEYS[self._current_screen.name]
-            command = getattr(self._current_screen, f"cmd_{commands[key]}")
-            return command
-        elif key in CommandLibrary.COMMAND_KEYS['DEFAULT']:
-            commands = CommandLibrary.COMMAND_KEYS['DEFAULT']
-            command = getattr(self._current_screen, f"cmd_{commands[key]}")
-            return command
+            try:
+                return self._current_screen.cmd_move(*CommandLibrary.MOVE_KEYS[key])
+            except AttributeError(f"No method cmd_move on {self._current_screen}."):
+                raise
+
+        try:
+            if key in CommandLibrary.COMMAND_KEYS[self._current_screen]:
+                commands = CommandLibrary.COMMAND_KEYS[self._current_screen.name]
+                command = getattr(self._current_screen, f"cmd_{commands[key]}")
+                return command
+        except KeyError:
+            pass
+
+        if key in CommandLibrary.COMMAND_KEYS['DEFAULT']:
+            try:
+                commands = CommandLibrary.COMMAND_KEYS['DEFAULT']
+                command = getattr(self._current_screen, f"cmd_{commands[key]}")
+                return command
+            except AttributeError:
+                print(f"Screen [{self._current_screen.name}] has no method matching input.")
+
         else:
             return None
 

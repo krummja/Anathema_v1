@@ -8,7 +8,7 @@ from anathema.abstracts import AbstractManager
 from anathema.components import all_components
 
 if TYPE_CHECKING:
-    from simulacra.core.game import Game
+    from anathema.core.game import Game
 
 
 JSON_PATH = "anathema/data/prefabs/"

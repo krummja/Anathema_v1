@@ -14,7 +14,7 @@ class RectView(AbstractView):
             *args,
             **kwargs
         ) -> None:
-        super().__init__(* args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.color_fg = color_fg
         self.color_bg = color_bg
         self.fill = fill

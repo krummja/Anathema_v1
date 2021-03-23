@@ -3,7 +3,7 @@ from __future__ import annotations
 
 from typing import List, Tuple, Type, Union
 
-from simulacra.utils.classproperty import classproperty
+from anathema.utils.classproperty import classproperty
 
 from .direction import Direction
 from .size import Size

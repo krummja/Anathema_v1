@@ -3,7 +3,7 @@ init-hook='import sys; sys.path.append("$HOME/Workspace/Python/Anathema/anathema
 
 [MESSAGES CONTROL]
 disable=
-    no-self-argument,
+    no-cls-argument,
     unsupported-assignment-operation,
     missing-function-docstring,
     ungrouped-imports,

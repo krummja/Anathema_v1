@@ -66,6 +66,9 @@ class RenderManager(AbstractManager):
         yield
         self._offset = previous
 
+    def has_input(self):
+        return self._terminal.has_input()
+
     def refresh(self) -> None:
         self._terminal.refresh()
 

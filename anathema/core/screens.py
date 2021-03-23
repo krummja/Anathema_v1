@@ -1,6 +1,7 @@
 from __future__ import annotations
-from typing import TYPE_CHECKING, List, Dict, Type, Optional
+from typing import TYPE_CHECKING, List, Optional
 
+from bearlibterminal import terminal
 from anathema.abstracts import AbstractManager, AbstractScreen
 from anathema.screens.test import TestScreen
 
@@ -12,8 +13,8 @@ class ScreenManager(AbstractManager):
 
     def __init__(self, game: Game) -> None:
         super().__init__(game)
+        self.should_exit = False
         self._stack: List[AbstractScreen] = []
-        self._screens: Dict[str, Type[AbstractScreen]] = {}
 
     @property
     def active_screen(self) -> Optional[AbstractScreen]:
@@ -23,7 +24,8 @@ class ScreenManager(AbstractManager):
             return None
 
     def replace_screen(self, screen: AbstractScreen):
-        self.pop_screen()
+        if self._stack:
+            self.pop_screen(may_exit=False)
         self.push_screen(screen)
 
     def push_screen(self, screen: AbstractScreen):
@@ -33,28 +35,44 @@ class ScreenManager(AbstractManager):
         screen.manager = self
         screen.on_enter()
         screen.become_active()
+        self.game.input.change_input_source()
 
-    def pop_screen(self):
+    def pop_screen(self, may_exit=True):
         if self.active_screen:
             self.active_screen.resign_active()
         if self._stack:
             last_screen = self._stack.pop()
             last_screen.on_leave()
-            last_screen.manager = None
         if self.active_screen:
             self.active_screen.become_active()
+            self.game.input.change_input_source()
+        elif may_exit:
+            self.should_exit = True
 
     def pop_to_first_screen(self):
         while len(self._stack) > 1:
             self.pop_screen()
 
-    def get_initial_screen(self):
+    def quit(self):
+        while self._stack:
+            self.pop_screen(may_exit=True)
+
+    @staticmethod
+    def get_initial_screen():
         return TestScreen()
 
-    def update(self):
+    def terminal_update(self):
         i = 0
         for j, screen in enumerate(self._stack):
             if screen.covers_screen:
                 i = j
         for screen in self._stack[i:]:
-            screen.on_update(screen == self._stack[-1])
+            screen.terminal_update(screen == self._stack[-1])
+        return not self.should_exit
+
+    def terminal_read(self, char):
+        if char == terminal.TK_ESCAPE:
+            self.quit()
+            return True
+        if self._stack:
+            return self.active_screen.terminal_read(char)

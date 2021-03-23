@@ -1,4 +1,5 @@
 from __future__ import annotations
+from numbers import Real
 from collections import namedtuple
 import weakref
 from morphism import Point, Rect, Size
@@ -7,20 +8,19 @@ from morphism import Point, Rect, Size
 ZERO_RECT = Rect(Point(0, 0), Size(0, 0))
 
 
-_LayoutOptions = namedtuple('_LayoutOptions',
-                            ['width', 'height', 'top', 'right', 'bottom', 'left'])
+class LayoutOptions(namedtuple('LayoutOptions', 'width height top right bottom left', defaults=[0])):
 
-
-class LayoutOptions(_LayoutOptions):
-
+    __slots__ = ()
     def __new__(cls, width=None, height=None, top=None, right=None, bottom=None, left=None):
-        self = super().__new__(cls, width, height, top, right, bottom, left)
-        return self
+        return super(LayoutOptions, cls).__new__(cls, width, height, top, right, bottom, left)
 
-    ### Convenience initializers ###
+    # def __new__(cls, width=None, height=None, top=None, right=None, bottom=None, left=None):
+    #     return super().__new__(cls, width, height, top, right, bottom, left)
+
+    # Convenience initializers ###
 
     @classmethod
-    def centered(self, width, height):
+    def centered(cls, width, height):
         """
         Create a :py:class:`LayoutOptions` object that positions the view in the
         center of the superview with a constant width and height.
@@ -30,7 +30,7 @@ class LayoutOptions(_LayoutOptions):
             width=width, height=height)
 
     @classmethod
-    def column_left(self, width):
+    def column_left(cls, width):
         """
         Create a :py:class:`LayoutOptions` object that positions the view as a
         full-height left column with a constant width.
@@ -40,7 +40,7 @@ class LayoutOptions(_LayoutOptions):
             width=width, height=None)
 
     @classmethod
-    def column_right(self, width):
+    def column_right(cls, width):
         """
         Create a :py:class:`LayoutOptions` object that positions the view as a
         full-height right column with a constant width.
@@ -50,7 +50,7 @@ class LayoutOptions(_LayoutOptions):
             width=width, height=None)
 
     @classmethod
-    def row_top(self, height):
+    def row_top(cls, height):
         """
         Create a :py:class:`LayoutOptions` object that positions the view as a
         full-height top row with a constant height.
@@ -60,7 +60,7 @@ class LayoutOptions(_LayoutOptions):
             width=None, height=height)
 
     @classmethod
-    def row_bottom(self, height):
+    def row_bottom(cls, height):
         """
         Create a :py:class:`LayoutOptions` object that positions the view as a
         full-height bottom row with a constant height.
@@ -69,7 +69,7 @@ class LayoutOptions(_LayoutOptions):
             top=None, bottom=0, left=0, right=0,
             width=None, height=height)
 
-    ### Convenience modifiers ###
+    # Convenience modifiers ###
 
     def with_updates(self, **kwargs):
         """
@@ -83,7 +83,7 @@ class LayoutOptions(_LayoutOptions):
         opts.update(kwargs)
         return LayoutOptions(**opts)
 
-    ### Semi-internal layout API ###
+    # Semi-internal layout API ###
 
     def get_type(self, k):
         # Return one of ``{'none', 'frame', 'constant', 'fraction'}``
@@ -177,10 +177,10 @@ class AbstractView:
         self.layout_spec = frame
         self.layout_options = layout_options or LayoutOptions()
 
-    ### core api ###
+    # core api ###
 
     @property
-    def scene(self):
+    def screen(self):
         """
         The scene this view is being rendered in, or ``None``.
         """
@@ -287,7 +287,7 @@ class AbstractView:
         for view in self.subviews:
             view.apply_springs_and_struts_layout_in_superview()
 
-    ### bounds, frame ###
+    # bounds, frame ###
 
     @property
     def intrinsic_size(self):
@@ -330,7 +330,7 @@ class AbstractView:
         self._frame = self._frame.with_size(new_value.size)
         self.set_needs_layout(True)
 
-    ### responder chain, input ###
+    # responder chain, input ###
 
     @property
     def can_become_first_responder(self):
@@ -414,7 +414,7 @@ class AbstractView:
                 return v
         return None
 
-    ### tree traversal ###
+    # tree traversal ###
 
     @property
     def leftmost_leaf(self):
@@ -483,23 +483,28 @@ class AbstractView:
         fields = [
             ('left', 'right', 'x', 'width'),
             ('top', 'bottom', 'y', 'height'),
-        ]
+            ]
 
         final_frame = Rect(Point(-1000, -1000), Size(-1000, -1000))
 
         for field_start, field_end, field_coord, field_size in fields:
+
             debug_string = options.get_debug_string_for_keys(
                 [field_start, field_size, field_end])
+
             matches = (
                 options.get_is_defined(field_start),
                 options.get_is_defined(field_size),
                 options.get_is_defined(field_end))
+
             if matches == (True, True, True):
                 raise ValueError(
                     "Invalid spring/strut definition: {}".format(debug_string))
+
             if matches == (False, False, False):
                 raise ValueError(
                     "Invalid spring/strut definition: {}".format(debug_string))
+
             elif matches == (True, False, False):
                 setattr(
                     final_frame, field_coord,
@@ -508,6 +513,7 @@ class AbstractView:
                 setattr(
                     final_frame, field_size,
                     getattr(spec, field_size))
+
             elif matches == (True, True, False):
                 setattr(
                     final_frame, field_coord,
@@ -515,32 +521,35 @@ class AbstractView:
                 setattr(
                     final_frame, field_size,
                     options.get_value(field_size, self))
+
             elif matches == (False, True, False):  # magical centering!
                 size_val = options.get_value(field_size, self)
                 setattr(final_frame, field_size, size_val)
                 setattr(
                     final_frame, field_coord,
                     getattr(superview_bounds, field_size) / 2 - size_val / 2)
+
             elif matches == (False, True, True):
                 size_val = options.get_value(field_size, self)
                 setattr(
                     final_frame, field_coord,
                     getattr(superview_bounds, field_size) - options.get_value(field_end, self) - size_val)
                 setattr(final_frame, field_size, size_val)
+
             elif matches == (False, False, True):
                 setattr(
                     final_frame, field_coord,
                     getattr(superview_bounds, field_size) - options.get_value(field_end, self))
                 # pretend that size is constant from frame
                 setattr(final_frame, field_size, getattr(spec, field_size))
+
             elif matches == (True, False, True):
                 start_val = options.get_value(field_start, self)
                 end_val = options.get_value(field_end, self)
-                setattr(
-                    final_frame, field_coord, start_val)
-                setattr(
-                    final_frame, field_size,
-                    getattr(superview_bounds, field_size) - start_val - end_val)
+                setattr(final_frame, field_coord, start_val)
+                setattr(final_frame, field_size,
+                        getattr(superview_bounds, field_size) - start_val - end_val)
+
             else:
                 raise ValueError("Unhandled case: {}".format(debug_string))
 

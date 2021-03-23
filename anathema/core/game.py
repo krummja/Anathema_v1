@@ -45,14 +45,40 @@ class Game:
     def engine(self):
         return self.ecs.engine
 
-    def start(self) -> None:
+    def start(self):
         self.renderer.setup()
         self._last_update = time.time()
         self.screens.replace_screen(self.screens.get_initial_screen())
-        self.loop()
-        self.renderer.teardown()
+        self.renderer.refresh()
+
+        try:
+            self.loop_until_terminal_exits()
+        except KeyboardInterrupt:
+            pass
+        finally:
+            self.renderer.teardown()
+
+    def loop_until_terminal_exits(self):
+        try:
+            has_run_one_loop = False
+            while self.run_loop_iteration():
+                has_run_one_loop = True
+            if not has_run_one_loop:
+                print("Exited after a single iteration.")
+        except KeyboardInterrupt:
+            pass
+
+    def run_loop_iteration(self):
+        while self.renderer.has_input():
+            char = self.renderer.terminal.read()
+            self.screens.terminal_read(char)
+        self.renderer.clear()
+        should_continue = self.screens.terminal_update()
+        self.renderer.refresh()
+        return should_continue
 
     def update_engine_systems(self, dt) -> None:
+        """This method must be run inside the main game screen."""
         for _ in range(20):
             self.clock.update(dt)
             player_turn = self.action_system.update(dt)
@@ -66,11 +92,11 @@ class Game:
         self.fov_system.update(dt)
         self.render_system.update(dt)
 
-    def loop(self) -> None:
-        while True:
-            now = time.time()
-            dt = now - self._last_update
-            self.fps.update(dt)
-            self.renderer.update()
-            self.screens.update()
-            self._last_update = now
+    # def loop(self) -> None:
+    #     while True:
+    #         now = time.time()
+    #         dt = now - self._last_update
+    #         self.fps.update(dt)
+    #         self.renderer.update()
+    #         # self.screens.update()
+    #         self._last_update = now

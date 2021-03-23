@@ -4,6 +4,26 @@ from bearlibterminal import terminal
 from morphism import Point, Rect
 
 
+class _TerminalState:
+    pass
+
+
+for constant_key in (c for c in dir(terminal) if c.startswith('TK_')):
+    def getter(k):
+        constant_value = getattr(terminal, k)
+
+        def get(self):
+            return terminal.state(constant_value)
+        return get
+    constant_name = constant_key[3:].lower()
+    attr_name = 'num_{}'.format(
+        constant_name) if constant_name[0].isdigit() else constant_name
+    setattr(
+        _TerminalState,
+        attr_name,
+        property(getter(constant_key)))
+
+
 class BaseTerminal:
 
     def __getattr__(self, k):
@@ -71,3 +91,5 @@ class BaseTerminal:
             return terminal.read_str(args[0].x, args[0].y, *args[1:])
         else:
             return terminal.read_str(*args)
+
+blt_state = _TerminalState()

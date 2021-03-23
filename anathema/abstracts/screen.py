@@ -1,11 +1,10 @@
 from __future__ import annotations
-from typing import TYPE_CHECKING, Optional, Callable
-import weakref
+from typing import TYPE_CHECKING, Optional
 
 from anathema.core.options import Options
 
-from morphism import Point, Size
-from anathema.screens.views.rectview import RectView
+from morphism import Size
+from anathema.screens.views.first_responder_container_view import FirstResponderContainerView
 
 if TYPE_CHECKING:
     from anathema.core.screens import ScreenManager
@@ -16,25 +15,31 @@ class AbstractScreen:
     name: str
 
     def __init__(self, *args, **kwargs) -> None:
-        self._manager: Callable[[], Optional[ScreenManager]] = lambda: None
+        self._manager: Optional[ScreenManager] = None
+        self._terminal_readers = []
         self.covers_screen: bool = True
 
     @property
     def manager(self):
-        return self._manager()
+        return self._manager
 
     @manager.setter
     def manager(self, value):
-        if value:
-            self._manager = weakref.ref(value)
-        else:
-            self._manager = lambda: None
+        self._manager = value
 
     # noinspection PyUnresolvedReferences
     @property
     def game(self) -> Game:
-        if self._manager():
-            return self._manager().game
+        if self.manager:
+            return self.manager.game
+
+    def add_terminal_reader(self, reader):
+        if not getattr(reader, 'terminal_read'):
+            raise ValueError("Invalid reader")
+        self._terminal_readers.append(reader)
+
+    def remove_terminal_reader(self, reader):
+        self._terminal_readers.remove(reader)
 
     def on_enter(self, *args):
         pass
@@ -48,17 +53,13 @@ class AbstractScreen:
     def resign_active(self):
         pass
 
-    def handle_input(self) -> None:
-        command = self.game.input.handle_input()
-        if not command:
-            return
-        command()
+    def terminal_update(self, is_active=False):
+        return True
 
-    def on_draw(self) -> None:
-        pass
-
-    def on_update(self, is_active=False):
-        pass
+    def terminal_read(self, char):
+        for reader in self._terminal_readers:
+            reader.terminal_read(char)
+        return True
 
 
 class UIScreen(AbstractScreen):
@@ -67,13 +68,16 @@ class UIScreen(AbstractScreen):
         super().__init__(*args, **kwargs)
         if not isinstance(views, list):
             views = [views]
+        self.view = FirstResponderContainerView(subviews=views, screen=self)
+        self.add_terminal_reader(self.view)
 
-        self.view = RectView(screen=self)
+    def terminal_read(self, val):
+        super().terminal_read(val)
 
-    def on_update(self, is_active=False):
+    # noinspection PyUnresolvedReferences
+    def terminal_update(self, is_active=False):
         self.game.renderer.bkcolor = 0xFF151515
         self.view.frame = self.view.frame.with_size(
             Size(Options.SCREEN_WIDTH, Options.SCREEN_HEIGHT))
         self.view.perform_layout()
-        self.view.perform_draw(self.manager.game.renderer)
-        self.game.renderer.print(Point(1, 1), "Hello, world!")
+        self.view.perform_draw(self.game.renderer)
