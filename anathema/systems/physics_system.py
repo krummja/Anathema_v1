@@ -4,7 +4,7 @@ from typing import TYPE_CHECKING, List
 import numpy as np
 from ecstremity import Entity
 
-from anathema.abstracts import AbstractSystem
+from anathema.systems.system import AbstractSystem
 
 
 if TYPE_CHECKING:

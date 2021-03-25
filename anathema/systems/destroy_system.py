@@ -1,9 +1,7 @@
 from __future__ import annotations
-from typing import List, TYPE_CHECKING
-from ecstremity.entity import Entity
+from typing import TYPE_CHECKING
 
-from anathema.abstracts import AbstractSystem
-
+from anathema.systems.system import AbstractSystem
 
 if TYPE_CHECKING:
     from anathema.core.game import Game

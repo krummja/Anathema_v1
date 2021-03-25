@@ -1,7 +1,7 @@
 from __future__ import annotations
 from typing import TYPE_CHECKING, List, Dict, Optional
 
-from anathema.abstracts import AbstractManager
+from anathema.core.manager import AbstractManager
 from anathema.world.area import Area
 from anathema.world.region import Region
 

@@ -2,11 +2,11 @@ from __future__ import annotations
 
 from bearlibterminal import terminal
 
-from anathema.abstracts.view import AbstractView
+from screens.views.view import View
 from anathema.core.terminal import blt_state
 
 
-class FirstResponderContainerView(AbstractView):
+class FirstResponderContainerView(View):
 
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)

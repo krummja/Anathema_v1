@@ -1,7 +1,7 @@
 from __future__ import annotations
 from typing import TYPE_CHECKING
 
-from anathema.abstracts import AbstractManager
+from anathema.core.manager import AbstractManager
 
 if TYPE_CHECKING:
     from anathema.core import Game

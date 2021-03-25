@@ -1,9 +1,9 @@
 from __future__ import annotations
 
-from anathema.abstracts.view import AbstractView
+from screens.views.view import View
 
 
-class RectView(AbstractView):
+class RectView(View):
 
     def __init__(
             self,

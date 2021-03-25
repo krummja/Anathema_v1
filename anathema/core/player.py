@@ -4,7 +4,7 @@ from collections import deque
 
 from anathema.data.actions.action import Action
 from anathema.data.message import Message, THEM
-from anathema.abstracts import AbstractManager
+from anathema.core.manager import AbstractManager
 from anathema.world.tile_factory import Depth
 
 if TYPE_CHECKING:

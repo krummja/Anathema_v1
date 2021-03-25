@@ -1,10 +1,10 @@
 from __future__ import annotations
 
-from anathema.abstracts.view import AbstractView
+from screens.views.view import View
 from morphism import Point, Size
 
 
-class LabelView(AbstractView):
+class LabelView(View):
 
     def __init__(
             self,

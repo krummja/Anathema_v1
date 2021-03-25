@@ -2,7 +2,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 from collections import deque
 
-from anathema.abstracts import AbstractSystem
+from anathema.systems.system import AbstractSystem
 
 if TYPE_CHECKING:
     from anathema.core import Game

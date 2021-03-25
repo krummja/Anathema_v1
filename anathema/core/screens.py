@@ -2,7 +2,8 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, List, Optional
 
 from bearlibterminal import terminal
-from anathema.abstracts import AbstractManager, AbstractScreen
+from anathema.core.manager import AbstractManager
+from anathema.screens.screen import AbstractScreen
 from anathema.screens.test import TestScreen
 
 if TYPE_CHECKING:

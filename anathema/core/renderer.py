@@ -7,10 +7,34 @@ from morphism import Point, Rect
 
 from anathema.core.options import Options
 from anathema.core.terminal import BaseTerminal
-from anathema.abstracts import AbstractManager
+from anathema.core.manager import AbstractManager
 
 if TYPE_CHECKING:
     from anathema.core.game import Game
+
+
+LINE_STYLES = {
+    'single':  {
+        'T': '─',
+        'B': '─',
+        'L': '│',
+        'R': '│',
+        'TL': '┌',
+        'TR': '┐',
+        'BL': '└',
+        'BR': '┘',
+        },
+    'double':  {
+        'T': '═',
+        'B': '═',
+        'L': '║',
+        'R': '║',
+        'TL': '╔',
+        'TR': '╗',
+        'BL': '╚',
+        'BR': '╝',
+        },
+    }
 
 
 class RenderManager(AbstractManager):
@@ -104,7 +128,7 @@ class RenderManager(AbstractManager):
         computed_point = point + self._offset
         if self._crop_rect and computed_point not in self._crop_rect:
             return
-        return self._terminal.pick(computed_point, char)
+        return self._terminal.put(computed_point, char)
 
     def print(self, point: Point, *args):
         computed_point = point + self._offset
@@ -153,40 +177,57 @@ class RenderManager(AbstractManager):
         self._terminal.color(self._bg)
         for _x in range(rect.left, rect.right):
             for _y in range(rect.top, rect.bottom):
-                self._terminal.put(_x, _y, char)
+                self.put(Point(_x, _y), char)
 
     def fill(self, char: str = "█", color: int = 0xFF151515) -> None:
         self._terminal.layer(0)
         self._terminal.color(color)
         for x in range(Options.SCREEN_WIDTH):
             for y in range(Options.SCREEN_HEIGHT):
-                self._terminal.put(x, y, char)
+                self.put(Point(x, y), char)
 
-    def draw_box(self, rect: Rect, color):
-        self.clear_area(rect)
-        self.fill_area(rect, layer=99)
-        self.terminal.layer(100)
-        self.terminal.color(color)
+    def draw_box(self, rect: Rect, color: int, ctx=None, style='single'):
+        if ctx is None:
+            ctx = self
+        ctx.clear_area(rect)
+        ctx.fill_area(rect, layer=99)
+        ctx.terminal.layer(100)
+        ctx.terminal.color(color)
 
-        x = rect.left
-        y = rect.top
-        w = rect.width
-        h = rect.height
+        style = LINE_STYLES[style]
 
-        # upper border
-        border = '┌' + '─' * (w - 2) + '┐'
-        self.terminal.print(x, y, border)
+        for point in rect.points_top:
+            ctx.put(point, style['T'])
+        for point in rect.points_bottom:
+            ctx.put(point, style['B'])
+        for point in rect.points_left:
+            ctx.put(point, style['L'])
+        for point in rect.points_right:
+            ctx.put(point, style['R'])
+        ctx.put(rect.origin, style['TL'])
+        ctx.put(rect.point_top_right, style['TR'])
+        ctx.put(rect.point_bottom_left, style['BL'])
+        ctx.put(rect.point_bottom_right, style['BR'])
 
-        # sides
-        for i in range(h - 2):
-            # left
-            self.terminal.print(x, y + 1 + i, '│')
-            # right
-            self.terminal.print(x + (w - 1), y + 1 + i, '│')
-
-        # lower border
-        border = '└' + '─' * (w - 2) + '┘'
-        self.terminal.print(x, y + (h - 1), border)
+        # x = rect.left
+        # y = rect.top
+        # w = rect.width
+        # h = rect.height
+        #
+        # # upper border
+        # border = '┌' + '─' * (w - 2) + '┐'
+        # ctx.put(Point(x, y), border)
+        #
+        # # sides
+        # for i in range(h - 2):
+        #     # left
+        #     ctx.put(Point(x, y) + 1 + i, '│')
+        #     # right
+        #     ctx.put(Point(x + (w - 1), y) + 1 + i, '│')
+        #
+        # # lower border
+        # border = '└' + '─' * (w - 2) + '┘'
+        # ctx.put(Point(x, y + (h - 1)), border)
 
     def draw_bar(self, x, y, w, value, maximum, fore):
         bar_width = round(w * 2 * (value / maximum))

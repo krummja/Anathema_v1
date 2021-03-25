@@ -1,9 +1,11 @@
 from __future__ import annotations
 
-from anathema.abstracts.screen import UIScreen
-from anathema.abstracts.view import LayoutOptions
-from anathema.screens.views.window_view import WindowView
+from anathema.core.options import Options
+from anathema.screens.screen import UIScreen
+from anathema.screens.views.layout_options import LayoutOptions
 from anathema.screens.views.label_view import LabelView
+from anathema.screens.views.window_view import WindowView
+from anathema.screens.views.rect_view import RectView
 
 
 class TestScreen(UIScreen):
@@ -11,10 +13,11 @@ class TestScreen(UIScreen):
     name: str = "Test"
 
     def __init__(self, *args, **kwargs):
-        view = WindowView(
-            'Test',
-            layout_options=LayoutOptions(top=1, right=1, bottom=1, left=1))
-        super().__init__(view, *args, **kwargs)
+        views = [
+            RectView(color_bg=0x66FF1111,
+                     layout=LayoutOptions(left=6, right=6, top=4, bottom=4))
+            ]
+        super().__init__(views, *args, **kwargs)
         self.covers_screen = True
 
     def become_active(self):

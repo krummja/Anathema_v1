@@ -4,7 +4,7 @@ from typing import TYPE_CHECKING
 import numpy as np
 import tcod
 
-from anathema.abstracts import AbstractSystem
+from anathema.systems.system import AbstractSystem
 
 if TYPE_CHECKING:
     from anathema.core.game import Game

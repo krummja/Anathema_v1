@@ -5,7 +5,7 @@ from collections import deque
 from functools import reduce
 from typing import TYPE_CHECKING
 
-from anathema.abstracts import AbstractManager
+from anathema.core.manager import AbstractManager
 
 if TYPE_CHECKING:
     from anathema.core.game import Game

@@ -4,7 +4,7 @@ from typing import TYPE_CHECKING
 import os, json
 from ecstremity import EngineAdapter as Engine
 
-from anathema.abstracts import AbstractManager
+from anathema.core.manager import AbstractManager
 from anathema.components import all_components
 
 if TYPE_CHECKING:

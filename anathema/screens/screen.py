@@ -77,6 +77,7 @@ class UIScreen(AbstractScreen):
     # noinspection PyUnresolvedReferences
     def terminal_update(self, is_active=False):
         self.game.renderer.bkcolor = 0xFF151515
+        self.game.renderer.clear()
         self.view.frame = self.view.frame.with_size(
             Size(Options.SCREEN_WIDTH, Options.SCREEN_HEIGHT))
         self.view.perform_layout()

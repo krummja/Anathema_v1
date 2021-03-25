@@ -29,14 +29,16 @@ class BaseTerminal:
     def __getattr__(self, k):
         return getattr(terminal, k)
 
-    def clear_area(self, *args):
+    @staticmethod
+    def clear_area(*args):
         if args and isinstance(args[0], Rect):
             return terminal.clear_area(
                 args[0].origin.x, args[0].origin.y,
                 args[0].size.width, args[0].size.height)
         return terminal.clear_area(*args)
 
-    def crop(self, *args):
+    @staticmethod
+    def crop(*args):
         if args and isinstance(args[0], Rect):
             return terminal.crop(
                 args[0].origin.x, args[0].origin.y,
@@ -44,52 +46,61 @@ class BaseTerminal:
         else:
             return terminal.crop(*args)
 
-    def puts(self, *args):
+    @staticmethod
+    def puts(*args):
         if isinstance(args[0], Point):
             return terminal.puts(args[0].x, args[0].y, *args[1:])
         else:
             return terminal.puts(*args)
 
-    def printf(self, *args):
+    @staticmethod
+    def printf(*args):
         if isinstance(args[0], Point):
             return terminal.printf(args[0].x, args[0].y, *args[1:])
         else:
             return terminal.printf(*args)
 
-    def put(self, *args):
+    @staticmethod
+    def put(*args):
         if isinstance(args[0], Point):
             return terminal.put(args[0].x, args[0].y, *args[1:])
         else:
             return terminal.put(*args)
 
-    def pick(self, *args):
+    @staticmethod
+    def pick(*args):
         if isinstance(args[0], Point):
             return terminal.pick(args[0].x, args[0].y, *args[1:])
         else:
             return terminal.pick(*args)
 
-    def pick_color(self, *args):
+    @staticmethod
+    def pick_color(*args):
         if isinstance(args[0], Point):
             return terminal.pick_color(args[0].x, args[0].y, *args[1:])
         else:
             return terminal.pick_color(*args)
 
-    def pick_bkcolor(self, *args):
+    @staticmethod
+    def pick_bkcolor(*args):
         if isinstance(args[0], Point):
             return terminal.pick_bkcolor(args[0].x, args[0].y, *args[1:])
         else:
             return terminal.pick_bkcolor(*args)
 
-    def put_ext(self, *args):
+    @staticmethod
+    def put_ext(*args):
         if isinstance(args[0], Point):
             return terminal.put_ext(args[0].x, args[0].y, args[1].x, args[1].y, *args[2:])
         else:
             return terminal.put_ext(*args)
 
-    def read_str(self, *args):
+    @staticmethod
+    def read_str(*args):
         if isinstance(args[0], Point):
             return terminal.read_str(args[0].x, args[0].y, *args[1:])
         else:
             return terminal.read_str(*args)
+
 
 blt_state = _TerminalState()

@@ -3,7 +3,7 @@ from typing import TYPE_CHECKING
 
 import math
 
-from anathema.abstracts import AbstractManager
+from anathema.core.manager import AbstractManager
 
 if TYPE_CHECKING:
     from .game import Game

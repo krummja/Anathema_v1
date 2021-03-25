@@ -5,7 +5,7 @@ from ecstremity.entity import Entity
 import numpy as np
 
 from anathema.utils.geometry import Circ, Point
-from anathema.abstracts import AbstractSystem
+from anathema.systems.system import AbstractSystem
 
 
 if TYPE_CHECKING:
