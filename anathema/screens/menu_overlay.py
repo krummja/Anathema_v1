@@ -14,7 +14,7 @@ class MenuOverlay(PlayerReady):
 
     def __init__(self, manager: ScreenManager) -> None:
         super().__init__(manager)
-        self.selection = (0, 0)
+        # self.selection = (0, 0)
 
     def on_draw(self, dt) -> None:
         super().on_draw(dt)

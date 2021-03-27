@@ -42,7 +42,8 @@ class Actor(Component):
         """Try to pick up a target object."""
 
         target = evt.data['target']
-        self.entity['Inventory'].add_to(target)
+        if self.entity.has('Inventory'):
+            self.entity['Inventory'].add_to(target)
 
     def on_try_get_equipped(self, evt: EntityEvent) -> None:
         self.entity.fire_event('get_equipped', evt.data)

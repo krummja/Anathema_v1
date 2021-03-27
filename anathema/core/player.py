@@ -51,44 +51,64 @@ class PlayerManager(AbstractManager):
         target_y = self.position[1] + direction[1]
 
         if self.game.world.current_area.is_blocked(target_x, target_y):
-
-            if self.game.world.current_area.is_interactable(target_x, target_y):
-                interactable = self.game.interaction_system.get(target_x, target_y)
-
-                self.action_queue.append(
-                    Action(entity = self.entity,
-                           event  = 'try_get_interactions',
-                           data   = {'target': interactable,
-                                     'expect': []}))
-
-            else:
-                self.game.log.report(Message("The way is blocked!"))
-
+            self.game.log.report(Message("The way is blocked!"))
         else:
             self.action_queue.append(
-                Action(entity = self.entity,
-                       event  = 'try_move',
-                       data   = {'target': direction}))
+                Action(entity = self.entity, event = 'try_move',
+                       data = {
+                           'target': direction
+                           }
+                       ))
+
+        # if self.game.world.current_area.is_blocked(target_x, target_y):
+        #
+        #     if self.game.world.current_area.is_interactable(target_x, target_y):
+        #         interactable = self.game.interaction_system.get(target_x, target_y)
+        #
+        #         self.action_queue.append(
+        #             Action(entity = self.entity,
+        #                    event  = 'try_get_interactions',
+        #                    data   = {'target': interactable,
+        #                              'expect': []}))
+        #
+        #     else:
+        #         self.game.log.report(Message("The way is blocked!"))
+        #
+        # else:
+        #     self.action_queue.append(
+        #         Action(entity = self.entity,
+        #                event  = 'try_move',
+        #                data   = {'target': direction}))
 
     def close(self, closable) -> None:
-        if ((closable.has('Door') and closable['Door'].is_open) or
-            (closable.has('Container') and closable['Container'].is_open)):
-
-            self.action_queue.append(
-                Action(entity = self.entity,
-                       event  = 'try_get_interactions',
-                       data   = {'target': closable,
-                                 'expect': []}))
+        print("Close")
+        # if ((closable.has('Door') and closable['Door'].is_open) or
+        #     (closable.has('Container') and closable['Container'].is_open)):
+        #
+        #     self.action_queue.append(
+        #         Action(entity = self.entity,
+        #                event  = 'try_get_interactions',
+        #                data   = {'target': closable,
+        #                          'expect': []}))
 
     def pickup(self) -> None:
         target = self.game.interaction_system.get(*self.position)
-
         self.action_queue.append(
-            Action(entity = self.entity,
-                   event  = 'try_pickup',
-                   data   = {'target': target,
-                             'instigator': self.entity}))
+            Action(entity = self.entity, event = 'try_pickup',
+                   data = {
+                       'target': target,
+                       'instigator': self.entity
+                       }
+                   ))
 
-        self.game.log.report(Message(f"{0} pick[s] up the {1} and stow[s] {1, THEM}.",
-                                     noun1=self.entity['Noun'],
-                                     noun2=target['Noun']))
+        # target = self.game.interaction_system.get(*self.position)
+        #
+        # self.action_queue.append(
+        #     Action(entity = self.entity,
+        #            event  = 'try_pickup',
+        #            data   = {'target': target,
+        #                      'instigator': self.entity}))
+
+        # self.game.log.report(Message(f"{0} pick[s] up the {1} and stow[s] {1, THEM}.",
+        #                              noun1=self.entity['Noun'],
+        #                              noun2=target['Noun']))

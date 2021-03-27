@@ -7,6 +7,7 @@ class Equippable(Component):
 
     def __init__(self, body_part: str) -> None:
         self.body_part = body_part
+        self._owner = None
 
     @property
     def owner(self):
@@ -16,8 +17,12 @@ class Equippable(Component):
     def owner(self, value) -> None:
         self._owner = value
 
-    def on_get_interactions(self, evt):
+    @staticmethod
+    def on_get_interactions(evt):
         evt.data['expect'].append({
             'name': 'Equip',
             'evt': 'try_equip'
             })
+
+    def on_try_equip(self, evt):
+        pass
