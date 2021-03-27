@@ -52,51 +52,43 @@ class Game:
         self.renderer.refresh()
 
         try:
-            self.loop_until_terminal_exits()
+            self.loop()
         except KeyboardInterrupt:
             pass
         finally:
             self.renderer.teardown()
 
-    def loop_until_terminal_exits(self):
+    def loop(self):
         try:
-            has_run_one_loop = False
-            while self.run_loop_iteration():
-                has_run_one_loop = True
-            if not has_run_one_loop:
-                print("Exited after a single iteration.")
+            iteration = False
+            while self.loop_iteration():
+                iteration = True
+            if not iteration:
+                print("Exited after a single cycle.")
         except KeyboardInterrupt:
             pass
 
-    def run_loop_iteration(self):
-        while self.renderer.has_input():
-            char = self.renderer.terminal.read()
-            self.screens.terminal_read(char)
-        self.renderer.clear()
-        should_continue = self.screens.terminal_update()
-        self.renderer.refresh()
+    def loop_iteration(self):
+        now = time.time()
+        dt = now - self._last_update
+        self.fps.update(dt)
+
+        should_continue = self.screens.update(dt)
+
+        self.renderer.update()
+        self._last_update = now
         return should_continue
 
-    def update_engine_systems(self, dt) -> None:
-        """This method must be run inside the main game screen."""
+    def update_engine_systems(self, dt):
         for _ in range(20):
             self.clock.update(dt)
             player_turn = self.action_system.update(dt)
             if player_turn:
-                self.update_game_systems(dt)
+                self.update_player_systems(dt)
                 return
 
-    def update_game_systems(self, dt) -> None:
+    def update_player_systems(self, dt):
         self.physics_system.update(dt)
         self.interaction_system.update(dt)
         self.fov_system.update(dt)
         self.render_system.update(dt)
-
-    # def loop(self) -> None:
-    #     while True:
-    #         now = time.time()
-    #         dt = now - self._last_update
-    #         self.fps.update(dt)
-    #         self.renderer.update()
-    #         # self.screens.update()
-    #         self._last_update = now

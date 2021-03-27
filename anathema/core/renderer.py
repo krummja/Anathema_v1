@@ -1,6 +1,7 @@
 from __future__ import annotations
 from typing import TYPE_CHECKING
 from contextlib import contextmanager
+from collections import deque
 
 from bearlibterminal import terminal
 from morphism import Point, Rect
@@ -49,6 +50,7 @@ class RenderManager(AbstractManager):
     def __init__(self, game: Game) -> None:
         super().__init__(game)
         self._terminal = BaseTerminal()
+        self._render_stack = deque([])
         self._crop_rect = None
         self._offset = Point(0, 0)
         self._fg = 0xFFFFFFFF
@@ -105,8 +107,21 @@ class RenderManager(AbstractManager):
         self._terminal.composition(False)
         self._terminal.close()
 
+    def push_to_stack(self, func):
+        self._render_stack.append(func)
+
+    def clear_stack(self):
+        self._render_stack.clear()
+
     def update(self) -> None:
+        while len(self._render_stack) > 0:
+            draw = self._render_stack.popleft()
+            draw(0)
+        self.clear_stack()
         self.refresh()
+
+    def layer(self, value: int):
+        self._terminal.layer(value)
 
     def clear(self) -> None:
         self._terminal.clear()
@@ -140,7 +155,7 @@ class RenderManager(AbstractManager):
         computed_point = point + self._offset
         if self._crop_rect and computed_point not in self._crop_rect:
             return
-        self.terminal.print(computed_point, f"[font=title]{string}[/font]")
+        self.terminal.puts(computed_point, f"[font=title]{string}[/font]")
 
     def pick(self, point, *args):
         computed_point = point + self._offset
@@ -172,9 +187,11 @@ class RenderManager(AbstractManager):
             return
         return self._terminal.read_str(computed_point, *args)
 
-    def fill_area(self, rect: Rect, char: str = "█", layer: int = 0) -> None:
+    def fill_area(self, rect: Rect, char: str = "█", layer: int = 0, color: int = None) -> None:
+        if color is None:
+            color = self._bg
         self._terminal.layer(layer)
-        self._terminal.color(self._bg)
+        self._terminal.color(color)
         for _x in range(rect.left, rect.right):
             for _y in range(rect.top, rect.bottom):
                 self.put(Point(_x, _y), char)
@@ -186,13 +203,9 @@ class RenderManager(AbstractManager):
             for y in range(Options.SCREEN_HEIGHT):
                 self.put(Point(x, y), char)
 
-    def draw_box(self, rect: Rect, color: int, ctx=None, style='single'):
+    def draw_box(self, rect: Rect, ctx=None, style='single'):
         if ctx is None:
             ctx = self
-        ctx.clear_area(rect)
-        ctx.fill_area(rect, layer=99)
-        ctx.terminal.layer(100)
-        ctx.terminal.color(color)
 
         style = LINE_STYLES[style]
 
@@ -208,26 +221,6 @@ class RenderManager(AbstractManager):
         ctx.put(rect.point_top_right, style['TR'])
         ctx.put(rect.point_bottom_left, style['BL'])
         ctx.put(rect.point_bottom_right, style['BR'])
-
-        # x = rect.left
-        # y = rect.top
-        # w = rect.width
-        # h = rect.height
-        #
-        # # upper border
-        # border = '┌' + '─' * (w - 2) + '┐'
-        # ctx.put(Point(x, y), border)
-        #
-        # # sides
-        # for i in range(h - 2):
-        #     # left
-        #     ctx.put(Point(x, y) + 1 + i, '│')
-        #     # right
-        #     ctx.put(Point(x + (w - 1), y) + 1 + i, '│')
-        #
-        # # lower border
-        # border = '└' + '─' * (w - 2) + '┘'
-        # ctx.put(Point(x, y + (h - 1)), border)
 
     def draw_bar(self, x, y, w, value, maximum, fore):
         bar_width = round(w * 2 * (value / maximum))

@@ -30,6 +30,10 @@ class BaseTerminal:
         return getattr(terminal, k)
 
     @staticmethod
+    def layer(value):
+        return terminal.layer(value)
+
+    @staticmethod
     def clear_area(*args):
         if args and isinstance(args[0], Rect):
             return terminal.clear_area(

@@ -14,8 +14,9 @@ class TestScreen(UIScreen):
 
     def __init__(self, *args, **kwargs):
         views = [
-            RectView(color_bg=0x66FF1111,
-                     layout=LayoutOptions(left=6, right=6, top=4, bottom=4))
+            WindowView(
+                'Test Window',
+                layout=LayoutOptions(left=6, right=6, top=4, bottom=4))
             ]
         super().__init__(views, *args, **kwargs)
         self.covers_screen = True

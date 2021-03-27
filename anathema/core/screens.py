@@ -4,7 +4,8 @@ from typing import TYPE_CHECKING, List, Optional
 from bearlibterminal import terminal
 from anathema.core.manager import AbstractManager
 from anathema.screens.screen import AbstractScreen
-from anathema.screens.test import TestScreen
+from anathema.screens.main_menu import MainMenu
+from anathema.screens.stage import Stage
 
 if TYPE_CHECKING:
     from anathema.core import Game
@@ -36,7 +37,6 @@ class ScreenManager(AbstractManager):
         screen.manager = self
         screen.on_enter()
         screen.become_active()
-        self.game.input.change_input_source()
 
     def pop_screen(self, may_exit=True):
         if self.active_screen:
@@ -46,7 +46,6 @@ class ScreenManager(AbstractManager):
             last_screen.on_leave()
         if self.active_screen:
             self.active_screen.become_active()
-            self.game.input.change_input_source()
         elif may_exit:
             self.should_exit = True
 
@@ -60,7 +59,16 @@ class ScreenManager(AbstractManager):
 
     @staticmethod
     def get_initial_screen():
-        return TestScreen()
+        # return MainMenu()
+        return Stage()
+
+    def update(self, dt):
+        if terminal.has_input():
+            char = terminal.read()
+            self.terminal_read(char)
+        self.game.renderer.clear()
+        should_continue = self.terminal_update()
+        return should_continue
 
     def terminal_update(self):
         i = 0
@@ -72,8 +80,5 @@ class ScreenManager(AbstractManager):
         return not self.should_exit
 
     def terminal_read(self, char):
-        if char == terminal.TK_ESCAPE:
-            self.quit()
-            return True
         if self._stack:
             return self.active_screen.terminal_read(char)

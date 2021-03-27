@@ -4,7 +4,7 @@ from typing import TYPE_CHECKING, Optional
 from anathema.core.options import Options
 
 from morphism import Size
-from anathema.screens.views.first_responder_container_view import FirstResponderContainerView
+from anathema.screens.views.first_responder import FirstResponderContainerView
 
 if TYPE_CHECKING:
     from anathema.core.screens import ScreenManager
@@ -76,9 +76,10 @@ class UIScreen(AbstractScreen):
 
     # noinspection PyUnresolvedReferences
     def terminal_update(self, is_active=False):
-        self.game.renderer.bkcolor = 0xFF151515
-        self.game.renderer.clear()
+        ctx = self.game.renderer
+        ctx.bkcolor = 0xFF151515
         self.view.frame = self.view.frame.with_size(
             Size(Options.SCREEN_WIDTH, Options.SCREEN_HEIGHT))
         self.view.perform_layout()
-        self.view.perform_draw(self.game.renderer)
+        self.view.perform_draw(ctx)
+        ctx.bkcolor = 0xFF151515

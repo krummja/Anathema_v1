@@ -2,6 +2,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from anathema.systems.system import AbstractSystem
+from morphism import Rect, Point, Size
 
 if TYPE_CHECKING:
     from anathema.core import Game
@@ -11,7 +12,7 @@ class RenderSystem(AbstractSystem):
 
     def __init__(self, game: Game) -> None:
         super().__init__(game)
-        self.terminal = game.renderer.terminal
+        self.context = game.renderer
         self._tiles = self.ecs.create_query(
             all_of=[ 'Renderable' ],
             none_of=[ 'Actor', 'Item' ])
@@ -37,11 +38,10 @@ class RenderSystem(AbstractSystem):
 
             if tile['Renderable'].back is not None:
                 back = alpha + tile['Renderable'].back
-                self.game.renderer.fill_area(x, y, 1, 1, color=back)
+                self.context.fill_area(Rect(Point(x, y), Size(1, 1)), color=back)
 
-            self.terminal.layer(z)
-            self.terminal.color(alpha + tile['Renderable'].fore)
-            self.terminal.put(x, y, tile['Renderable'].char)
+            self.context.color = alpha + tile['Renderable'].fore
+            self.context.put(Point(x, y), tile['Renderable'].char)
 
     def draw_items(self, dt) -> None:
         for item in self._items.result:
@@ -59,20 +59,18 @@ class RenderSystem(AbstractSystem):
             #     back = alpha + item['Renderable'].back
             #     self.game.renderer.fill_area(x, y, 1, 1, color=back)
 
-            self.terminal.layer(z)
-            self.terminal.color(alpha + item['Renderable'].fore)
-            self.terminal.put(x, y, item['Renderable'].char)
+            self.context.color = alpha + item['Renderable'].fore
+            self.context.put(Point(x, y), item['Renderable'].char)
 
     def draw_actors(self, dt) -> None:
         for actor in self._actors.result:
             x, y, z = actor['Position'].xyz
-            self.terminal.clear_area(x, y, 1, 1)
-            self.terminal.layer(z)
-            self.terminal.color(actor['Renderable'].fore)
-            self.terminal.put(x, y, actor['Renderable'].char)
+
+            self.context.clear_area(Rect(Point(x, y), Size(1, 1)))
+            self.context.color = actor['Renderable'].fore
+            self.context.put(Point(x, y), actor['Renderable'].char)
 
     def update(self, dt) -> None:
-        self.terminal.clear()
-        self.game.renderer.push_to_stack(self.draw_tiles)
-        self.game.renderer.push_to_stack(self.draw_items)
-        self.game.renderer.push_to_stack(self.draw_actors)
+        self.context.push_to_stack(self.draw_tiles)
+        self.context.push_to_stack(self.draw_items)
+        self.context.push_to_stack(self.draw_actors)

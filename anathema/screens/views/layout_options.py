@@ -20,6 +20,15 @@ class LayoutOptions:
         self.right = right
         self.bottom = bottom
 
+        self.opts = {
+            'width': width,
+            'height': height,
+            'left': left,
+            'top': top,
+            'right': right,
+            'bottom': bottom
+            }
+
     @classmethod
     def centered(cls, width, height):
         return LayoutOptions(
@@ -53,10 +62,9 @@ class LayoutOptions:
     # Convenience modifiers ###
 
     def with_updates(self, **kwargs):
-        pass
-        # opts = self._asdict()
-        # opts.update(kwargs)
-        # return LayoutOptions(**opts)
+        opts = self.opts
+        opts.update(kwargs)
+        return LayoutOptions(**opts)
 
     # Semi-internal layout API ###
 
@@ -92,9 +100,9 @@ class LayoutOptions:
 
         elif self.get_type(k) == 'intrinsic':
             if k == 'width':
-                return view.intrinsic_size.width
+                return view.intrinsic_size[0]
             elif k == 'height':
-                return view.intrinsic_size.height
+                return view.intrinsic_size[1]
             else:
                 raise KeyError(
                     "'intrinsic' can only be used with width or height.")

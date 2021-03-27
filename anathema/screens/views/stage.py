@@ -1,9 +1,9 @@
 from __future__ import annotations
 
-from screens.views.view import View
+from anathema.screens.views.view import View
 
 
-class RectView(View):
+class StageView(View):
 
     def __init__(
             self,
@@ -21,8 +21,4 @@ class RectView(View):
         self.style = style
 
     def draw(self, ctx):
-        ctx.color = self.color_fg
-        ctx.bkcolor = self.color_bg
-        if self.fill or self.clear:
-            ctx.clear_area(self.bounds)
-        ctx.draw_box(self.bounds)
+        ctx.update()
