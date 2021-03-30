@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from ecstremity import Component
+from ecstremity import Component, Entity
 
 
 class Stackable(Component):
@@ -45,13 +45,12 @@ class Inventory(Component):
     def get_stackable(self, identifier: str):
         pass
 
-    def add_to(self, item):
-        if item.has('Stackable'):
-            existing = self.get_stackable(item['Stackable'].identifier)
-            if existing:
-                existing['Stackable'].add_other(item)
-                return
-
+    def add_to(self, item: Entity):
+        # if item.has('Stackable'):
+        #     existing = self.get_stackable(item['Stackable'].identifier)
+        #     if existing:
+        #         existing['Stackable'].add_other(item)
+        #         return
         item.add('IsInventoried', {'owner': self.entity})
         self.contents.append(item)
 
@@ -59,4 +58,6 @@ class Inventory(Component):
         pass
 
     def drop_from(self, item):
-        pass
+        item['IsInventoried'].destroy()
+        item['Position'].xy = self.entity['Position'].xy
+        self.contents.remove(item)

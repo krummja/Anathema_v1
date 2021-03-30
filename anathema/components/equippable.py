@@ -23,6 +23,3 @@ class Equippable(Component):
             'name': 'Equip',
             'evt': 'try_equip'
             })
-
-    def on_try_equip(self, evt):
-        pass

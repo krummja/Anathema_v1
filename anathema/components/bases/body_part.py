@@ -55,6 +55,12 @@ class BodyPart(Component):
             item['Equippable'].owner = self.entity
             self._equipped = item
 
+    def dequip(self):
+        if self._equipped:
+            item = self._equipped
+            item['Equippable'].owner = None
+            self._equipped = None
+
     def on_try_get_equipped(self, evt):
         evt.data.expect['equipped'].append({
             "name": self.equipped_name,
@@ -62,15 +68,3 @@ class BodyPart(Component):
             "evt": "get_equipment_opts"
             })
         return evt
-
-    def on_try_get_inventories(self, evt):
-        if self._equipped and self._equipped.has('Container'):
-            evt.data.expect['inventories'].append({
-                "name": self.equipped_name,
-                "uid": self._equipped.uid,
-                "evt": "get_inventories"
-                })
-            # evt.data.expect['inventories'].append({
-            #     self.equipped_name: self._equipped['Container']
-            #     })
-            # return evt

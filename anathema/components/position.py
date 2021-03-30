@@ -16,8 +16,12 @@ class Position(Component):
     def xy(self) -> Tuple[int, int]:
         return self.x, self.y
 
+    @xy.setter
+    def xy(self, value: Tuple[int, int]):
+        self.x, self.y = value
+
     @property
-    def xyz(self) -> Tuple[int, int, int]:
+    def xyz(self) -> Tuple[int, int, Depth]:
         return self.x, self.y, self.z
 
     def __eq__(self, other: Union[Entity, Position]) -> bool:
@@ -25,7 +29,7 @@ class Position(Component):
             return (self.x == other['Position'].x and
                     self.y == other['Position'].y)
         elif isinstance(other, Position):
-            return (self.x == other.x and self.y == other.y)
+            return self.x == other.x and self.y == other.y
         else:
             return False
 
@@ -35,6 +39,6 @@ class Position(Component):
                 self != other['Position'] and
                 self.z < other['Position'].z)
         elif isinstance(other, Position):
-            return (self != other and self.z < other.z)
+            return self != other and self.z < other.z
         else:
             return False

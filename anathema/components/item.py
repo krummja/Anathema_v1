@@ -17,7 +17,14 @@ class Item(Component):
         self.take(instigator)
         evt.handle()
 
-    def on_drop(self, evt):
+    def on_try_drop(self, evt):
+        if self.entity.has('IsInventoried'):
+            owner = self.entity['IsInventoried'].owner
+            owner['Inventory'].drop_from(self.entity)
+            evt.handle()
+
+    @staticmethod
+    def on_get_info(evt):
         pass
 
     @staticmethod
@@ -28,8 +35,8 @@ class Item(Component):
             })
         evt.data['expect'].append({
             'name': 'Info',
-            'evt': 'get_info'
+            'evt': 'try_get_info'
             })
 
-    def on_get_info(self):
-        pass
+    def on_try_get_info(self, evt):
+        self.entity.fire_event('get_info', {'expect': []})
