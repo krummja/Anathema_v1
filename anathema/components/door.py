@@ -20,8 +20,8 @@ class Door(Component):
             return False
         self._is_open = True
         self.entity['Renderable'].char = self._open_char
-        self.entity.remove('Blocker')
-        self.entity.remove('Opacity')
+        self.entity['Blocker'].remove()
+        self.entity['Opacity'].remove()
         return True
 
     def close_door(self):

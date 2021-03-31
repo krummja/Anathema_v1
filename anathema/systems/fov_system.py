@@ -16,8 +16,10 @@ class FOVSystem(AbstractSystem):
         super().__init__(game)
         self._pov = self.ecs.create_query(
             all_of=[ 'IsPlayer' ])
-        self._query = self.ecs.create_query(
+        self._opaque = self.ecs.create_query(
             all_of=[ 'Opacity' ])
+        self._transparent = self.ecs.create_query(
+            none_of=[ 'Opacity' ])
         self.transparent = np.ones((64, 64), dtype=np.bool, order="F")
         self.explored = np.zeros((64, 64), dtype=np.bool, order="F")
         self.visible = np.zeros((64, 64), dtype=np.bool, order="F")
@@ -33,11 +35,12 @@ class FOVSystem(AbstractSystem):
         self.explored |= self.visible
 
     def update(self, dt):
-        for target in self._query.result:
+        for target in self._opaque.result:
             x, y = target['Position'].xy
-            # if target['Opacity'].opaque:
-            if target.has('Opacity'):
-                self.transparent[x][y] = False
-            else:
-                self.transparent[x][y] = True
+            self.transparent[x][y] = False
+
+        for target in self._transparent.result:
+            x, y = target['Position'].xy
+            self.transparent[x][y] = True
+
         self.compute_fov()

@@ -1,9 +1,6 @@
 from __future__ import annotations
 from typing import Generic, TypeVar, Optional, List, Tuple
 
-import math
-import numpy as np
-
 T = TypeVar("T")
 
 

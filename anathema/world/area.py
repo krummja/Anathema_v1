@@ -29,7 +29,7 @@ class Area:
     def get_entities_at(self, x: int, y: int):
         entities = self.region.world.game.ecs.engine.entities
         result = []
-        for entity in entities:
+        for entity in entities.get_all:
             if entity.has('Position'):
                 if entity['Position'].xy == (x, y):
                     result.append(entity.uid)
@@ -38,7 +38,15 @@ class Area:
     def is_blocked(self, x: int, y: int) -> bool:
         if not (0 <= x < self.width and 0 <= y < self.height):
             return True
-        if not self.region.world.game.physics_system.passable[x][y]:
+        # if not self.region.world.game.physics_system.passable[x][y]:
+        #     return True
+        uid_list = self.get_entities_at(x, y)
+        candidates = []
+        for uid in uid_list:
+            entity = self.region.world.game.ecs.engine.get_entity(uid)
+            candidates.append(entity)
+
+        if any([entity.has('Blocker') for entity in candidates]):
             return True
         return False
 
