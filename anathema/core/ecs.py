@@ -1,7 +1,8 @@
 from __future__ import annotations
 from typing import TYPE_CHECKING
 
-import os, json
+import os
+import json
 from ecstremity import EngineAdapter as Engine
 
 from anathema.abstracts import AbstractManager

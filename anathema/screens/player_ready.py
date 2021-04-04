@@ -1,8 +1,6 @@
 from __future__ import annotations
-from typing import Optional
 
 from anathema.core.options import Options
-from anathema.data.actions.event_data import EventData
 from anathema.screens.stage import Stage
 
 
