@@ -27,7 +27,7 @@ class Area:
         self.items.spawn(ItemSpawners.short_sword(9, 9))
 
     def get_entities_at(self, x: int, y: int):
-        entities = self.region.world.game.ecs.engine.entities
+        entities = self.region.world.game.ecs.entities
         result = []
         for entity in entities.get_all:
             if entity.has('Position'):
@@ -43,7 +43,7 @@ class Area:
         uid_list = self.get_entities_at(x, y)
         candidates = []
         for uid in uid_list:
-            entity = self.region.world.game.ecs.engine.get_entity(uid)
+            entity = self.region.world.game.ecs.get_entity(uid)
             candidates.append(entity)
 
         if any([entity.has('Blocker') for entity in candidates]):

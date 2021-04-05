@@ -13,7 +13,7 @@ class WorldManager(AbstractManager):
 
     def __init__(self, game: Game) -> None:
         super().__init__(game)
-        self.ecs = game.ecs.engine
+        self.ecs = game.ecs
         self.regions: Dict[str, Dict[str, Area]] = {
             'start': Region('start', self)
             }

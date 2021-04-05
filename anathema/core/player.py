@@ -22,7 +22,7 @@ class PlayerManager(AbstractManager):
 
     @property
     def entity(self):
-        return self.game.ecs.engine.get_entity(self._player_uid)
+        return self.game.ecs.get_entity(self._player_uid)
 
     @property
     def uid(self):
@@ -37,8 +37,8 @@ class PlayerManager(AbstractManager):
         return self.entity['Position'].xy
 
     def initialize_player(self):
-        player = self.game.ecs.engine.create_entity()
-        self.game.ecs.engine.prefabs.apply_to_entity(
+        player = self.game.ecs.create_entity()
+        self.game.ecs.prefabs.apply_to_entity(
             player, 'Player', {'Position': {'x': 10, 'y': 10, 'z': Depth.ABOVE_2.value}})
         player['Noun'].noun_text = "Aulia Inuicta"
         self._player_uid = player.uid

@@ -45,7 +45,7 @@ class Game:
 
     @property
     def engine(self):
-        return self.ecs.engine
+        return self.ecs
 
     def start(self) -> None:
         self.renderer.setup()
@@ -54,12 +54,12 @@ class Game:
         self.renderer.teardown()
 
     def update_engine_systems(self, dt) -> None:
-        for _ in range(20):
-            self.clock.update(dt)
-            player_turn = self.action_system.update(dt)
-            if player_turn:
-                self.update_game_systems(dt)
-                return
+        # for _ in range(20):
+        self.clock.update(dt)
+        player_turn = self.action_system.update(dt)
+        if player_turn:
+            self.update_game_systems(dt)
+            return
 
     def update_game_systems(self, dt) -> None:
         self.physics_system.update(dt)

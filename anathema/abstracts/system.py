@@ -12,7 +12,7 @@ class AbstractSystem(ABC):
 
     def __init__(self, game: Game) -> None:
         self.game = game
-        self.ecs: Engine = game.ecs.engine
+        self.ecs: Engine = game.ecs
         self._query: Optional[Query] = None
 
     @abstractmethod
