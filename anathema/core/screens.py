@@ -59,8 +59,7 @@ class ScreenManager(AbstractManager):
 
     @staticmethod
     def get_initial_screen():
-        # return MainMenu()
-        return Stage()
+        return MainMenu()
 
     def update(self, dt):
         if terminal.has_input():
