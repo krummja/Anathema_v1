@@ -42,7 +42,7 @@ class AbstractScreen:
         self._terminal_readers.remove(reader)
 
     def on_enter(self, *args):
-        pass
+        self.game.renderer.clear()
 
     def on_leave(self, *args):
         pass

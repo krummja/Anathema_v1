@@ -48,10 +48,11 @@ class Stage(UIScreen):
         self.covers_screen = True
 
     def become_active(self):
-        print("Stage screen is now active context.")
+        self.view.perform_draw(self.manager.ctx)
+        self.game.renderer.refresh()
 
-    def update(self):
-        self.game.update_engine_systems()
+    def terminal_update(self, is_active=False):
+        self.game.update_engine_systems(0)
 
     def terminal_read(self, val):
         if val == blt.TK_ESCAPE:

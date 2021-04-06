@@ -65,7 +65,7 @@ class ScreenManager(AbstractManager):
         if terminal.has_input():
             char = terminal.read()
             self.terminal_read(char)
-        self.game.renderer.clear()
+        # self.game.renderer.clear()
         should_continue = self.terminal_update()
         return should_continue
 
