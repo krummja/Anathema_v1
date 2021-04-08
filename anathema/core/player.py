@@ -1,4 +1,5 @@
 from __future__ import annotations
+from collections import deque
 from typing import *
 
 from .base_manager import BaseManager
@@ -13,6 +14,8 @@ class PlayerManager(BaseManager):
     def __init__(self, game: Game):
         super().__init__(game)
         self._uid = None
+        self._action_queue = deque([])
+        self.initialize()
 
     @property
     def entity(self) -> Entity:
@@ -31,4 +34,15 @@ class PlayerManager(BaseManager):
         return self.entity['Position'].xy
 
     def initialize(self):
-        pass
+        player = self.game.ecs.engine.create_entity()
+        player.add('Position', {'x': 10, 'y': 10})
+        player.add('Renderable', {'char': '@', 'fore': "0xFFFF00FF"})
+        player.add('Actor', {})
+        print(player.components)
+        self._uid = player.uid
+
+    def get_next_action(self):
+        return self._action_queue.popleft()
+
+    def queue_action(self, action):
+        self._action_queue.append(action)

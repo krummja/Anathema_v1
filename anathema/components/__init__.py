@@ -11,7 +11,10 @@ def load_component_definitions():
 
 
 def initialize_class_from_module(module_name: str):
-    class_name = module_name.capitalize()
+    if module_name[0:2] == 'is':
+        class_name = 'Is' + module_name[2:].capitalize()
+    else:
+        class_name = module_name.capitalize()
     module = importlib.import_module('components.' + module_name)
     print(f"Loading Component {class_name}")
     return module.__dict__.get(class_name)
