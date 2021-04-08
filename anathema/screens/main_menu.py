@@ -1,6 +1,7 @@
 import nocterminal as noc
 
 from screens.character_creation import CharacterCreationScreen
+from screens.stage import StageScreen
 
 
 class MainMenuScreen(noc.ui.UIScreen):
@@ -28,7 +29,7 @@ class MainMenuScreen(noc.ui.UIScreen):
         self.director.push_screen(CharacterCreationScreen())
 
     def load(self):
-        pass
+        self.director.push_screen(StageScreen())
 
     def options(self):
         pass

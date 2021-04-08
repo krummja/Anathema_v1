@@ -24,18 +24,18 @@ class TileFactory:
 
                 tile.add('Position', {'x': x, 'y': y, 'z': Depth.GROUND.value})
                 tile.add('Renderable', {'char': tile_def.char, 'fore': tile_def.fore, 'back': tile_def.back})
-                tile.add('Noun', {'noun_text': tile_def.name})
+                # tile.add('Noun', {'noun_text': tile_def.name})
 
                 if tile_def._blocker:
                     tile.add('Blocker', {})
                 if tile_def._opaque:
-                    tile.add('Opacity', {})
+                    tile.add('IsOpaque', {})
                 if tile_def._interactable:
                     tile.add('IsInteractable', {})
-                if tile_def._portal:
-                    if tile_def._is_closed:
-                        tile.add('Door', {})
-                    else:
-                        tile.add('Door', {})
-                if tile_def._container:
-                    tile.add('Container', {'capacity': 10})
+                # if tile_def._portal:
+                #     if tile_def._is_closed:
+                #         tile.add('Door', {})
+                #     else:
+                #         tile.add('Door', {})
+                # if tile_def._container:
+                #     tile.add('Container', {'capacity': 10})

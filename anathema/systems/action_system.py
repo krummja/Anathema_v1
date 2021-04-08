@@ -10,7 +10,7 @@ class ActionSystem(BaseSystem):
     def initialize(self):
         self.query('actors', all_of=[ 'Actor' ])
 
-    def update(self, dt):
+    def update(self, dt) -> bool:
         entities = self._queries['actors'].result
         entities = deque(sorted(entities, key=(lambda e: e['Actor'])))
 

@@ -16,8 +16,8 @@ class Area:
         # self.items = ItemFactory(self, region.world.ecs)
         self.name = name
         self.region = region
-        self.width = 128
-        self.height = 128
+        self.width = 64
+        self.height = 64
         self.initialize_area()
 
     def initialize_area(self) -> None:

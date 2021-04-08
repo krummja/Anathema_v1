@@ -18,3 +18,9 @@ class Action:
         self.event = event
         self.data = data
         self.cost = cost
+
+    def act(self) -> None:
+        """Act step, which fires the event for an action success."""
+        self.entity.fire_event('energy_consumed', {'cost': self.cost})
+        result = self.entity.fire_event(self.event, self.data)
+        return result
