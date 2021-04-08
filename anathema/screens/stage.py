@@ -46,6 +46,7 @@ class StageView(View):
         self.style = style
 
     def draw(self, ctx):
+        ctx.layer(100)
         ctx.print(Point(1, 1), "Test")
         ctx.print(Point(1, 3), str(self.screen.director.client.player.position))
 
@@ -55,13 +56,14 @@ class StageScreen(UIScreen):
     def __init__(self):
         views = [StageView(layout=LayoutOptions(left=0, top=0, right=24, bottom=14))]
         super().__init__(views)
+        self.covers_screen = True
 
     def become_active(self):
         self.view.perform_draw(self.director.context)
-        self.director.context.refresh()
+        self.director.client.systems_update(100)
 
-    def on_terminal_update(self):
-        self.director.client.engine_update(0)
+    def terminal_update(self, is_active=False):
+        self.director.client.engine_update(100)
 
     def terminal_read(self, char):
         if char == terminal.TK_ESCAPE:

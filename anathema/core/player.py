@@ -37,7 +37,7 @@ class PlayerManager(BaseManager):
     def initialize(self):
         player = self.game.ecs.engine.create_entity()
         player.add('IsPlayer', {})
-        player.add('Position', {'x': 10, 'y': 10})
+        player.add('Position', {'x': 10, 'y': 10, 'z': 6})
         player.add('Renderable', {'char': '@', 'fore': "0xFFFF00FF"})
         player.add('Actor', {})
         player.add('Eyes', {})

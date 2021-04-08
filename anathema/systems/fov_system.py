@@ -29,7 +29,7 @@ class FOVSystem(BaseSystem):
     def update(self, dt):
         for target in self._queries['opaque'].result:
             x, y = target['Position'].xy
-            if target.has('Opacity'):
+            if target.has('IsOpaque'):
                 self.transparent[x][y] = False
             else:
                 self.transparent[x][y] = True

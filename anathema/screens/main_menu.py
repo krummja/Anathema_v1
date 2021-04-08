@@ -24,6 +24,11 @@ class MainMenuScreen(noc.ui.UIScreen):
 
     def become_active(self):
         self.director.context.clear()
+        self.terminal_update()
+
+    def terminal_update(self, is_active=False):
+        self.director.context.clear()
+        super().terminal_update()
 
     def create(self):
         self.director.push_screen(CharacterCreationScreen())

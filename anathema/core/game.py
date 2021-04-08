@@ -37,7 +37,10 @@ class Game(noc.Director):
             self.clock.update(dt)  # TICK!
             player_turn = self.action_system.update(dt)
             if player_turn:
-                self.physics_system.update(dt)
-                self.interaction_system.update(dt)
-                self.fov_system.update(dt)
-                self.render_system.update(dt)
+                self.systems_update(dt)
+
+    def systems_update(self, dt):
+        self.physics_system.update(dt)
+        self.interaction_system.update(dt)
+        self.fov_system.update(dt)
+        self.render_system.update(dt)

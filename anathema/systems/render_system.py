@@ -27,6 +27,7 @@ class RenderSystem(BaseSystem):
                 back = alpha + tile['Renderable'].back
                 self.game.context.fill_area(Rect(Point(x, y), Size(1, 1)), color=back)
 
+            self.game.context.layer(z)
             self.game.context.color = alpha + tile['Renderable'].fore
             self.game.context.put(Point(x, y), tile['Renderable'].char)
 
@@ -54,11 +55,12 @@ class RenderSystem(BaseSystem):
             x, y, z = actor['Position'].xyz
 
             self.game.context.clear_area(Rect(Point(x, y), Size(1, 1)))
+            self.game.context.layer(z)
             self.game.context.color = actor['Renderable'].fore
             self.game.context.put(Point(x, y), actor['Renderable'].char)
-        print("Actors drawing")
 
     def update(self, dt) -> None:
+        self.game.context.clear()
         self.game.context.push_to_stack(self.draw_tiles)
-        self.game.context.push_to_stack(self.draw_items)
+        # self.game.context.push_to_stack(self.draw_items)
         self.game.context.push_to_stack(self.draw_actors)
