@@ -7,7 +7,6 @@ from anathema.systems.base_system import BaseSystem
 
 
 class FOVSystem(BaseSystem):
-
     transparent = np.ones((64, 64), dtype=bool, order="F")
     explored = np.zeros((64, 64), dtype=bool, order="F")
     visible = np.zeros((64, 64), dtype=bool, order="F")

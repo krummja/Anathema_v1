@@ -1,9 +1,9 @@
 from __future__ import annotations
 from collections import deque
 from typing import *
+from ecstremity import EventData
 
 from .base_manager import BaseManager
-from anathema.core.action import Action
 
 if TYPE_CHECKING:
     from ecstremity import Entity
@@ -55,23 +55,6 @@ class PlayerManager(BaseManager):
         target_x = self.position[0] + direction[0]
         target_y = self.position[1] + direction[1]
 
-        if self.game.world.current_area.is_blocked(target_x, target_y):
-
-            if self.game.world.current_area.is_interactable(target_x, target_y):
-                interactable = self.game.interaction_system.get(target_x, target_y)
-
-                self.queue_action(
-                    Action(entity = self.entity,
-                           event  = 'try_get_interactions',
-                           data   = {'target': interactable,
-                                     'expect': []}))
-
-            else:
-                print("The way is blocked!")
-                # self.game.log.report(Message("The way is blocked!"))
-
-        else:
-            self.queue_action(
-                Action(entity = self.entity,
-                       event  = 'try_move',
-                       data   = {'target': (target_x, target_y)}))
+        self.queue_action((lambda: self.entity.fire_event(
+            'try_move',
+            EventData(target=(target_x, target_y)))))

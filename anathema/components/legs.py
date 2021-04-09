@@ -14,7 +14,7 @@ class Legs(Component):
         self._leg_count = leg_count
 
     def on_try_move(self, evt: EntityEvent) -> None:
-        self.update_position(*evt.data['target'])
+        self.update_position(*evt.data.target)
         evt.handle()
 
     def update_position(self, x: int, y: int) -> None:

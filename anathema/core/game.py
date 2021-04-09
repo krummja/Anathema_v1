@@ -1,5 +1,7 @@
 from __future__ import annotations
 import nocterminal as noc
+import cProfile
+import pstats
 
 from screens.main_menu import MainMenuScreen
 from anathema.core.clock import ClockManager
@@ -16,6 +18,8 @@ from anathema.systems.render_system import RenderSystem
 
 class Game(noc.Director):
 
+    _last_update: float = 0.0
+
     def __init__(self):
         super().__init__(client=self)
         self.ecs = ECSManager(self)
@@ -29,15 +33,20 @@ class Game(noc.Director):
         self.fov_system = FOVSystem(self)
         self.render_system = RenderSystem(self)
 
+    def start(self):
+        self.replace_screen(self.get_initial_screen())
+        noc.terminal.setup()
+        self.main_loop()
+        noc.terminal.teardown()
+
     def get_initial_screen(self):
         return MainMenuScreen()
 
     def engine_update(self, dt):
-        for _ in range(20):
-            self.clock.update(dt)  # TICK!
-            player_turn = self.action_system.update(dt)
-            if player_turn:
-                self.systems_update(dt)
+        self.clock.update(dt)
+        player_turn = self.action_system.update(dt)
+        if player_turn:
+            self.systems_update(dt)
 
     def systems_update(self, dt):
         self.physics_system.update(dt)
