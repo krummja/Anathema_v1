@@ -29,7 +29,6 @@ class RenderSystem(BaseSystem):
                 noc.terminal.layer(0)
                 noc.terminal.color(back)
                 noc.terminal.put(x, y, "█")
-                # self.game.context.fill_area(Rect(Point(x, y), Size(1, 1)), color=back)
 
             # self.game.context.layer(z)
             self.game.context.color = alpha + tile['Renderable'].fore
@@ -58,8 +57,6 @@ class RenderSystem(BaseSystem):
         for actor in self._queries['actors'].result:
             x, y, z = actor['Position'].xyz
 
-            # self.game.context.clear_area(Rect(Point(x, y), Size(1, 1)))
-            # self.game.context.layer(z)
             self.game.context.color = actor['Renderable'].fore
             self.game.context.put(Point(x, y), actor['Renderable'].char)
 
@@ -67,6 +64,3 @@ class RenderSystem(BaseSystem):
         self.game.context.clear()
         self.draw_tiles(dt)
         self.draw_actors(dt)
-        # self.game.context.push_to_stack(self.draw_tiles)
-        # self.game.context.push_to_stack(self.draw_items)
-        # self.game.context.push_to_stack(self.draw_actors)

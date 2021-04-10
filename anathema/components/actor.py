@@ -27,7 +27,7 @@ class Actor(Component):
         return self._energy >= 0
 
     def on_energy_consumed(self, evt: EntityEvent) -> None:
-        self.reduce_energy(evt.data)
+        self.reduce_energy(int(evt.data.cost))
 
     def on_tick(self, evt: EntityEvent) -> None:
         self.add_energy(1)

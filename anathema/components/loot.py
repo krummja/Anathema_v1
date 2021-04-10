@@ -2,6 +2,8 @@ from __future__ import annotations
 from typing import *
 from ecstremity import Component
 
+from ecstremity.entity_event import EventData
+
 if TYPE_CHECKING:
     from ecstremity.entity_event import EntityEvent
 
@@ -40,11 +42,19 @@ class Loot(Component):
                 'evt': 'try_pick_up'
                 })
 
-    def on_equipped(self, evt):
-        pass
+    def on_equipped(self, evt: EntityEvent):
+        if not evt.data.instigator.has('Inventory'):
+            return
+        if evt.data.instigator['Inventory'].has_loot(self.entity):
+            return
+        evt.data.instigator['Inventory'].add_loot(self.entity)
 
-    def on_try_pickup(self, evt):
-        pass
+    def on_try_pickup(self, evt: EntityEvent):
+        self.take(evt.data.instigator)
+        evt.data.instigator.fire_event('energy_consumed', EventData(cost=100))
+        evt.handle()
 
-    def on_try_take(self, evt):
-        pass
+    def on_try_take(self, evt: EntityEvent):
+        self.take(evt.data.instigator)
+        evt.data.instigator.fire_event('energy_consumed', EventData(cost=100))
+        evt.handle()
