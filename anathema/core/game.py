@@ -1,7 +1,5 @@
 from __future__ import annotations
 import nocterminal as noc
-import cProfile
-import pstats
 
 from screens.main_menu import MainMenuScreen
 from anathema.core.clock import ClockManager
@@ -53,3 +51,6 @@ class Game(noc.Director):
         self.interaction_system.update(dt)
         self.fov_system.update(dt)
         self.render_system.update(dt)
+
+    def to_ui_hook(self, func):
+        print(func())

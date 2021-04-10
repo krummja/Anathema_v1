@@ -1,6 +1,7 @@
 from __future__ import annotations
-from typing import TYPE_CHECKING
+from typing import *
 
+from morphism import Size
 from anathema.world.area import Area
 
 if TYPE_CHECKING:
@@ -14,5 +15,8 @@ class Region:
         self.world = world
         self.areas = {}
 
-    def add_area(self, name: str):
-        self.areas[name] = Area(name, self)
+    def add_area(self, area: Type[Area], size: Size = Size(64, 64), tile_factory = None):
+        if tile_factory:
+            self.areas[area.name] = area(self, size, tile_factory)
+        else:
+            self.areas[area.name] = area(self, size)

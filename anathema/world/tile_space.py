@@ -13,12 +13,14 @@ if TYPE_CHECKING:
 
 class TileSpace:
 
-    @staticmethod
-    def initialize():
-        tile_space = np.zeros((64, 64), dtype=object, order="F")
+    def __init__(self, size: Size):
+        self.size = size
+
+    def initialize(self):
+        tile_space = np.zeros(self.size, dtype=object, order="F")
 
         # TODO Break this out into a method
-        automata = Anneal((64, 64), density=0.46)
+        automata = Anneal(self.size, density=0.46)
         automata.generate(10)
         result = automata.board
         result = np.where(result == 1, Tiles.dirt_1, Tiles.unformed)

@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import TYPE_CHECKING
+from typing import *
 
 from anathema.world.tile_space import TileSpace
 from anathema.world.depth import Depth
@@ -11,14 +11,14 @@ if TYPE_CHECKING:
 
 class TileFactory:
 
-    def __init__(self, area: Area, ecs: Engine) -> None:
+    def __init__(self, area: Area, ecs: Engine, tile_space: TileSpace) -> None:
         self.area = area
         self.ecs = ecs
-        self.tile_space = TileSpace.initialize()
+        self.tile_space = tile_space.initialize()
 
     def build(self):
-        for x in range(self.area.width):
-            for y in range(self.area.height):
+        for x in range(int(self.area.size.width)):
+            for y in range(int(self.area.size.height)):
                 tile_def = self.tile_space[x, y]
                 tile = self.ecs.create_entity()
 
@@ -37,5 +37,5 @@ class TileFactory:
                 #         tile.add('Door', {})
                 #     else:
                 #         tile.add('Door', {})
-                # if tile_def._container:
-                #     tile.add('Container', {'capacity': 10})
+                if tile_def._container:
+                    tile.add('Container', {'capacity': 10})
