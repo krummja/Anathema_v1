@@ -39,6 +39,7 @@ class Container(Component):
         return enumerate(self.contents)
 
     def on_get_interactions(self, evt):
+        evt.data.instigator = self.entity
         if self._is_open:
             evt.data.interactions.append({
                 "name": "Close",
@@ -47,9 +48,13 @@ class Container(Component):
         elif not self._is_open:
             evt.data.interactions.append({
                 "name": "Open",
-                "event": "try_open_container"
-                })
-        return evt
+                "event": self.open_container
+            })
+            evt.data.interactions.append({
+                "name": "Test",
+                "event": "test_method"
+            })
+        evt.handle()
 
     def on_try_close_container(self, evt):
         # if self.close_container():

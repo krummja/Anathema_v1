@@ -19,6 +19,7 @@ class Game(noc.Director):
     _last_update: float = 0.0
 
     def __init__(self):
+        _interface_subscribers = {}
         super().__init__(client=self)
         self.ecs = ECSManager(self)
         self.clock = ClockManager(self)
@@ -56,6 +57,3 @@ class Game(noc.Director):
         self.interaction_system.update(dt)
         self.fov_system.update(dt)
         self.render_system.update(dt)
-
-    def to_ui_hook(self, func):
-        print(func())

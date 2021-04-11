@@ -19,7 +19,7 @@ class RenderSystem(BaseSystem):
 
             if not explored[x, y]:
                 alpha = 0x00000000
-            elif explored[x, y] & ~visible[x, y]:
+            elif explored[x, y] and not visible[x, y]:
                 alpha = 0x66000000
             else:
                 alpha = 0xFF000000
@@ -41,7 +41,7 @@ class RenderSystem(BaseSystem):
 
             if not explored[x, y]:
                 alpha = 0x00000000
-            elif explored[x, y] & ~visible[x, y]:
+            elif explored[x, y] and not visible[x, y]:
                 alpha = 0x66000000
             else:
                 alpha = 0xFF000000

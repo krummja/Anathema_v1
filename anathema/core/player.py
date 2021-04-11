@@ -39,9 +39,9 @@ class PlayerManager(BaseManager):
         player.add('Position', {'x': 10, 'y': 10, 'z': 6})
         player.add('Renderable', {'char': '@', 'fore': "0xFFFF00FF"})
         player.add('Actor', {})
+        player.add('Brain', {})
         player.add('Eyes', {})
         player.add('Legs', {})
-        print(player.components)
         self._uid = player.uid
 
     def get_next_action(self):
