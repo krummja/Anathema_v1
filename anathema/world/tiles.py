@@ -11,51 +11,51 @@ class TileType:
     fore: int
     back: int
 
-    _blocker: Optional[bool] = None
-    _opaque: Optional[bool] = None
-    _interactable: Optional[bool] = None
-    _portal: Optional[bool] = None
-    _is_closed: Optional[bool] = None
-    _container: Optional[bool] = None
+    blocker: Optional[bool] = None
+    opaque: Optional[bool] = None
+    interactable: Optional[bool] = None
+    portal: Optional[bool] = None
+    is_closed: Optional[bool] = None
+    is_container: Optional[bool] = None
 
     def open(self) -> TileType:
-        self._blocker = False
-        self._opaque = False
+        self.blocker = False
+        self.opaque = False
         return self
 
     def solid(self) -> TileType:
-        self._blocker = True
-        self._opaque = True
+        self.blocker = True
+        self.opaque = True
         return self
 
     def obstacle(self) -> TileType:
-        self._blocker = True
-        self._opaque = False
+        self.blocker = True
+        self.opaque = False
         return self
 
     def obfuscated(self) -> TileType:
-        self._blocker = False
-        self._opaque = True
+        self.blocker = False
+        self.opaque = True
         return self
 
     def openable(self) -> TileType:
-        self._interactable = True
-        self._is_closed = True
+        self.interactable = True
+        self.is_closed = True
         return self
 
     def closable(self) -> TileType:
-        self._interactable = True
-        self._is_closed = False
+        self.interactable = True
+        self.is_closed = False
         return self
 
     def door(self) -> TileType:
-        self._portal = True
-        self._blocker = True
-        self._opaque = True
+        self.portal = True
+        self.blocker = True
+        self.opaque = True
         return self
 
     def container(self) -> TileType:
-        self._container = True
+        self.is_container = True
         return self
 
 

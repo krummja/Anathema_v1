@@ -16,6 +16,7 @@ class FOVSystem(BaseSystem):
         self.query('opaque', all_of=[ 'IsOpaque' ])
 
     def compute_fov(self):
+
         self.visible = tcod.map.compute_fov(
             transparency=self.transparent,
             pov=self._queries['pov'].result[0]['Position'].xy,

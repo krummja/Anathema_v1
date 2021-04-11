@@ -26,16 +26,16 @@ class TileFactory:
                 tile.add('Renderable', {'char': tile_def.char, 'fore': tile_def.fore, 'back': tile_def.back})
                 # tile.add('Noun', {'noun_text': tile_def.name})
 
-                if tile_def._blocker:
+                if tile_def.blocker:
                     tile.add('Blocker', {})
-                if tile_def._opaque:
+                if tile_def.opaque:
                     tile.add('IsOpaque', {})
-                if tile_def._interactable:
+                if tile_def.interactable:
                     tile.add('IsInteractable', {})
                 # if tile_def._portal:
                 #     if tile_def._is_closed:
                 #         tile.add('Door', {})
                 #     else:
                 #         tile.add('Door', {})
-                if tile_def._container:
+                if tile_def.container:
                     tile.add('Container', {'capacity': 10})

@@ -16,7 +16,6 @@ class PlayerManager(BaseManager):
         super().__init__(game)
         self._uid = None
         self._action_queue = deque([])
-        self.initialize()
 
     @property
     def entity(self) -> Entity:

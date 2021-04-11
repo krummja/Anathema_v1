@@ -15,5 +15,6 @@ class ECSManager(BaseManager):
         super().__init__(game)
         self.engine = Engine(client=game)
 
+    def initialize(self):
         for component in all_components():
             self.engine.components.register(component)

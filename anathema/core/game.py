@@ -31,11 +31,16 @@ class Game(noc.Director):
         self.fov_system = FOVSystem(self)
         self.render_system = RenderSystem(self)
 
-    def start(self):
+    def run(self):
         self.replace_screen(self.get_initial_screen())
         noc.terminal.setup()
         self.main_loop()
         noc.terminal.teardown()
+
+    def start(self):
+        self.ecs.initialize()
+        self.world.initialize()
+        self.player.initialize()
 
     def get_initial_screen(self):
         return MainMenuScreen()

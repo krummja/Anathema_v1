@@ -34,6 +34,7 @@ class MainMenuScreen(noc.ui.UIScreen):
         self.director.push_screen(CharacterCreationScreen())
 
     def load(self):
+        self.director.start()
         self.director.push_screen(StageScreen())
 
     def options(self):

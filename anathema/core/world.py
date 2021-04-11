@@ -1,7 +1,6 @@
 from __future__ import annotations
 from typing import TYPE_CHECKING, Dict, Optional
 
-from morphism import Size
 from anathema.core.base_manager import BaseManager
 from anathema.world.area import Area
 from anathema.world.region import Region
@@ -16,11 +15,15 @@ class WorldManager(BaseManager):
     def __init__(self, game: Game) -> None:
         super().__init__(game)
         self.ecs = game.ecs.engine
+        self.regions = {}
+        self._current_area = None
+        self._current_region = None
+
+    def initialize(self):
         self.regions: Dict[str, Region] = {
             'start': Region('start', self)
             }
 
-        # TODO Replace this with a more robust generation system eventually
         self.regions['start'].add_area(TestArea)
 
         self._current_region = self.regions['start']
