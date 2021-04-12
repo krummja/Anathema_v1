@@ -1,4 +1,3 @@
-
 from __future__ import annotations
 from typing import Tuple, List, TYPE_CHECKING
 
@@ -8,7 +7,7 @@ from anathema.world.tiles import Tiles
 from anathema.world.generation.cellular import *
 
 if TYPE_CHECKING:
-    from anathema.world.tiles import TileType
+    from world.tile_type import TileType
 
 
 class TileSpace:

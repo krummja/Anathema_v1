@@ -1,62 +1,7 @@
 from __future__ import annotations
 from typing import Optional
-from dataclasses import dataclass
 from anathema.utils.color import Palette
-
-
-@dataclass
-class TileType:
-    name: str
-    char: str
-    fore: int
-    back: int
-
-    blocker: Optional[bool] = None
-    opaque: Optional[bool] = None
-    interactable: Optional[bool] = None
-    portal: Optional[bool] = None
-    is_closed: Optional[bool] = None
-    is_container: Optional[bool] = None
-
-    def open(self) -> TileType:
-        self.blocker = False
-        self.opaque = False
-        return self
-
-    def solid(self) -> TileType:
-        self.blocker = True
-        self.opaque = True
-        return self
-
-    def obstacle(self) -> TileType:
-        self.blocker = True
-        self.opaque = False
-        return self
-
-    def obfuscated(self) -> TileType:
-        self.blocker = False
-        self.opaque = True
-        return self
-
-    def openable(self) -> TileType:
-        self.interactable = True
-        self.is_closed = True
-        return self
-
-    def closable(self) -> TileType:
-        self.interactable = True
-        self.is_closed = False
-        return self
-
-    def door(self) -> TileType:
-        self.portal = True
-        self.blocker = True
-        self.opaque = True
-        return self
-
-    def container(self) -> TileType:
-        self.is_container = True
-        return self
+from world.tile_type import TileType
 
 
 def tile(name: str, char: str, fore: int, back: Optional[int] = None):
@@ -66,7 +11,6 @@ def tile(name: str, char: str, fore: int, back: Optional[int] = None):
 class Tiles:
 
     # Temporary tiles for stage generation
-
     unformed = tile("unformed", "?", Palette.light_cool_gray).open()
     unformed_wet = tile("unformed_wet", "≈", Palette.light_blue).open()
     open_ground = tile("open", "·", Palette.light_cool_gray).open()
@@ -77,7 +21,6 @@ class Tiles:
     doorway = tile("doorway", "○", Palette.light_cool_gray).open()
 
     # Real Tiles
-
     # Walls
     flagstone_wall = tile("Flagstone Wall", "▒", Palette.light_warm_gray, Palette.warm_gray).solid()
     granite_wall = tile("Granite Wall", "▒", Palette.cool_gray).solid()
@@ -91,9 +34,7 @@ class Tiles:
     dirt_2 = tile("Dirt", "φ", Palette.brown).open()
     grass = tile("Grass", "░", Palette.lima).open()
     tall_grass = tile("Tall Grass", "√", Palette.pea_green).obfuscated()
-
     tree_1 = tile("Evergreen Tree", "▲", Palette.sherwood).solid()
-
     shallow_water = tile("Shallow Water", "≈", Palette.light_blue).open()
 
     # Doorways
