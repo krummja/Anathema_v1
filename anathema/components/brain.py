@@ -1,6 +1,5 @@
 from __future__ import annotations
 from ecstremity import Component, EntityEvent, Entity, EventData
-from anathema.utils.interface_helpers import to_interface
 from anathema.screens.select_from import SelectFrom
 
 
