@@ -5,14 +5,14 @@ from abc import ABC, abstractmethod
 
 if TYPE_CHECKING:
     from anathema.core.game import Game
-    from ecstremity import Query, Engine
+    from ecstremity import Query, World
 
 
 class BaseSystem(ABC):
 
     def __init__(self, game: Game) -> None:
         self.game = game
-        self.ecs: Engine = game.ecs.engine
+        self.ecs: World = game.ecs.world
         self._queries: Dict[str, Query] = {}
         self.initialize()
 

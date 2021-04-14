@@ -7,7 +7,7 @@ from anathema.systems.base_system import BaseSystem
 class RenderSystem(BaseSystem):
 
     def initialize(self):
-        self.query('tiles', all_of=[ 'Renderable' ], none_of=[ 'Actor' ])
+        self.query('tiles', all_of=[ 'Position' ], none_of=[ 'Actor' ])
         self.query('actors', all_of=[ 'Actor' ])
 
     def draw_tiles(self) -> None:

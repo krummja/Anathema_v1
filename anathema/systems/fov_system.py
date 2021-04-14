@@ -1,4 +1,5 @@
 from __future__ import annotations
+from anathema.components import *
 
 import numpy as np
 import tcod
@@ -12,8 +13,8 @@ class FOVSystem(BaseSystem):
     visible = np.zeros((64, 64), dtype=bool, order="F")
 
     def initialize(self):
-        self.query('pov', all_of=[ 'IsPlayer' ])
-        self.query('opaque', all_of=[ 'IsOpaque' ])
+        self.query('pov', all_of=[ IsPlayer ])
+        self.query('opaque', all_of=[ IsOpaque ])
 
     def compute_fov(self):
 
@@ -29,7 +30,7 @@ class FOVSystem(BaseSystem):
     def update(self, dt):
         for target in self._queries['opaque'].result:
             x, y = target['Position'].xy
-            if target.has('IsOpaque'):
+            if target.has(IsOpaque):
                 self.transparent[x][y] = False
             else:
                 self.transparent[x][y] = True

@@ -26,7 +26,8 @@ class Area:
         # self.items = ItemFactory(self, region.world.ecs)
         self.region = region
         self.size = size
-        self.factory = TileFactory(self, region.world.ecs, tile_space)
+        self.ecs = region.world.game.ecs.world
+        self.factory = TileFactory(self, self.ecs, tile_space)
         self.initialize_area()
 
     def initialize_area(self) -> None:
@@ -34,7 +35,7 @@ class Area:
         # self.items.spawn(ItemSpawners.short_sword(9, 9))
 
     def get_entities_at(self, x: int, y: int):
-        entities = self.region.world.game.ecs.engine.entities
+        entities = self.ecs.entities
         result = []
         for entity in entities:
             if entity.has('Position'):

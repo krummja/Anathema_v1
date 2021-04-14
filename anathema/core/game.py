@@ -19,9 +19,9 @@ class Game(noc.Director):
     _last_update: float = 0.0
 
     def __init__(self):
-        _interface_subscribers = {}
         super().__init__(client=self)
         self.ecs = ECSManager(self)
+        self.ecs.initialize()
         self.clock = ClockManager(self)
         self.world = WorldManager(self)
         self.player = PlayerManager(self)
@@ -39,7 +39,6 @@ class Game(noc.Director):
         noc.terminal.teardown()
 
     def start(self):
-        self.ecs.initialize()
         self.world.initialize()
         self.player.initialize()
 

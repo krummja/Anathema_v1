@@ -16,10 +16,11 @@ class PlayerManager(BaseManager):
         super().__init__(game)
         self._uid = None
         self._action_queue = deque([])
+        self.ecs = self.game.ecs.world
 
     @property
     def entity(self) -> Entity:
-        return self.game.ecs.engine.get_entity(self._uid)
+        return self.ecs.get_entity(self._uid)
 
     @property
     def uid(self) -> str:
@@ -34,7 +35,7 @@ class PlayerManager(BaseManager):
         return self.entity['Position'].xy
 
     def initialize(self):
-        player = self.game.ecs.engine.create_entity()
+        player = self.ecs.create_entity()
         player.add('IsPlayer', {})
         player.add('Position', {'x': 10, 'y': 10, 'z': 6})
         player.add('Renderable', {'char': '@', 'fore': "0xFFFF00FF"})
