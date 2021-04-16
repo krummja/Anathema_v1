@@ -18,7 +18,7 @@ class MainMenuScreen(noc.ui.UIScreen):
                               layout=noc.ui.LayoutOptions(left=10, top=28)),
             noc.ui.ButtonView("Quit", callback=self.quit, align_horz="left",
                               layout=noc.ui.LayoutOptions(left=10, top=32)),
-            ]
+        ]
         super().__init__(views)
         self.covers_screen = True
 

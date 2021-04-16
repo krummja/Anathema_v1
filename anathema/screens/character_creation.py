@@ -68,6 +68,7 @@ class CharacterCreationScreen(noc.ui.UIScreen):
                         for label, value in sorted(self.CHARACTER_CONFIGURATION.items())
                         ],
                     value_column_width=10,
+                    max_height = 8,
                     layout=LayoutOptions(left=2, height=8, top=8, bottom=None, right=40)),
 
                 # Navigation

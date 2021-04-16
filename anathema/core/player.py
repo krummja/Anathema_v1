@@ -35,7 +35,7 @@ class PlayerManager(BaseManager):
         return self.entity['Position'].xy
 
     def initialize(self):
-        player = self.ecs.create_entity()
+        player = self.ecs.create_entity('PLAYER')
         player.add('IsPlayer', {})
         player.add('Position', {'x': 10, 'y': 10, 'z': 6})
         player.add('Renderable', {'char': '@', 'fore': "0xFFFF00FF"})
@@ -56,5 +56,4 @@ class PlayerManager(BaseManager):
         target_y = self.position[1] + direction[1]
 
         self.queue_action((lambda: self.entity.fire_event(
-            'try_move',
-            EventData(target=(target_x, target_y)))))
+            'try_move', EventData(target=(target_x, target_y)))))

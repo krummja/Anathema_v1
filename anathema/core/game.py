@@ -6,6 +6,8 @@ from anathema.core.clock import ClockManager
 from anathema.core.ecs import ECSManager
 from anathema.core.player import PlayerManager
 from anathema.core.world import WorldManager
+from anathema.core.storage import StorageManager
+# from anathema.core.camera import CameraManager
 
 from anathema.systems.action_system import ActionSystem
 from anathema.systems.physics_system import PhysicsSystem
@@ -21,10 +23,11 @@ class Game(noc.Director):
     def __init__(self):
         super().__init__(client=self)
         self.ecs = ECSManager(self)
-        self.ecs.initialize()
         self.clock = ClockManager(self)
         self.world = WorldManager(self)
         self.player = PlayerManager(self)
+        self.storage = StorageManager(self)
+        # self.camera = CameraManager(self)
 
         self.action_system = ActionSystem(self)
         self.physics_system = PhysicsSystem(self)
@@ -41,6 +44,7 @@ class Game(noc.Director):
     def start(self):
         self.world.initialize()
         self.player.initialize()
+        # self.render_system.initialize_viewport()
 
     def get_initial_screen(self):
         return MainMenuScreen()

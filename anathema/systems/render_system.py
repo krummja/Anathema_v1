@@ -1,14 +1,22 @@
 from __future__ import annotations
 
+from morphism import *
 import nocterminal as noc
 from anathema.systems.base_system import BaseSystem
 
 
 class RenderSystem(BaseSystem):
 
+    viewport: Rect
+
     def initialize(self):
         self.query('tiles', all_of=[ 'Position' ], none_of=[ 'Actor' ])
         self.query('actors', all_of=[ 'Actor' ])
+
+    def initialize_viewport(self):
+        self.viewport = Rect.centered_at(
+            Size(96 - 24, 64 - 14),
+            Point(*self.game.player.position))
 
     def draw_tiles(self) -> None:
         explored = self.game.fov_system.explored
@@ -49,6 +57,12 @@ class RenderSystem(BaseSystem):
             noc.terminal.layer(z)
             noc.terminal.color(alpha + (actor['Renderable'].fore & 0x00FFFFFF))
             noc.terminal.put(x, y, actor['Renderable'].char)
+
+    def is_in_view(self, x, y):
+        return (x < self.viewport.width &
+                y < self.viewport.height &
+                x >= self.viewport.x &
+                y >= self.viewport.y)
 
     def update(self, dt) -> None:
         self.game.context.clear()

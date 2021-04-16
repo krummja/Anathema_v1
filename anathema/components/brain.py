@@ -10,8 +10,8 @@ class Brain(Component):
     def __init__(self):
         self._is_player = False
 
-    def on_attached(self):
-        self._is_player = self.entity.has('IsPlayer')
+    def on_attached(self, entity):
+        self._is_player = entity.has('IsPlayer')
 
     def on_try_interact(self, evt: EntityEvent):
         evt.data.instigator = self.entity
