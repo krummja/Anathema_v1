@@ -19,7 +19,7 @@ class Area:
             self,
             region: Region,
             size: Size,
-            tile_space: TileSpace,
+            tile_space: TileSpace = None,
         ) -> None:
         if not tile_space:
             tile_space = TileSpace(size)

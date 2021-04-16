@@ -15,7 +15,7 @@ class Region:
         self.world = world
         self.areas = {}
 
-    def add_area(self, area: Type[Area], size: Size = Size(128, 128), tile_factory = None):
+    def add_area(self, area: Type[Area], size: Size = Size(128, 128), tile_factory=None):
         if tile_factory:
             self.areas[area.name] = area(self, size, tile_factory)
         else:
