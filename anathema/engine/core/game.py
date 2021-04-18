@@ -2,8 +2,6 @@ from __future__ import annotations
 from typing import *
 import tcod
 
-from anathema.engine.core import BaseGame
-
 from anathema.engine.core.clock import ClockManager
 from anathema.engine.core.console import ConsoleManager
 from anathema.engine.core.content import ContentManager
@@ -19,6 +17,7 @@ from anathema.engine.systems.action_system import ActionSystem
 from anathema.engine.systems.interaction_system import InteractionSystem
 from anathema.engine.systems.physics_system import PhysicsSystem
 
+from .options import Options
 
 if TYPE_CHECKING:
     pass
@@ -33,7 +32,7 @@ CONFIG = {
 }
 
 
-class Game(BaseGame):
+class Game:
 
     context: tcod.context.Context
 

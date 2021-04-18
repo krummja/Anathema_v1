@@ -15,7 +15,7 @@ class BaseSystem:
         self.initialize()
 
     def query(self, key: str, all_of=None, any_of=None, none_of=None) -> None:
-        self._queries[key] = self.ecs.create_query(all_of, any_of, none_of)
+        self._queries[key] = self.ecs.world.create_query(all_of, any_of, none_of)
 
     def initialize(self):
         raise NotImplementedError()

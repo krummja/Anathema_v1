@@ -10,3 +10,9 @@ class BaseScreen:
     def __init__(self, name: str, game: BaseGame) -> None:
         self.name = name
         self.game = game
+
+
+class UIScreen(BaseScreen):
+
+    def __init__(self, name: str, game: BaseGame) -> None:
+        super().__init__(name, game)

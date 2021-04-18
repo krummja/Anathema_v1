@@ -10,7 +10,7 @@ if TYPE_CHECKING:
 class ActionSystem(BaseSystem):
 
     def initialize(self):
-        self.query('actors', all_of=[ 'Actor' ])
+        pass
 
     def update(self):
         pass

@@ -1,4 +1,5 @@
-from tcod import Tileset
+import tcod
+from tcod.tileset import Tileset
 
 
 class Options:
