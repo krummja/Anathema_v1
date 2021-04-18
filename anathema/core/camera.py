@@ -3,7 +3,6 @@ from typing import *
 from math import floor
 
 from morphism import *
-from anathema.screens.stage import StageScreen
 from .base_manager import BaseManager
 
 if TYPE_CHECKING:

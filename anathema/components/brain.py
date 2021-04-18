@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from ecstremity import Component, EntityEvent, Entity, EventData
 
-from anathema.screens.select_from import SelectFrom
+from attic.select_from import SelectFrom
 
 
 class Brain(Component):

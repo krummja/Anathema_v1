@@ -1,7 +1,7 @@
 import nocterminal as noc
 
-from screens.character_creation import CharacterCreationScreen
-from screens.stage import StageScreen
+from attic.character_creation import CharacterCreationScreen
+from attic.stage import StageScreen
 
 
 class MainMenuScreen(noc.ui.UIScreen):
