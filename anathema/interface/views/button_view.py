@@ -13,8 +13,8 @@ class ButtonView(View):
             callback,
             align_horz='center',
             align_vert='center',
-            color_fg=(255, 255, 255),
-            color_bg=(21, 21, 21),
+            fg=(255, 255, 255),
+            bg=(21, 21, 21),
             size=None,
             clear=False,
             *args, **kwargs
@@ -24,13 +24,13 @@ class ButtonView(View):
             align_horz=align_horz,
             align_vert=align_vert,
             size=size,
-            color_fg=color_fg,
-            color_bg=color_bg,
+            fg=fg,
+            bg=bg,
             clear=clear
             )
         super().__init__(subviews=[self.label_view], *args, **kwargs)
-        self.color_fg = color_fg
-        self.color_bg = color_bg
+        self.fg = fg
+        self.bg = bg
         self.callback = callback
 
     def set_needs_layout(self, val: bool = True) -> None:
@@ -38,12 +38,12 @@ class ButtonView(View):
         self.label_view.set_needs_layout(val)
 
     def did_become_responder(self):
-        self.label_view.color_fg = self.color_bg
-        self.label_view.color_bg = self.color_fg
+        self.label_view.fg = self.bg
+        self.label_view.bg = self.fg
 
     def did_resign_responder(self):
-        self.label_view.color_fg = self.color_fg
-        self.label_view.color_bg = self.color_bg
+        self.label_view.fg = self.fg
+        self.label_view.bg = self.bg
 
     def draw(self):
         pass

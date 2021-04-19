@@ -4,9 +4,9 @@ import numpy as np
 from dataclasses import dataclass
 
 from .tile import tile_dt
-from .region import Region
 
 if TYPE_CHECKING:
+    from .region import Region
     from numpy.lib.index_tricks import IndexExpression
 
 
@@ -47,8 +47,9 @@ class AreaLocation(Location):
 
 class Area:
 
-    def __init__(self, name: str, region: Region, width: int, height: int) -> None:
-        self.name = name
+    name: str
+
+    def __init__(self, region: Region, width: int, height: int) -> None:
         self.region = region
         self.width = width
         self.height = height

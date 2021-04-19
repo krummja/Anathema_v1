@@ -8,8 +8,8 @@ class LabelView(View):
     def __init__(
             self,
             text,
-            color_fg=(255, 255, 255),
-            color_bg=(21, 21, 21),
+            fg=(255, 255, 255),
+            bg=(21, 21, 21),
             align_horz='center',
             align_vert='center',
             size=None,
@@ -20,8 +20,8 @@ class LabelView(View):
         self.align_horz = align_horz
         self.align_vert = align_vert
         self.text = text
-        self.color_fg = color_fg
-        self.color_bg = color_bg
+        self.fg = fg
+        self.bg = bg
         self._explicit_size = size
 
     @property
@@ -36,8 +36,8 @@ class LabelView(View):
         return Size(width, height)
 
     def draw(self):
-        self.context.set_fg(self.bounds, self.color_fg)
-        self.context.set_bg(self.bounds, self.color_bg)
+        self.context.set_fg(self.bounds, self.fg)
+        self.context.set_bg(self.bounds, self.bg)
 
         x = 0
         if self.align_horz == 'center':
