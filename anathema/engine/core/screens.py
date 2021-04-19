@@ -14,8 +14,6 @@ class ScreenManager(BaseManager):
     def __init__(self, game: Game):
         super().__init__(game)
         self.screens = {
-            'MAIN MENU': MainMenu(game),
-            'STAGE': Stage(game)
         }
         self._stack: List[Screen] = []
         self.should_continue: bool = True
