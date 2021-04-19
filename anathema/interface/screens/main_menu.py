@@ -6,8 +6,6 @@ from anathema.interface.screens import UIScreen
 from anathema.interface.views import Layout
 from anathema.interface.views.rect_view import RectView
 from anathema.interface.views.label_view import LabelView
-from anathema.interface.views.button_view import ButtonView
-from anathema.engine.core.input import LoopExit
 
 if TYPE_CHECKING:
     from anathema.engine.core import BaseGame
@@ -17,8 +15,18 @@ class MainMenu(UIScreen):
 
     def __init__(self, game: BaseGame) -> None:
         views = [
-            RectView(layout=Layout(top=0, right=0, bottom=0, left=0))
-                 ]
+            RectView(
+                layout=Layout(top=0, right=0, bottom=0, left=0),
+                # subviews=[
+                #     LabelView(
+                #         "Test Label",
+                #         fg=(255, 0, 0),
+                #         align_horz="center",
+                #         align_vert="center"
+                #     )
+                # ]
+            )
+        ]
         super().__init__(name="MAIN MENU", game=game, views=views)
 
     def create(self):

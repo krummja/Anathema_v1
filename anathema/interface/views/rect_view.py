@@ -11,18 +11,20 @@ if TYPE_CHECKING:
 class RectView(View):
     def __init__(
             self,
-            color_fg=0xFFAAAAAA,
-            color_bg=0xFF151515,
+            fg=(255, 255, 255),
+            bg=(21, 21, 21),
             fill=False,
             style='single',
             *args,
             **kwargs
         ) -> None:
         super().__init__(*args, **kwargs)
-        self.color_fg = color_fg
-        self.color_bg = color_bg
+        self.fg = fg
+        self.bg = bg
         self.fill = fill
         self.style = style
 
     def draw(self):
         self.context.draw_frame(self.bounds, fg=(255, 255, 255), bg=(21, 21, 21))
+        self.console.draw_frame(self.bounds.x+10, self.bounds.y+10, self.bounds.width-20, self.bounds.height-20,
+                                title="Test Title", fg=(255, 0, 0), bg=(21, 21, 21))
