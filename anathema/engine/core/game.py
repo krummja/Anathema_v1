@@ -2,11 +2,12 @@ from __future__ import annotations
 from typing import *
 import tcod
 
+from anathema.engine.core.camera import CameraManager
 from anathema.engine.core.clock import ClockManager
 from anathema.engine.core.console import ConsoleManager
 from anathema.engine.core.content import ContentManager
 from anathema.engine.core.ecs import ECSManager
-from anathema.engine.core.input import InputManager
+from anathema.engine.core.input import InputManager, LoopExit
 from anathema.engine.core.player import PlayerManager
 from anathema.engine.core.renderer import RenderManager
 from anathema.engine.core.screens import ScreenManager
@@ -40,6 +41,7 @@ class Game:
         self.ecs: ECSManager = ECSManager(self)
         self.clock: ClockManager = ClockManager(self)
         self.console: ConsoleManager = ConsoleManager(self)
+        self.camera: CameraManager = CameraManager(self)
         self.renderer: RenderManager = RenderManager(self)
         self.screens: ScreenManager = ScreenManager(self)
         self.input: InputManager = InputManager(self)
@@ -54,9 +56,14 @@ class Game:
         self.interaction_system: InteractionSystem = InteractionSystem(self)
 
     def run(self):
+        print("Starting...")
+        self.screens.replace_screen(self.screens.screens['MAIN MENU'])
         self.loop()
 
     def loop(self):
-        with tcod.context.new_terminal(**CONFIG) as self.context:
-            while True:
+        with tcod.context.new(**CONFIG) as self.context:
+            print("Welcome to Anathema.")
+            while self.screens.should_continue:
+                self.screens.update()
                 self.context.present(self.console.root)
+                self.input.update()

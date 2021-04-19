@@ -11,3 +11,8 @@ class WorldManager(BaseManager):
 
     def __init__(self, game: Game):
         super().__init__(game)
+        self._current_area = None
+
+    @property
+    def current_area(self):
+        return self._current_area

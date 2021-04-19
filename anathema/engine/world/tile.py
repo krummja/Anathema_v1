@@ -2,6 +2,8 @@ from __future__ import annotations
 from typing import *
 import numpy as np
 
+from anathema.engine.graphic import Graphic
+
 if TYPE_CHECKING:
     pass
 
