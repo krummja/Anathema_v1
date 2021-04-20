@@ -18,15 +18,15 @@ class StageView(View):
 
     def __init__(
             self,
-            color_fg=(255, 255, 255),
-            color_bg=(21, 21, 21),
+            fg=(255, 255, 255),
+            bg=(21, 21, 21),
             clear=True,
             *args,
             **kwargs
             ) -> None:
         super().__init__(*args, **kwargs)
-        self.color_fg = color_fg
-        self.color_bg = color_bg
+        self.fg = fg
+        self.bg = bg
         self.clear = clear
 
     def draw(self):

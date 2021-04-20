@@ -11,16 +11,16 @@ if TYPE_CHECKING:
 class RectView(View):
     def __init__(
             self,
-            color_fg=0xFFAAAAAA,
-            color_bg=0xFF151515,
+            fg=(255, 255, 255),
+            bg=(21, 21, 21),
             fill=False,
             style='single',
             *args,
             **kwargs
         ) -> None:
         super().__init__(*args, **kwargs)
-        self.color_fg = color_fg
-        self.color_bg = color_bg
+        self.fg = fg
+        self.bg = bg
         self.fill = fill
         self.style = style
 

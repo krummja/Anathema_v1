@@ -20,15 +20,15 @@ class Context:
     def set_fg(self, rect: Rect, value):
         computed = Rect(rect.origin + self._offset, rect.size)
         self.console.fg[
-            computed.x:computed.x+computed.width,
-            computed.y:computed.y+computed.height
+            computed.y:computed.y + computed.height,
+            computed.x:computed.x + computed.width
         ] = value
 
     def set_bg(self, rect: Rect, value):
         computed = Rect(rect.origin + self._offset, rect.size)
         self.console.bg[
-            computed.x:computed.x+computed.width,
-            computed.y:computed.y+computed.height
+            computed.y:computed.y + computed.height,
+            computed.x:computed.x + computed.width
         ] = value
 
     @contextmanager
@@ -40,6 +40,16 @@ class Context:
 
     def blit(self):
         pass
+
+    def clear_area(self, rect: Rect, *args, **kwargs):
+        computed = Rect(rect.origin + self._offset, rect.size)
+        self.draw_rect(
+            computed,
+            ch=32,
+            fg=self.console.default_fg,
+            bg=self.console.default_bg,
+            *args, **kwargs
+        )
 
     def draw_frame(self, rect: Rect, *args, **kwargs):
         computed = Rect(rect.origin + self._offset, rect.size)

@@ -307,7 +307,7 @@ class View:
         pass
 
     def handle_input(self, char):
-        return True
+        return False
 
     @property
     def leftmost_leaf(self):

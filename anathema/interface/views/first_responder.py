@@ -109,8 +109,8 @@ class FirstResponderView(View):
         return self.handle_input_after_responder(val, can_resign)
 
     def handle_input_after_responder(self, val, can_resign):
-        if can_resign and val == tcod.event.K_TAB:
-            if val & tcod.event.KMOD_LSHIFT:
+        if can_resign and val.sym == tcod.event.K_TAB:
+            if val.sym & tcod.event.KMOD_LSHIFT:
                 self.find_prev_responder()
                 return True
             else:

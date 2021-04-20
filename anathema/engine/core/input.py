@@ -19,7 +19,7 @@ class InputManager(BaseManager, Generic[T], tcod.event.EventDispatch[T]):
 
     COMMAND_KEYS = {
         tcod.event.K_ESCAPE: 'escape',
-        tcod.event.K_RETURN: 'return',
+        # tcod.event.K_RETURN: 'return',
     }
 
     def __init__(self, game: Game):
@@ -35,10 +35,12 @@ class InputManager(BaseManager, Generic[T], tcod.event.EventDispatch[T]):
                 return value
 
     def ev_keydown(self, event):
+        self.game.screens.active_screen.handle_input(event)
+
         func: Callable[[], T]
         if event.sym in self.COMMAND_KEYS:
             try:
                 func = getattr(self.game.screens.active_screen, f"cmd_{self.COMMAND_KEYS[event.sym]}")
                 return func()
             except AttributeError:
-                self.game.screens.active_screen.handle_input(event)
+                pass
