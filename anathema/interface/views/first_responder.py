@@ -12,103 +12,103 @@ class FirstResponderView(View):
 
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
-        self.responder = None
+        self.first_responder = None
         self.find_next_responder()
 
     @property
-    def contains_responders(self):
+    def contains_first_responders(self):
         return True
 
-    def responder_traversal(self):
+    def first_responder_traversal(self):
         for subview in self.subviews:
-            yield from self._responder_traversal(subview)
+            yield from self._first_responder_traversal(subview)
 
-    def _responder_traversal(self, v):
-        if v.contains_responders:
+    def _first_responder_traversal(self, v):
+        if v.contains_first_responders:
             yield v
             return
         for subview in v.subviews:
-            yield from self._responder_traversal(subview)
+            yield from self._first_responder_traversal(subview)
         yield v
 
     @property
-    def _eligible_responders(self):
-        return [v for v in self.responder_traversal()
-                if v != self and v.can_become_responder]
+    def _eligible_first_responders(self):
+        return [v for v in self.first_responder_traversal()
+                if v != self and v.can_become_first_responder]
 
     def remove_subviews(self, subviews):
         super().remove_subviews(subviews)
         for v in subviews:
-            for subview in self._responder_traversal(v):
-                if subview == self.responder:
-                    self.set_responder(None)
+            for subview in self._first_responder_traversal(v):
+                if subview == self.first_responder:
+                    self.set_first_responder(None)
                     self.find_next_responder()
                     return
 
-    def set_responder(self, value):
-        if self.responder:
-            self.responder.did_resign_responder()
-            for ancestor in self.responder.ancestors:
-                ancestor.descendant_did_resign_responder(self.responder)
+    def set_first_responder(self, value):
+        if self.first_responder:
+            self.first_responder.did_resign_first_responder()
+            for ancestor in self.first_responder.ancestors:
+                ancestor.descendant_did_resign_first_responder(self.first_responder)
 
-        self.responder = value
+        self.first_responder = value
 
-        if self.responder:
-            self.responder.did_become_responder()
-            for ancestor in self.responder.ancestors:
-                ancestor.descendant_did_become_responder(self.responder)
+        if self.first_responder:
+            self.first_responder.did_become_first_responder()
+            for ancestor in self.first_responder.ancestors:
+                ancestor.descendant_did_become_first_responder(self.first_responder)
 
     def find_next_responder(self):
-        existing_responder = self.responder
-        if self.responder is None:
+        existing_responder = self.first_responder
+        if self.first_responder is None:
             existing_responder = self.leftmost_leaf
-        all_responders = self._eligible_responders
+        all_responders = self._eligible_first_responders
 
         try:
             i = all_responders.index(existing_responder)
             if i == len(all_responders) - 1:
-                self.set_responder(all_responders[0])
+                self.set_first_responder(all_responders[0])
             else:
-                self.set_responder(all_responders[i + 1])
+                self.set_first_responder(all_responders[i + 1])
 
         except ValueError:
             if all_responders:
-                self.set_responder(all_responders[0])
+                self.set_first_responder(all_responders[0])
             else:
-                self.set_responder(None)
+                self.set_first_responder(None)
 
     def find_prev_responder(self):
-        existing_responder = self.responder
-        if self.responder is None:
+        existing_responder = self.first_responder
+        if self.first_responder is None:
             existing_responder = self.leftmost_leaf
-        all_responders = self._eligible_responders
+        all_responders = self._eligible_first_responders
 
         try:
             i = all_responders.index(existing_responder)
             if i == 0:
-                self.set_responder(all_responders[-1])
+                self.set_first_responder(all_responders[-1])
             else:
-                self.set_responder(all_responders[i - 1])
+                self.set_first_responder(all_responders[i - 1])
 
         except ValueError:
             if all_responders:
-                self.set_responder(all_responders[-1])
+                self.set_first_responder(all_responders[-1])
             else:
-                self.set_responder(None)
+                self.set_first_responder(None)
 
     def handle_input(self, val):
-        handled = self.responder and self.responder.handle_input(val)
-        if self.responder and not handled:
-            for v in self.responder.ancestors:
+        handled = self.first_responder and self.first_responder.handle_input(val)
+        if self.first_responder and not handled:
+            for v in self.first_responder.ancestors:
                 if v == self:
                     break
                 if v.handle_input(val):
                     return True
 
-        can_resign = (not self.responder or self.responder.can_resign_responder)
-        return self.handle_input_after_responder(val, can_resign)
+        can_resign = (not self.first_responder or self.first_responder.can_resign_first_responder)
+        return self.handle_input_after_first_responder(val, can_resign)
 
-    def handle_input_after_responder(self, val, can_resign):
+    def handle_input_after_first_responder(self, val, can_resign):
         if can_resign and val.sym == tcod.event.K_TAB:
             if val.sym & tcod.event.KMOD_LSHIFT:
                 self.find_prev_responder()

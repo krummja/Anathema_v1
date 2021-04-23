@@ -26,6 +26,10 @@ class CameraManager(BaseManager):
         cam_y = self._camera_pos[1] - Options.STAGE_PANEL_HEIGHT // 2
         return cam_x, cam_y
 
+    @camera_pos.setter
+    def camera_pos(self, value):
+        self._camera_pos = value
+
     @property
     def camera_view(self) -> Tuple[Tuple[slice, slice], Tuple[slice, slice]]:
         cam_x, cam_y = self.camera_pos

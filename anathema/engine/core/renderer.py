@@ -20,15 +20,14 @@ class RenderManager(BaseManager):
 
     def render_area_tiles(self, area: Area) -> None:
         screen_view, world_view = self.game.camera.camera_view
-        self.root_console.clear()
-        self.root_console.tiles_rgb[screen_view] = self.select_area_max(area, world_view)
+        self.root_console.tiles_rgb[screen_view] = self.select_area_mask(area, world_view)
 
     @staticmethod
     def select_area_mask(area: Area, world_view: Tuple[slice, slice]) -> np.ndarray:
-        UNKNOWN = np.asarray((0, (21, 21, 21), (0, 0, 0)), dtype=tile_graphic)
+        UNKNOWN = np.asarray((0, (21, 21, 21), (21, 21, 21)), dtype=tile_graphic)
 
-        if_visible = area.visible
-        if_explored = area.explored
+        if_visible = area.visible[world_view]
+        if_explored = area.explored[world_view]
         lit_tiles = area.tiles["light"][world_view]
         unlit_tiles = area.tiles["dark"][world_view]
 

@@ -161,8 +161,8 @@ class View:
         self.needs_layout: bool = True
 
         self.clear: bool = clear
-        self.responder = None
-        self.is_responder: bool = False
+        self.first_responder = None
+        self.is_first_responder: bool = False
         self.is_hidden: bool = False
 
         self.subviews: List[View] = []
@@ -272,38 +272,38 @@ class View:
         self.set_needs_layout(True)
 
     @property
-    def can_become_responder(self) -> bool:
+    def can_become_first_responder(self) -> bool:
         return False
 
     @property
-    def contains_responders(self) -> bool:
+    def contains_first_responders(self) -> bool:
         return False
 
     @property
-    def can_resign_responder(self) -> bool:
+    def can_resign_first_responder(self) -> bool:
         return True
 
     @property
-    def responder_container_view(self) -> Optional[View]:
-        if self.responder:
+    def first_responder_container_view(self) -> Optional[View]:
+        if self.first_responder:
             return self
         for v in self.ancestors:
-            if v.responder:
+            if v.first_responder:
                 return v
         return None
 
-    def did_become_responder(self) -> None:
+    def did_become_first_responder(self) -> None:
         self.set_needs_layout(True)
-        self.is_responder = True
+        self.is_first_responder = True
 
     def did_resign_first_responder(self) -> None:
         self.set_needs_layout(True)
-        self.is_responder = False
+        self.is_first_responder = False
 
-    def descendant_did_become_responder(self, view: View) -> bool:
+    def descendant_did_become_first_responder(self, view: View) -> bool:
         pass
 
-    def descendant_did_resign_responder(self, view: View) -> bool:
+    def descendant_did_resign_first_responder(self, view: View) -> bool:
         pass
 
     def handle_input(self, char):

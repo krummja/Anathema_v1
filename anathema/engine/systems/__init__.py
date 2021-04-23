@@ -2,13 +2,13 @@ from __future__ import annotations
 from typing import *
 
 if TYPE_CHECKING:
-    from anathema.engine.core import BaseGame
+    from anathema.engine.core.game import Game
     from ecstremity import Query, World
 
 
 class BaseSystem:
 
-    def __init__(self, game: BaseGame) -> None:
+    def __init__(self, game: Game) -> None:
         self.game = game
         self.ecs = game.ecs
         self._queries: Dict[str, Query] = {}

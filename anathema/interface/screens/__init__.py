@@ -56,6 +56,14 @@ class Screen(BaseScreen):
     def resign_active(self):
         pass
 
+    def pre_update(self):
+        """Timing hook that runs just before the screen update step."""
+        pass
+
+    def post_update(self):
+        """Timing hook that runs just after the screen update step."""
+        pass
+
 
 class UIScreen(Screen):
 
@@ -67,9 +75,17 @@ class UIScreen(Screen):
         self.add_input_handler(self.view)
 
     def on_update(self, is_active=False):
-        self.game.console.root.clear()
+        """Method that runs once each frame.
+                                -------------------------
+        1) pre_update          | 2a) clear_console       |
+        2) on_update --------> | 2b) view perform layout |
+        3) post_update         | 2c) view perform draw   |
+                                -------------------------
+        """
+        self.pre_update()
         self.view.frame = self.view.frame.with_size(
             Size(Options.CONSOLE_WIDTH, Options.CONSOLE_HEIGHT))
         self.view.perform_layout()
         self.view.perform_draw()
+        self.post_update()
         return True

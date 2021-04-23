@@ -4,7 +4,6 @@ import numpy as np
 from dataclasses import dataclass
 
 from .tile import tile_dt
-from .region import Region
 
 if TYPE_CHECKING:
     from numpy.lib.index_tricks import IndexExpression
@@ -47,9 +46,9 @@ class AreaLocation(Location):
 
 class Area:
 
-    def __init__(self, name: str, region: Region, width: int, height: int) -> None:
-        self.name = name
-        self.region = region
+    name: str
+
+    def __init__(self, width: int, height: int) -> None:
         self.width = width
         self.height = height
         self._tiles = np.zeros(self.shape, dtype=tile_dt)
@@ -68,9 +67,24 @@ class Area:
     def explored(self):
         return self._explored
 
+    @explored.setter
+    def explored(self, value):
+        self._explored = value
+
     @property
     def visible(self):
         return self._visible
+
+    @visible.setter
+    def visible(self, value):
+        self._visible = value
+
+    def is_blocked(self, x: int, y: int):
+        if not (0 <= x < self.width and 0 <= y < self.height):
+            return True
+        if not self.tiles[y, x]["move_cost"]:
+            return True
+        return False
 
     def get_bg_color(self, x: int, y: int) -> List[int]:
         pass

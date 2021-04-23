@@ -25,4 +25,4 @@ class RectView(View):
         self.style = style
 
     def draw(self):
-        self.context.draw_frame(self.bounds, fg=(255, 255, 255), bg=(21, 21, 21))
+        self.context.draw_frame(self.bounds, fg=self.fg, bg=self.bg)

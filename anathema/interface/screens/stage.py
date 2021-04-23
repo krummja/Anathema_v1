@@ -1,6 +1,7 @@
 from __future__ import annotations
 from typing import *
 from morphism import *
+import numpy as np
 import tcod
 
 from anathema.engine.core.options import Options
@@ -9,6 +10,7 @@ from anathema.interface.views import Layout, View
 from anathema.interface.views.rect_view import RectView
 from anathema.interface.views.label_view import LabelView
 from anathema.engine.core.input import LoopExit
+from anathema.engine.world.tile import tile_dt
 
 if TYPE_CHECKING:
     from anathema.engine.core.game import Game
@@ -20,7 +22,7 @@ class StageView(View):
             self,
             fg=(255, 255, 255),
             bg=(21, 21, 21),
-            clear=True,
+            clear=False,
             *args,
             **kwargs
             ) -> None:
@@ -28,9 +30,12 @@ class StageView(View):
         self.fg = fg
         self.bg = bg
         self.clear = clear
+        self.fill = False
 
     def draw(self):
-        self.context.print(Point(1, 1), "Stage Screen")
+        pass
+        # self.screen.game.console.root.tiles_rgb[:] = (ord("#"), [100, 0, 100], [21, 21, 21])
+        # self.context.print(Point(10, 10), "Hello, world!", fg=(255, 255, 255))
 
 
 class Stage(UIScreen):
@@ -40,6 +45,15 @@ class Stage(UIScreen):
             top=0, right=Options.STAGE_PANEL_WIDTH, bottom=Options.STAGE_PANEL_HEIGHT, left=0))]
         super().__init__(name="STAGE", game=game, views=views)
         self.covers_screen = True
+
+    def on_enter(self, *args):
+        self.game.console.root.clear()
+        self.game.camera.camera_pos = self.game.player.position
+        self.game.fov_system.update_fov()
+        self.game.render_system.update()
+
+    def pre_update(self):
+        self.game.player_update()
 
     def cmd_escape(self):
         self.game.screens.pop_screen()

@@ -37,11 +37,11 @@ class ButtonView(View):
         super().set_needs_layout(val)
         self.label_view.set_needs_layout(val)
 
-    def did_become_responder(self):
+    def did_become_first_responder(self):
         self.label_view.fg = self.bg
         self.label_view.bg = self.fg
 
-    def did_resign_responder(self):
+    def did_resign_first_responder(self):
         self.label_view.fg = self.fg
         self.label_view.bg = self.bg
 
@@ -66,7 +66,7 @@ class ButtonView(View):
         self.label_view.frame = self.bounds
 
     @property
-    def can_become_responder(self):
+    def can_become_first_responder(self):
         return True
 
     def handle_input(self, event):

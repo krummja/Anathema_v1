@@ -22,6 +22,29 @@ class InputManager(BaseManager, Generic[T], tcod.event.EventDispatch[T]):
         # tcod.event.K_RETURN: 'return',
     }
 
+    MOVE_KEYS: Dict[int, Tuple[int, int]] = {
+        # Arrow keys.
+        tcod.event.K_LEFT    : (-1, 0),
+        tcod.event.K_RIGHT   : (1, 0),
+        tcod.event.K_UP      : (0, -1),
+        tcod.event.K_DOWN    : (0, 1),
+        tcod.event.K_HOME    : (-1, -1),
+        tcod.event.K_END     : (-1, 1),
+        tcod.event.K_PAGEUP  : (1, -1),
+        tcod.event.K_PAGEDOWN: (1, 1),
+        tcod.event.K_PERIOD  : (0, 0),
+        # Numpad keys.
+        tcod.event.K_KP_1    : (-1, 1),
+        tcod.event.K_KP_2    : (0, 1),
+        tcod.event.K_KP_3    : (1, 1),
+        tcod.event.K_KP_4    : (-1, 0),
+        tcod.event.K_KP_5    : (0, 0),
+        tcod.event.K_KP_6    : (1, 0),
+        tcod.event.K_KP_7    : (-1, -1),
+        tcod.event.K_KP_8    : (0, -1),
+        tcod.event.K_KP_9    : (1, -1),
+    }
+
     def __init__(self, game: Game):
         super().__init__(game)
 
@@ -44,3 +67,5 @@ class InputManager(BaseManager, Generic[T], tcod.event.EventDispatch[T]):
                 return func()
             except AttributeError:
                 pass
+        if event.sym in self.MOVE_KEYS:
+            self.game.player.move(self.MOVE_KEYS[event.sym])

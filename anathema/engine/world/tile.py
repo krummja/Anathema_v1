@@ -40,7 +40,7 @@ class Tile(Graphic):
         light = (char, color, bg)
         dark = (char,
                 (color[0] // 2, color[1] // 2, color[2] // 2),
-                (bg[0] // 2, bg[1] // 2, bg[2] // 2))
+                (21, 21, 21))
 
         return np.array((move_cost, transparent, light, dark), dtype=tile_dt)
 
