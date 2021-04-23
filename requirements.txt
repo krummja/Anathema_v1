@@ -1,5 +1,7 @@
 bearlibterminal~=0.15.7
-ecstremity~=1.0.0
+ecstremity~=1.0.4
+morphism~=0.0.1
+nocterminal~=0.0.1
 numpy~=1.19.5
 setuptools~=45.2.0
 tcod~=11.19.3

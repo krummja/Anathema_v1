@@ -1,12 +1,12 @@
 from __future__ import annotations
+from typing import *
 
-from anathema.core import Game
+from anathema.engine.core.game import Game
 
-
-def main():
-    game = Game()
-    game.start()
+if TYPE_CHECKING:
+    pass
 
 
 if __name__ == '__main__':
-    main()
+    game = Game()
+    game.run()
