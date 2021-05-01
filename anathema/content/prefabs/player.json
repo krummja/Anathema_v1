@@ -1,0 +1,9 @@
+{
+    "name": "Player",
+    "inherit": ["Being"],
+    "components": [
+        {
+            "type": "IsPlayer"
+        }
+    ]
+}

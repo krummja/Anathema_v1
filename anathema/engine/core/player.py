@@ -13,7 +13,7 @@ class PlayerManager(BaseManager):
 
     def __init__(self, game: Game):
         super().__init__(game)
-        self._uid = 'PLAYER'
+        self._uid = None
         self._action_queue = deque([])
 
     @property
@@ -29,12 +29,16 @@ class PlayerManager(BaseManager):
         return self.entity['Position'].xy
 
     def initialize(self):
-        player = self.game.ecs.world.create_entity(self._uid)
-        player.add('IsPlayer', {})
-        player.add('Position', {'x': 10, 'y': 10})
-        player.add('Renderable', {'char': '@', 'fg': (255, 0, 255)})
-        player.add('Actor', {})
-        player.add('Legs', {})
+        player = self.game.ecs.world.create_prefab("Player", {
+            "position": {
+                "x": 10, "y": 20
+            },
+            "renderable": {
+                "char": "@",
+                "fg": (255, 0, 255)
+            }
+        })
+        self._uid = player.uid
 
     def get_next_action(self):
         return self._action_queue.popleft()

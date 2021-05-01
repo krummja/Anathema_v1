@@ -1,7 +1,7 @@
 from __future__ import annotations
 from typing import *
 import numpy as np
-from dataclasses import dataclass
+from engine.world.generation.tiles import Tiles
 
 from .tile import tile_dt
 
@@ -51,6 +51,7 @@ class Area:
     def __init__(self, width: int, height: int) -> None:
         self.width = width
         self.height = height
+        self._factory = Tiles()
         self._tiles = np.zeros(self.shape, dtype=tile_dt)
         self._explored = np.zeros(self.shape, dtype=bool)
         self._visible = np.zeros(self.shape, dtype=bool)

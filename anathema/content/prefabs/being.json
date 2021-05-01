@@ -1,0 +1,12 @@
+{
+  "name": "Being",
+  "inherit": ["GameObject"],
+  "components": [
+    {
+      "type": "Actor"
+    },
+    {
+      "type": "Legs"
+    }
+  ]
+}

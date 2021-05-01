@@ -1,6 +1,7 @@
 from __future__ import annotations
 from typing import *
 import tcod
+import os
 
 from anathema.engine.core.camera import CameraManager
 from anathema.engine.core.clock import ClockManager
@@ -61,6 +62,7 @@ class Game:
 
     def run(self):
         print("Starting...")
+        self.content.load_prefabs(path="content/prefabs/")
         self.screens.replace_screen(self.screens.screens['MAIN MENU'])
         self.loop()
 

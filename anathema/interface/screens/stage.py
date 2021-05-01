@@ -16,33 +16,22 @@ if TYPE_CHECKING:
     from anathema.engine.core.game import Game
 
 
-class StageView(View):
-
-    def __init__(
-            self,
-            fg=(255, 255, 255),
-            bg=(21, 21, 21),
-            clear=False,
-            *args,
-            **kwargs
-            ) -> None:
-        super().__init__(*args, **kwargs)
-        self.fg = fg
-        self.bg = bg
-        self.clear = clear
-        self.fill = False
-
-    def draw(self):
-        pass
-        # self.screen.game.console.root.tiles_rgb[:] = (ord("#"), [100, 0, 100], [21, 21, 21])
-        # self.context.print(Point(10, 10), "Hello, world!", fg=(255, 255, 255))
-
-
 class Stage(UIScreen):
 
     def __init__(self, game: Game) -> None:
-        views = [StageView(layout=Layout(
-            top=0, right=Options.STAGE_PANEL_WIDTH, bottom=Options.STAGE_PANEL_HEIGHT, left=0))]
+        views = [
+            RectView(
+                layout=Layout(
+                    right = Options.CONSOLE_WIDTH-Options.STAGE_PANEL_WIDTH,
+                    top = Options.STAGE_PANEL_HEIGHT
+                )
+            ),
+            RectView(
+                layout = Layout(
+                    left = Options.STAGE_PANEL_WIDTH,
+                )
+            )
+        ]
         super().__init__(name="STAGE", game=game, views=views)
         self.covers_screen = True
 

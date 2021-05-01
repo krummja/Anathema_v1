@@ -1,0 +1,14 @@
+{
+  "name": "GameObject",
+  "components": [
+    {
+      "type": "Position"
+    },
+    {
+      "type": "Renderable",
+      "properties": {
+        "char": "?"
+      }
+    }
+  ]
+}

@@ -68,4 +68,5 @@ class InputManager(BaseManager, Generic[T], tcod.event.EventDispatch[T]):
             except AttributeError:
                 pass
         if event.sym in self.MOVE_KEYS:
-            self.game.player.move(self.MOVE_KEYS[event.sym])
+            if self.game.screens.active_screen.name == 'STAGE':
+                self.game.player.move(self.MOVE_KEYS[event.sym])
