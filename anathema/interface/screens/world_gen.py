@@ -9,6 +9,7 @@ from anathema.interface.screens import UIScreen
 from anathema.interface.views import Layout, View
 from anathema.interface.views.rect_view import RectView
 from anathema.interface.views.label_view import LabelView
+from anathema.engine.world.generation.color import test_palette
 
 if TYPE_CHECKING:
     from anathema.engine.core.game import Game
@@ -41,6 +42,10 @@ class WorldGen(UIScreen):
 
     def pre_update(self):
         self.game.render_system.draw_world_map()
+        cam_x, cam_y = self.game.camera.camera_pos
+        x = self.position[0] - cam_x
+        y = self.position[1] - cam_y
+        self.game.console.root.tiles_rgb[["fg", "bg"]][y][x] = (0, 0, 0), (255, 0, 0)
 
     def post_update(self):
         if self.debug:
@@ -63,3 +68,9 @@ class WorldGen(UIScreen):
         self.game.console.root.print(
             Options.STAGE_PANEL_WIDTH + 2, 4,
             "Position: " + str(self.position))
+
+    def cmd_space(self):
+        self.game.world.generator.generate()
+        self.game.world.planet_view.generate_view(test_palette)
+        self.game.console.root.clear()
+

@@ -11,12 +11,8 @@ from anathema.engine.world.planet.tcod_heightmap import *
 
 class Heightmap:
 
-    def __init__(
-            self,
-            height: int,
-            width: int,
-        ) -> None:
-        self._array = heightmap_new(width, height)
+    def __init__(self, width: int, height: int) -> None:
+        self._array = heightmap_new(height, width, order="C")
 
     @property
     def array(self) -> np.ndarray:
@@ -34,8 +30,8 @@ class Heightmap:
         for i in range(count):
             heightmap_add_hill(
                 self._array,
-                randint(self.width // 10, self.width - self.width // 10),
                 randint(self.height // 10, self.height - self.height // 10),
+                randint(self.width // 10, self.width - self.width // 10),
                 randint(12, 16), randint(6, 10)
             )
 
@@ -43,8 +39,8 @@ class Heightmap:
         for i in range(count):
             heightmap_add_hill(
                 self._array,
-                randint(self.width // 10, self.width - self.width // 10),
                 randint(self.height // 10, self.height - self.height // 10),
+                randint(self.width // 10, self.width - self.width // 10),
                 randint(2, 4), randint(6, 10)
             )
 

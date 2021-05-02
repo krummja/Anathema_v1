@@ -426,14 +426,16 @@ def heightmap_dig_bezier(
     )
 
 
-def heightmap_get_value(hm: np.ndarray, x: int, y: int) -> float:
+def heightmap_get_value(hm: np.ndarray, x: int, y: int, order="C") -> float:
     """Return the value at ``x``, ``y`` in a heightmap.
     .. deprecated:: 2.0
         Access `hm` as a NumPy array instead.
     """
-    if hm.flags["C_CONTIGUOUS"]:
+    # if hm.flags["C_CONTIGUOUS"]:
+    if order == "C":
         return hm[y, x]  # type: ignore
-    elif hm.flags["F_CONTIGUOUS"]:
+    # elif hm.flags["F_CONTIGUOUS"]:
+    elif order == "F":
         return hm[x, y]  # type: ignore
     else:
         raise ValueError("This array is not contiguous.")

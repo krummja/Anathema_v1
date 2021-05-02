@@ -3,6 +3,7 @@ from typing import *
 
 from morphism import *
 import tcod.map
+from tcod.color import Color
 
 from anathema.engine.core import BaseManager
 from anathema.engine.world.area import Area
@@ -10,6 +11,7 @@ from anathema.engine.world.tile import Tile
 from anathema.engine.world.generation.array_tools import rng_selection
 from anathema.engine.world.generation.automata import *
 from anathema.engine.world.planet.generator import PlanetView, PlanetGenerator
+from anathema.engine.world.generation.color import test_palette
 
 if TYPE_CHECKING:
     from anathema.engine.core.game import Game
@@ -55,7 +57,7 @@ class WorldManager(BaseManager):
 
     def initialize_world(self):
         self.generator.generate()
-        self.planet_view.generate_view()
+        self.planet_view.generate_view(test_palette)
 
     def initialize(self):
         self.current_area = TestArea()

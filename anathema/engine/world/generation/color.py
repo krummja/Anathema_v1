@@ -1,3 +1,8 @@
+from tcod import color
+import numpy as np
+from anathema.engine.world.tile import tile_graphic
+
+
 class Color:
     black = (0x00, 0x00, 0x00)
     white = (0xFF, 0xFF, 0xFF)
@@ -25,3 +30,22 @@ class Color:
     lima = (0x83, 0x9e, 0x0d)
     pea_green = (0x16, 0x75, 0x26)
     sherwood = (0x00, 0x40, 0x27)
+
+
+test_palette = np.array(
+            [
+                (ord("≈"), color.Color( 20,  40, 130), color.Color(21, 21, 21)),
+                (ord("≈"), color.Color( 20,  60, 165), color.Color(21, 21, 21)),
+                (ord("≈"), color.Color( 60, 100, 210), color.Color(21, 21, 21)),
+                (ord("2"), color.Color(175, 215, 170), color.Color(21, 21, 21)),
+                (ord("3"), color.Color(125, 200, 140), color.Color(21, 21, 21)),
+                (ord("4"), color.Color(100, 175, 100), color.Color(21, 21, 21)),
+                (ord("5"), color.Color(100, 135,  95), color.Color(21, 21, 21)),
+                (ord("6"), color.Color( 60, 110,  55), color.Color(21, 21, 21)),
+                (ord("7"), color.Color( 30,  90,  25), color.Color(21, 21, 21)),
+                (ord("8"), color.Color( 60,  65,  60), color.Color(21, 21, 21)),
+                (ord("▲"), color.Color(160, 160, 160) - color.Color(40, 40, 40), color.Color(21, 21, 21)),
+                (ord("▲"), color.Color(190, 190, 190), color.Color(21, 21, 21)),
+            ],
+            dtype=tile_graphic
+        )
