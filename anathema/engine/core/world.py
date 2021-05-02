@@ -9,6 +9,7 @@ from anathema.engine.world.area import Area
 from anathema.engine.world.tile import Tile
 from anathema.engine.world.generation.array_tools import rng_selection
 from anathema.engine.world.generation.automata import *
+from anathema.engine.world.planet.generator import PlanetView, PlanetGenerator
 
 if TYPE_CHECKING:
     from anathema.engine.core.game import Game
@@ -22,8 +23,6 @@ class TestArea(Area):
         super().__init__(512, 512)
 
     def initialize(self):
-        # self._tiles[:] = self._factory.unformed.make()
-
         automata = Anneal((512, 512), density=0.46)
         automata.generate(10)
         result = automata.board
@@ -51,6 +50,12 @@ class WorldManager(BaseManager):
     def __init__(self, game: Game):
         super().__init__(game)
         self.current_area = None
+        self.generator = PlanetGenerator(130, 200)
+        self.planet_view = PlanetView(self.generator)
+
+    def initialize_world(self):
+        self.generator.generate()
+        self.planet_view.generate_view()
 
     def initialize(self):
         self.current_area = TestArea()

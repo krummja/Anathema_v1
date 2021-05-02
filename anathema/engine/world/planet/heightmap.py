@@ -13,10 +13,10 @@ class Heightmap:
 
     def __init__(
             self,
-            width: int,
             height: int,
+            width: int,
         ) -> None:
-        self._array = heightmap_new(height, width)
+        self._array = heightmap_new(width, height)
 
     @property
     def array(self) -> np.ndarray:
@@ -49,7 +49,7 @@ class Heightmap:
             )
 
     def apply_simplex_noise(self):
-        _noise = heightmap_new(self.width, self.height)
+        _noise = heightmap_new(self.height, self.width)
         noise_2d = tcod.noise_new(2)
         heightmap_add_fbm(_noise, noise_2d, 6, 6, 0, 0, 32, 1, 1)
         heightmap_normalize(_noise, 0.0, 1.0)
@@ -69,26 +69,25 @@ class Heightmap:
     def point_distance_round(x1: int, y1: int, x2: int, y2: int) -> int:
         return round( abs(x2 - x1) + abs(y2 - y1) )
 
-    @staticmethod
-    def lowest_neighbor(world, x: int, y: int):
+    def lowest_neighbor(self, world, x: int, y: int):
         min_val: int = 1
         _x: int = 0
         _y: int = 0
 
-        if world[x + 1][y].height < min_val and x + 1 < self.width:
-            min_val = world[x + 1][y].height
+        if world[x + 1][y] < min_val and x + 1 < self.width:
+            min_val = world[x + 1][y]
             _x, _y = x + 1, y
 
-        if world[x][y + 1].height < min_val and y + 1 < self.height:
-            min_val = world[x][y + 1].height
+        if world[x][y + 1] < min_val and y + 1 < self.height:
+            min_val = world[x][y + 1]
             _x, _y = x, y + 1
 
-        if world[x - 1][y].height < min_val and x - 1 > 0:
-            min_val = world[x - 1][y].height
+        if world[x - 1][y] < min_val and x - 1 > 0:
+            min_val = world[x - 1][y]
             _x, _y = x - 1, y
 
-        if world[x][y - 1].height < min_val and y - 1 > 0:
-            min_val = world[x][y - 1].height
+        if world[x][y - 1] < min_val and y - 1 > 0:
+            min_val = world[x][y - 1]
             _x, _y = x, y - 1
 
         error = 0

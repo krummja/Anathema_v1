@@ -57,10 +57,15 @@ class MainMenu(UIScreen):
                                     align_horz="left",
                                     layout=Layout(left=10, top=0)),
 
+                         ButtonView("New World",
+                                    callback=self.generate,
+                                    align_horz="left",
+                                    layout=Layout(left=10, top=4)),
+
                          ButtonView("Quit",
                                     callback=self.quit,
                                     align_horz="left",
-                                    layout=Layout(left=10, top=4))
+                                    layout=Layout(left=10, top=8)),
                      ])
         ]
         super().__init__(name="MAIN MENU", game=game, views=views)
@@ -69,6 +74,10 @@ class MainMenu(UIScreen):
         self.game.world.initialize()
         self.game.player.initialize()
         self.game.screens.push_screen(self.game.screens.screens['STAGE'])
+
+    def generate(self):
+        self.game.world.initialize_world()
+        self.game.screens.push_screen(self.game.screens.screens['WORLD GEN'])
 
     def quit(self):
         self.game.screens.quit()

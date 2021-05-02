@@ -9,8 +9,6 @@ from anathema.interface.screens import UIScreen
 from anathema.interface.views import Layout, View
 from anathema.interface.views.rect_view import RectView
 from anathema.interface.views.label_view import LabelView
-from anathema.engine.core.input import LoopExit
-from anathema.engine.world.tile import tile_dt
 
 if TYPE_CHECKING:
     from anathema.engine.core.game import Game

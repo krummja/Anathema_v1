@@ -69,7 +69,7 @@ class FirstResponderView(View):
             if i == len(all_responders) - 1:
                 self.set_first_responder(all_responders[0])
             else:
-                self.set_first_responder(all_responders[i + 1])
+                self.set_first_responder(all_responders[i+1])
 
         except ValueError:
             if all_responders:
@@ -88,7 +88,7 @@ class FirstResponderView(View):
             if i == 0:
                 self.set_first_responder(all_responders[-1])
             else:
-                self.set_first_responder(all_responders[i - 1])
+                self.set_first_responder(all_responders[i-1])
 
         except ValueError:
             if all_responders:
@@ -111,9 +111,9 @@ class FirstResponderView(View):
     def handle_input_after_first_responder(self, val, can_resign):
         if can_resign and val.sym == tcod.event.K_TAB:
             if val.sym & tcod.event.KMOD_LSHIFT:
-                self.find_prev_responder()
+                self.find_next_responder()
                 return True
             else:
-                self.find_next_responder()
+                self.find_prev_responder()
                 return True
         return False

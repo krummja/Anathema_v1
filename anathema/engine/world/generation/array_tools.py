@@ -2,6 +2,8 @@ from __future__ import annotations
 from typing import *
 import numpy as np
 
+from anathema.engine.world.tile import tile_graphic
+
 if TYPE_CHECKING:
     from anathema.engine.world.generation.tiles import TileType
 
