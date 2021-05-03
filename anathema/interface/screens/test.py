@@ -44,7 +44,7 @@ class TestScreen(UIScreen):
                     (label, CyclingButtonView(
                         options = value,
                         initial_value = value[0],
-                        callback = (lambda _: None),
+                        callback = (lambda value: print(value)),
                         align_horz = 'left'))
                     for label, value in sorted(CHARACTER_CONFIGURATION.items())
                 ],

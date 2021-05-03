@@ -76,7 +76,6 @@ class MainMenu(UIScreen):
         self.game.screens.push_screen(self.game.screens.screens['STAGE'])
 
     def generate(self):
-        self.game.world.initialize_world()
         self.game.screens.push_screen(self.game.screens.screens['WORLD GEN'])
 
     def quit(self):

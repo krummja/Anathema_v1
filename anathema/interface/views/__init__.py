@@ -38,31 +38,31 @@ class Layout:
 
     @classmethod
     def centered(cls, width, height):
-        return LayoutOptions(
+        return Layout(
             top=None, bottom=None, left=None, right=None,
             width=width, height=height)
 
     @classmethod
     def column_left(cls, width):
-        return LayoutOptions(
+        return Layout(
             top=0, bottom=0, left=0, right=None,
             width=width, height=None)
 
     @classmethod
     def column_right(cls, width):
-        return LayoutOptions(
+        return Layout(
             top=0, bottom=0, left=None, right=0,
             width=width, height=None)
 
     @classmethod
     def row_top(cls, height):
-        return LayoutOptions(
+        return Layout(
             top=0, bottom=None, left=0, right=0,
             width=None, height=height)
 
     @classmethod
     def row_bottom(cls, height):
-        return LayoutOptions(
+        return Layout(
             top=None, bottom=0, left=0, right=0,
             width=None, height=height)
 
@@ -71,7 +71,7 @@ class Layout:
     def with_updates(self, **kwargs):
         opts = self.opts
         opts.update(kwargs)
-        return LayoutOptions(**opts)
+        return Layout(**opts)
 
     # Semi-internal layout API ###
 
@@ -356,14 +356,18 @@ class View:
                        options.get_is_defined(field_end))
 
             if matches == (True, True, True):
+                # start, size, end      defined
                 raise ValueError(
                     "Invalid spring/strut definition: {}".format(debug_string))
 
             if matches == (False, False, False):
+                # start, size, end      undefined
                 raise ValueError(
                     "Invalid spring/strut definition: {}".format(debug_string))
 
             elif matches == (True, False, False):
+                # start                 defined
+                # size, end             undefined
                 setattr(
                     final_frame, field_coord,
                     options.get_value(field_start, self))
@@ -373,6 +377,8 @@ class View:
                     getattr(spec, field_size))
 
             elif matches == (True, True, False):
+                # start, size           defined
+                # end                   undefined
                 setattr(
                     final_frame, field_coord,
                     options.get_value(field_start, self))
@@ -381,6 +387,8 @@ class View:
                     options.get_value(field_size, self))
 
             elif matches == (False, True, False):  # magical centering!
+                # start, end            undefined
+                # size                  defined
                 size_val = options.get_value(field_size, self)
                 setattr(final_frame, field_size, size_val)
                 setattr(

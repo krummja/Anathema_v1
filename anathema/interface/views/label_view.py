@@ -7,7 +7,7 @@ class LabelView(View):
 
     def __init__(
             self,
-            text,
+            text="<unset>",
             fg=(255, 255, 255),
             bg=(21, 21, 21),
             align_horz='center',
@@ -35,8 +35,10 @@ class LabelView(View):
             width = max(width, len(line))
         return Size(width, height)
 
-    def draw(self):
+    def update(self, text: str):
+        self.text = text
 
+    def draw(self):
         x = 0
         if self.align_horz == 'center':
             x = self.bounds.width / 2 - self.intrinsic_size.width / 2

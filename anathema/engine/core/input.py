@@ -19,7 +19,7 @@ class InputManager(BaseManager, Generic[T], tcod.event.EventDispatch[T]):
 
     COMMAND_KEYS = {
         tcod.event.K_ESCAPE: 'escape',
-        tcod.event.K_SPACE: 'space',
+        # tcod.event.K_SPACE: 'space',
         # tcod.event.K_RETURN: 'return',
     }
 

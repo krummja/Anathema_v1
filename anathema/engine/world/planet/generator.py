@@ -263,5 +263,4 @@ class PlanetView:
 
     def generate_view(self, palette):
         height = (self.world_data["height"] * 10).clip(0, len(palette) - 1).astype(np.int8)
-        # self.view[:] = (ord("≈"), (0, 134, 179), (21, 21, 21))
         self.view[:] = palette[height]
