@@ -31,8 +31,7 @@ class PlanetGenerator:
         self.height = height
         self.width = width
         self.heightmap = Heightmap(height, width)
-        self.world_data = np.zeros((height, width), world_tile)
-        print(self.world_data.shape)
+        self.world_data = np.zeros((height, width), world_tile, order="C")
 
     def generate(self):
         self.initialize_map()
@@ -51,74 +50,78 @@ class PlanetGenerator:
         self.heightmap.apply_simplex_noise()
 
     def initialize_world_data(self):
-        # initialize temperature
-        # initialize precipitation
-        # initialize drainage
+        self.world_data["height"][:] = self.heightmap._array[:]
+        self.temperature()
+        self.precipitation()
+        self.drainage()
+
         for x in range(self.width):
             for y in range(self.height):
-                self.world_data[:] = self.heightmap._array[:]
+                if (0.10 <= self.world_data[y][x]["precipitation"] < 0.33
+                        and self.world_data[y][x]["drainage"] < 0.5):
+                    self.world_data[y][x]["biome_id"] = 3
 
-                # if (0.10 <= self.world_data[x][y]["precipitation"] < 0.33
-                #         and self.world_data[x][y]["drainage"] < 0.5
-                #     ):
-                #     self.world_data[x][y]["biome_id"] = 3
-                #     if randint(1, 2) == 2:
-                #         self.world_data[x][y]["biome_id"] = 16
-                #
-                # if (self.world_data[x][y]["precipitation"] >= 0.10
-                #         and self.world_data[x][y]["precipitation"] > 0.33
-                #     ):
-                #     self.world_data[x][y]["biome_id"] = 2
-                #     if self.world_data[x][y]["precipitation"] >= 0.66:
-                #         self.world_data[x][y]["biome_id"] = 1
-                #
-                # if (0.33 <= self.world_data[x][y]["precipitation"] < 0.66
-                #         and self.world_data[x][y]["drainage"] >= 0.33
-                #     ):
-                #     self.world_data[x][y]["biome_id"] = 15
-                #     if randint(1, 5) == 5:
-                #         self.world_data[x][y]["biome_id"] = 5
-                #
-                # if (self.world_data[x][y]["temperature"] > 0.2
-                #         and self.world_data[x][y]["precipitation"] >= 0.66
-                #         and self.world_data[x][y]["drainage"] > 0.33
-                #     ):
-                #     self.world_data[x][y]["biome_id"] = 5
-                #     if self.world_data[x][y]["precipitation"] >= 0.75:
-                #         self.world_data[x][y]["biome_id"] = 6
-                #     if randint(1, 5) == 5:
-                #         self.world_data[x][y]["biome_id"] = 15
-                #
-                # if (0.10 <= self.world_data[x][y]["precipitation"] < 0.33
-                #         and self.world_data[x][y]["drainage"] >= 0.5
-                #     ):
-                #     self.world_data[x][y]["biome_id"] = 16
-                #     if randint(1, 2) == 2:
-                #         self.world_data[x][y]["biome_id"] = 14
-                #
-                # if self.world_data[x][y]["precipitation"] < 0.10:
-                #     self.world_data[x][y]["biome_id"] = 4
-                #     if self.world_data[x][y]["drainage"] > 0.5:
-                #         self.world_data[x][y]["biome_id"] = 16
-                #         if randint(1, 2) == 2:
-                #             self.world_data[x][y]["biome_id"] = 14
-                #
-                #     if self.world_data[x][y]["drainage"] >= 0.66:
-                #         self.world_data[x][y]["biome_id"] = 8
-                #
-                # if self.world_data[x][y]["height"] <= 0.2:
-                #     self.world_data[x][y]["biome_id"] = 0
-                #
-                # if (self.world_data[x][y]["temperature"] <= 0.2
-                #         and self.world_data[x][y]["height"] > 0.15
-                #     ):
-                #     self.world_data[x][y]["biome_id"] = randint(11, 13)
-                #
-                # if self.world_data[x][y]["height"] > 0.6:
-                #     self.world_data[x][y]["biome_id"] = 9
-                #
-                # if self.world_data[x][y]["height"] > 0.9:
-                #     self.world_data[x][y]["biome_id"] = 10
+                if (0.10 <= self.world_data[y][x]["precipitation"] < 0.33
+                        and self.world_data[y][x]["drainage"] < 0.5
+                    ):
+                    self.world_data[y][x]["biome_id"] = 3
+                    if randint(1, 2) == 2:
+                        self.world_data[y][x]["biome_id"] = 16
+
+                if (self.world_data[y][x]["precipitation"] >= 0.10
+                        and self.world_data[y][x]["precipitation"] > 0.33
+                    ):
+                    self.world_data[y][x]["biome_id"] = 2
+                    if self.world_data[y][x]["precipitation"] >= 0.66:
+                        self.world_data[y][x]["biome_id"] = 1
+
+                if (0.33 <= self.world_data[y][x]["precipitation"] < 0.66
+                        and self.world_data[y][x]["drainage"] >= 0.33
+                    ):
+                    self.world_data[y][x]["biome_id"] = 15
+                    if randint(1, 5) == 5:
+                        self.world_data[y][x]["biome_id"] = 5
+
+                if (self.world_data[y][x]["temperature"] > 0.2
+                        and self.world_data[y][x]["precipitation"] >= 0.66
+                        and self.world_data[y][x]["drainage"] > 0.33
+                    ):
+                    self.world_data[y][x]["biome_id"] = 5
+                    if self.world_data[y][x]["precipitation"] >= 0.75:
+                        self.world_data[y][x]["biome_id"] = 6
+                    if randint(1, 5) == 5:
+                        self.world_data[y][x]["biome_id"] = 15
+
+                if (0.10 <= self.world_data[y][x]["precipitation"] < 0.33
+                        and self.world_data[y][x]["drainage"] >= 0.5
+                    ):
+                    self.world_data[y][x]["biome_id"] = 16
+                    if randint(1, 2) == 2:
+                        self.world_data[y][x]["biome_id"] = 14
+
+                if self.world_data[y][x]["precipitation"] < 0.10:
+                    self.world_data[y][x]["biome_id"] = 4
+                    if self.world_data[y][x]["drainage"] > 0.5:
+                        self.world_data[y][x]["biome_id"] = 16
+                        if randint(1, 2) == 2:
+                            self.world_data[y][x]["biome_id"] = 14
+
+                    if self.world_data[y][x]["drainage"] >= 0.66:
+                        self.world_data[y][x]["biome_id"] = 8
+
+                if self.world_data[y][x]["height"] <= 0.2:
+                    self.world_data[y][x]["biome_id"] = 0
+
+                if (self.world_data[y][x]["temperature"] <= 0.2
+                        and self.world_data[y][x]["height"] > 0.15
+                    ):
+                    self.world_data[y][x]["biome_id"] = randint(11, 13)
+
+                if self.world_data[y][x]["height"] > 0.6:
+                    self.world_data[y][x]["biome_id"] = 9
+
+                if self.world_data[y][x]["height"] > 0.9:
+                    self.world_data[y][x]["biome_id"] = 10
 
     def pole_generator(self, ns: int):
         if ns == 0:
@@ -163,24 +166,40 @@ class PlanetGenerator:
             for y in range(self.height):
                 height_effect = 0
                 if y > self.height / 2:
-                    heightmap_set_value(temp, x, y, self.height - y - height_effect)
+                    self.world_data[y][x]["temperature"] = self.height - y - height_effect
                 else:
-                    heightmap_set_value(temp, x, y, y - height_effect)
-                height_effect = heightmap_get_value(self.heightmap._array, x, y)
+                    self.world_data[y][x]["temperature"] = y - height_effect
+                height_effect = self.heightmap._array[y][x]
 
                 if height_effect > 0.8:
                     height_effect *= 5
                     if y > self.height / 2:
-                        heightmap_set_value(temp, x, y, self.height - y - height_effect)
+                        self.world_data[y][x]["temperature"] = self.height - y - height_effect
                     else:
-                        heightmap_set_value(temp, x, y, y - height_effect)
+                        self.world_data[y][x]["temperature"] = y - height_effect
 
                 if height_effect < 0.25:
                     height_effect *= 10
                     if y > self.height / 2:
-                        heightmap_set_value(temp, x, y, self.height - y - height_effect)
+                        self.world_data[y][x]["temperature"] = self.height - y - height_effect
                     else:
-                        heightmap_set_value(temp, x, y, y - height_effect)
+                        self.world_data[y][x]["temperature"] = y - height_effect
+
+    def precipitation(self):
+        precipitation_hm = heightmap_new(self.width, self.height, order="C")
+        precipitation_hm[:] += 2
+        precipitation_noise = tcod.noise_new(2, tcod.NOISE_DEFAULT_HURST, tcod.NOISE_DEFAULT_LACUNARITY)
+        heightmap_add_fbm(precipitation_hm, precipitation_noise, 2, 2, 0, 0, 32, 1, 1)
+        heightmap_normalize(precipitation_hm, 0.0, 1.0)
+        self.world_data["precipitation"] = precipitation_hm
+
+    def drainage(self):
+        drainage_hm = heightmap_new(self.width, self.height, order="C")
+        drainage_hm[:] += 2
+        drainage_noise = tcod.noise_new(2, tcod.NOISE_DEFAULT_HURST, tcod.NOISE_DEFAULT_LACUNARITY)
+        heightmap_add_fbm(drainage_hm, drainage_noise, 2, 2, 0, 0, 32, 1, 1)
+        heightmap_normalize(drainage_hm, 0.0, 1.0)
+        self.world_data["drainage"] = drainage_hm
 
     def river_gen(self):
         MIN_RIVER_LENGTH = 10
@@ -261,6 +280,78 @@ class PlanetView:
     def height(self):
         return self.generator.height
 
-    def generate_view(self, palette):
+    def generate_standard_view(self, palette):
         height = (self.world_data["height"] * 10).clip(0, len(palette) - 1).astype(np.int8)
         self.view[:] = palette[height]
+
+    def generate_temperature_view(self):
+        precipitation = (self.world_data["precipitation"])
+
+    def generate_precipitation_view(self):
+        pass
+
+    def generate_biome_view(self):
+
+        def symbol_lookup(x):
+            char = None
+            if x == 15:
+                char = (251, ",")[randint(1, 2) == 2]
+            if x == 8:
+                char = (251, ",")[randint(1, 2) == 2]
+            if x == 1:
+                char = ('░', "√")[randint(1, 2) == 2]
+            if x == 2:
+                char = ('░', "√")[randint(1, 2) == 2]
+            return {
+                0 : "≈",    # water
+                1 : "≈",    # forest
+                2 : char,   # grassland
+                3 : "3",    # ?
+                4 : "φ",    # desert
+                5 : "♣",    # ?
+                6 : "♣",    # ?
+                8 : "#",    # badlands
+                9 : "▲",    # mountain
+                10: "▲",    # mountain
+                11: "█",    # ice
+                12: "█",    # ice
+                13: "█",    # ice
+                14: 'n',    # hills?
+                15: "t",    # ?
+                16: "T",    # ?
+            }[x]
+
+        def color_lookup(x):
+            badlands = tcod.Color(204, 159, 81)
+            ice = tcod.Color(176, 223, 215)
+            darkgreen = tcod.Color(68, 158, 53)
+            lightgreen = tcod.Color(131, 212, 82)
+            water = tcod.Color(13, 103, 196)
+            mountain = tcod.Color(185, 192, 162)
+            desert = tcod.Color(255, 218, 90)
+            return {
+                0 : water,
+                1 : water,
+                2 : lightgreen,
+                3 : lightgreen,
+                4 : desert,
+                5 : darkgreen,
+                6 : darkgreen,
+                8 : badlands,
+                9 : mountain,
+                10: mountain,
+                11: ice,
+                12: ice,
+                13: ice,
+                14: darkgreen,
+                15: lightgreen,
+                16: darkgreen
+            }[x]
+
+        for x in range(self.width):
+            for y in range(self.height):
+                biome = self.world_data[y][x]["biome_id"]
+                symbol = symbol_lookup(biome)
+                self.view[y][x] = (ord(symbol) if not isinstance(symbol, int) else symbol,
+                                   color_lookup(biome),
+                                   (21, 21, 21))

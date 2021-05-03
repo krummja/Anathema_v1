@@ -68,6 +68,7 @@ RENDER_CONFIGURATION = {
 }
 
 MENU_OPTIONS = {
+    'View': ['Standard', 'Biome'],
     'Palette': ['Normal', 'Red', 'Knutux']
 }
 
@@ -77,6 +78,7 @@ class WorldGen(UIScreen):
     def __init__(self, game: Game):
         self.position = (0, 0)
         self.configuration = {
+            'View': 'Standard',
             'Palette': 'Normal'
         }
 
@@ -156,15 +158,18 @@ class WorldGen(UIScreen):
 
     def generate_new(self):
         self.game.world.generator.generate()
-        self.game.world.planet_view.generate_view(
+        self.game.world.planet_view.generate_standard_view(
             RENDER_CONFIGURATION['Palette'][self.configuration['Palette']]
         )
         self.game.console.root.clear()
 
     def apply_options(self):
-        self.game.world.planet_view.generate_view(
-            RENDER_CONFIGURATION['Palette'][self.configuration['Palette']]
-        )
+        if self.configuration['View'] == 'Standard':
+            self.game.world.planet_view.generate_standard_view(
+                RENDER_CONFIGURATION['Palette'][self.configuration['Palette']]
+            )
+        if self.configuration['View'] == 'Biome':
+            self.game.world.planet_view.generate_biome_view()
         self.game.console.root.clear()
 
 
