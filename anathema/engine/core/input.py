@@ -50,18 +50,22 @@ class InputManager(BaseManager, Generic[T], tcod.event.EventDispatch[T]):
         super().__init__(game)
 
     def update(self):
-        all_input_events = list(tcod.event.get())
-        key_events = [e for e in all_input_events if e.type == 'KEYDOWN']
-        if len(key_events) > 0:
-            event = key_events.pop()
+        for event in tcod.event.get():
             value = self.dispatch(event)
             if value is not None:
                 return value
+        # all_input_events = list(tcod.event.get())
+        # key_events = [e for e in all_input_events if e.type == 'KEYDOWN']
+        # if len(key_events) > 0:
+        #     event = key_events.pop()
+        #     value = self.dispatch(event)
+        #     if value is not None:
+        #         return value
 
     def ev_keydown(self, event):
         self.game.screens.active_screen.handle_input(event)
 
-        func: Callable[[], T]
+        func: T
         if event.sym in self.COMMAND_KEYS:
             try:
                 func = getattr(self.game.screens.active_screen, f"cmd_{self.COMMAND_KEYS[event.sym]}")

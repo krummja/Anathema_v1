@@ -11,6 +11,7 @@ from anathema.engine.world.tile import Tile
 from anathema.engine.world.generation.array_tools import rng_selection
 from anathema.engine.world.generation.automata import *
 from anathema.engine.world.planet.generator import PlanetView, PlanetGenerator
+from anathema.engine.core.options import Options
 
 if TYPE_CHECKING:
     from anathema.engine.core.game import Game
@@ -51,7 +52,7 @@ class WorldManager(BaseManager):
     def __init__(self, game: Game):
         super().__init__(game)
         self.current_area = None
-        self.generator = PlanetGenerator(160, 240)
+        self.generator = PlanetGenerator(Options.WORLD_HEIGHT, Options.WORLD_WIDTH)
         self.planet_view = PlanetView(self.generator)
 
     def initialize(self):

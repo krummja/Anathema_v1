@@ -15,8 +15,7 @@ class RectView(View):
             bg=(21, 21, 21),
             fill=False,
             style='single',
-            *args,
-            **kwargs
+            *args, **kwargs
         ) -> None:
         super().__init__(*args, **kwargs)
         self.fg = fg

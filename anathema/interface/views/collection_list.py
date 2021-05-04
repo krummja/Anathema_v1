@@ -73,8 +73,7 @@ class SettingsListView(FirstResponderView):
 
     def scroll_to(self, y):
         if self.inner_height <= 0:
-            return  # metrics are garbage right now
-
+            return
         if y < self.min_row:
             self.min_row = y
         elif y > self.min_row + self.inner_height:
@@ -102,8 +101,7 @@ class SettingsListView(FirstResponderView):
                     Point(self.bounds.x + 1, y),
                     Size(self.bounds.width - self.value_column_width - 2, 1))
                 self.values[i].frame = Rect(
-                    Point(self.bounds.x + 1 + self.bounds.width -
-                          self.value_column_width - 2, y),
+                    Point(self.bounds.x + 1 + self.bounds.width - self.value_column_width - 2, y),
                     Size(self.value_column_width, 1))
             self.labels[i].is_hidden = not is_in_view
             self.values[i].is_hidden = not is_in_view

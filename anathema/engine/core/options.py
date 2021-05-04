@@ -10,3 +10,6 @@ class Options:
     VSYNC: bool = True
     STAGE_PANEL_WIDTH: int = 72
     STAGE_PANEL_HEIGHT: int = 39
+
+    WORLD_WIDTH: int = 240
+    WORLD_HEIGHT: int = 160

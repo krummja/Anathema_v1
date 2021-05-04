@@ -42,6 +42,7 @@ class TestScreen(UIScreen):
             SettingsListView(
                 label_control_pairs=[
                     (label, CyclingButtonView(
+                        key = label,
                         options = value,
                         initial_value = value[0],
                         callback = (lambda value: print(value)),

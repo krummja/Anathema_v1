@@ -77,7 +77,8 @@ class ButtonView(View):
 
 class CyclingButtonView(ButtonView):
 
-    def __init__(self, options, initial_value, callback, *args, **kwargs) -> None:
+    def __init__(self, key, options, initial_value, callback, *args, **kwargs) -> None:
+        self.key = key
         self.options = options
         self._inner_callback = callback
         super().__init__(initial_value, self._call_inner_callback, *args, **kwargs)
@@ -86,4 +87,4 @@ class CyclingButtonView(ButtonView):
         i = self.options.index(self.text)
         new_value = self.options[(i + 1) % len(self.options)]
         self.text = new_value
-        self._inner_callback(new_value)
+        self._inner_callback(self.key, new_value)

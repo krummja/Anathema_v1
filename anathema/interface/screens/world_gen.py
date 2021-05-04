@@ -1,6 +1,7 @@
 from __future__ import annotations
 from typing import *
 from morphism import *
+from math import ceil
 import numpy as np
 import tcod
 from tcod import color
@@ -67,29 +68,54 @@ RENDER_CONFIGURATION = {
     }
 }
 
-MENU_OPTIONS = {
-    'View': ['Standard', 'Biome'],
-    'Palette': ['Normal', 'Red', 'Knutux']
-}
-
 
 class WorldGen(UIScreen):
 
     def __init__(self, game: Game):
-        self.position = (0, 0)
+        self.position = (ceil(Options.WORLD_WIDTH // 2), ceil(Options.WORLD_HEIGHT // 2))
+
+        self.menu_options = {
+            'View': ['Standard', 'Biome', 'Rainfall', 'Temp'],
+            'Palette': ['Normal', 'Red', 'Knutux'],
+        }
         self.configuration = {
             'View': 'Standard',
-            'Palette': 'Normal'
+            'Palette': 'Normal',
         }
 
         self.lat_label = LabelView(
             text = "", align_horz = 'left', align_vert = 'top',
-            layout = Layout.row_top(0.2).with_updates(left=2, top=2, width=0.5, right=None)
-            )
+            layout = Layout.row_top(0.2).with_updates(left = 2, top = 2, width = 0.5, right = None)
+        )
         self.long_label = LabelView(
             text = "", align_horz = 'left', align_vert = 'top',
-            layout = Layout.row_top(0.2).with_updates(left=10, top=2, width=0.5, right=None)
-            )
+            layout = Layout.row_top(0.2).with_updates(left = 14, top = 2, width = 0.5, right = None)
+        )
+        self.height_label = LabelView(
+            text = "", align_horz = 'left', align_vert = 'top',
+            layout = Layout.row_top(0.2).with_updates(left = 2, top = 4, width = 0.5, right = None)
+        )
+        self.biome_label = LabelView(
+            text = "", align_horz = 'left', align_vert = 'top',
+            layout = Layout.row_top(0.2).with_updates(left = 2, top = 6, width = 0.5, right = None)
+        )
+        self.temp_label = LabelView(
+            text = "", align_horz = 'left', align_vert = 'top',
+            layout = Layout.row_top(0.2).with_updates(left = 2, top = 8, width = 0.5, right = None)
+        )
+        self.rainfall_label = LabelView(
+            text = "", align_horz = 'left', align_vert = 'top',
+            layout = Layout.row_top(0.2).with_updates(left = 18, top = 8, width = 0.5, right = None)
+        )
+        self.settings_list = SettingsListView(
+            label_control_pairs = [
+                (k, CyclingButtonView(
+                    k, v, v[0], callback=lambda key, val: self.set_option(key, val), align_horz = 'left'))
+                for k, v in sorted(self.menu_options.items())
+            ],
+            value_column_width = 12,
+            layout = Layout(left = 2, right = 2, top = 10, bottom = 20),
+        )
 
         views = [
             RectView(
@@ -97,18 +123,11 @@ class WorldGen(UIScreen):
                 subviews = [
                     self.lat_label,
                     self.long_label,
-                    SettingsListView(
-                        label_control_pairs = [
-                            (label, CyclingButtonView(
-                                options = value,
-                                initial_value = value[0],
-                                callback = (lambda val: self.set_option(label, val)),
-                                align_horz = 'left'))
-                            for label, value in sorted(MENU_OPTIONS.items())
-                        ],
-                        value_column_width = 12,
-                        layout = Layout(left = 2, right = 2, top = 10, bottom = 20),
-                    ),
+                    self.height_label,
+                    self.biome_label,
+                    self.temp_label,
+                    self.rainfall_label,
+                    self.settings_list,
                     ButtonView(
                         text = "Apply",
                         callback = self.apply_options,
@@ -127,8 +146,17 @@ class WorldGen(UIScreen):
         super().__init__(name="WORLD GEN", game=game, views=views)
         self.covers_screen = True
 
+    @property
+    def x(self):
+        return self.position[0]
+
+    @property
+    def y(self):
+        return self.position[1]
+
     def on_enter(self):
         self.generate_new()
+        self.game.camera.camera_pos = self.position
 
     def cmd_escape(self):
         self.game.screens.pop_screen()
@@ -141,20 +169,33 @@ class WorldGen(UIScreen):
         self.game.console.root.tiles_rgb[["fg", "bg"]][y][x] = (0, 0, 0), (255, 0, 0)
 
     def post_update(self):
-        self.lat_label.update(tile_to_coord(0, 160, self.position[1]))
-        self.long_label.update(tile_to_coord(1, 240, self.position[0]))
+        world_data = self.game.world.planet_view.world_data
+        self.lat_label.update(self.tile_to_coord(0, self.y))
+        self.long_label.update(self.tile_to_coord(1, self.x))
+        self.height_label.update(
+            "Height: " + str(round(world_data[self.y][self.x]['height'], 2)))
+        self.biome_label.update(
+            "Biome:  " + self.biome_name(world_data[self.y][self.x]["biome_id"]))
+        self.temp_label.update(
+            "Temp:   " + str(round(world_data[self.y][self.x]["temperature"])))
+        self.rainfall_label.update(
+            "Rain:   " + str(round(world_data[self.y][self.x]["precipitation"])))
 
     def move_focus(self, direction):
         WIDTH = self.game.world.generator.width
         HEIGHT = self.game.world.generator.height
-        target_x = self.position[0] + direction[0]
-        target_y = self.position[1] + direction[1]
+        target_x = self.x + direction[0]
+        target_y = self.y + direction[1]
         if 0 <= target_x < WIDTH and 0 <= target_y < HEIGHT:
             self.position = (target_x, target_y)
             self.game.camera.camera_pos = self.position
 
     def set_option(self, key, value):
         self.configuration[key] = value
+
+    def apply_options(self):
+        self.get_current_view()
+        self.game.console.root.clear()
 
     def generate_new(self):
         self.game.world.generator.generate()
@@ -163,21 +204,43 @@ class WorldGen(UIScreen):
         )
         self.game.console.root.clear()
 
-    def apply_options(self):
+    def get_current_view(self):
         if self.configuration['View'] == 'Standard':
             self.game.world.planet_view.generate_standard_view(
                 RENDER_CONFIGURATION['Palette'][self.configuration['Palette']]
             )
         if self.configuration['View'] == 'Biome':
             self.game.world.planet_view.generate_biome_view()
-        self.game.console.root.clear()
+        if self.configuration['View'] == 'Rainfall':
+            self.game.world.planet_view.generate_precipitation_view()
+        if self.configuration['View'] == 'Temp':
+            self.game.world.planet_view.generate_temperature_view()
 
+    @staticmethod
+    def tile_to_coord(lat_long: int, tile: int) -> str:
+        suf = (("N", "S"), ("W", "E"))[lat_long]
+        coord = (tile * 360) / (Options.WORLD_HEIGHT, Options.WORLD_WIDTH)[lat_long]
+        if coord < 180:
+            return "{:4}".format(str(int(180 - coord))) + suf[0]
+        if coord > 180:
+            return "{:4}".format(str(int(coord - 180))) + suf[1]
+        return ("- EQUATOR -", "- MERIDIAN -")[lat_long]
 
-def tile_to_coord(lat_long: int, max_val: int, tile: int) -> str:
-    suf = (("N", "S"), ("W", "E"))[lat_long]
-    coord = (tile * 360) / max_val
-    if coord < 180:
-        return "{:4}".format(str(int(180 - coord))) + suf[0]
-    if coord > 180:
-        return "{:4}".format(str(int(coord - 180))) + suf[1]
-    return ("- EQUATOR -", "- MERIDIAN -")[lat_long]
+    @staticmethod
+    def biome_name(biome_id: int) -> str:
+        return {
+            0: "ice cap",
+            1: "tundra",
+            2: "subarctic",
+            3: "dry steppe",
+            4: "dry desert",
+            5: "highland",
+            6: "humid continental",
+            7: "dry summer subtropic",
+            8: "tropical wet & dry",
+            9: "marine west coast",
+            10: "humid subtropical",
+            11: "wet tropics",
+            12: "ocean",
+            13: "shallow ocean"
+        }[biome_id]
