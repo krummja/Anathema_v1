@@ -36,7 +36,23 @@ class RenderSystem(BaseSystem):
                 actor['Renderable'].fg
             )
 
+    def draw_path(self):
+        cam_x, cam_y = self.game.camera.camera_pos
+        pathing = filter((lambda e: e['Actor'].is_pathing), self._queries['actors'].result)
+        for e in pathing:
+            path = e['Actor'].path
+            for point in path:
+                x = point[0] - cam_x
+                y = point[1] - cam_y
+                self.game.console.root.tiles_rgb[["ch", "fg"]][y, x] = (
+                    ord("o"),
+                    ([255, 0, 0])
+                )
+
     def update(self):
         self.game.console.root.clear()
         self.draw_tiles()
         self.draw_actors()
+
+        if self.game.debug:
+            self.draw_path()

@@ -55,6 +55,7 @@ class Area:
         self._tiles = np.zeros(self.shape, dtype=tile_dt)
         self._explored = np.zeros(self.shape, dtype=bool)
         self._visible = np.zeros(self.shape, dtype=bool)
+        self.actors = set()
 
     @property
     def shape(self) -> Tuple[int, int]:
@@ -84,6 +85,8 @@ class Area:
         if not (0 <= x < self.width and 0 <= y < self.height):
             return True
         if not self.tiles[y, x]["move_cost"]:
+            return True
+        if any(actor["Position"].xy == (x, y) for actor in self.actors):
             return True
         return False
 

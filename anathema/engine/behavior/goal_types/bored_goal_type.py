@@ -1,6 +1,5 @@
 from __future__ import annotations
 from typing import *
-from ecstremity import EventData
 
 from anathema.engine.behavior.goal_action_result import *
 from .goal_type import GoalType
@@ -21,12 +20,12 @@ class BoredGoalType(GoalType):
     @staticmethod
     def take_action(entity: Entity, goal: Component):
 
-        kill_event = entity.fire_event('try_detect_hostiles')
-        # if kill_event.data:
-        if kill_event:
-            # target = kill_event.data.target
-            target = entity.world.get_entity("PLAYER")
+        kill_event = entity.fire_event('try_detect_hostiles', {
+            "targets": set()
+        })
 
+        if len(kill_event.data.targets) > 0:
+            target = kill_event.data.targets[0]
             kill_goal = KillSomethingGoalType().create_sub_goal(
                 entity.world, goal, { "target": target }
             )
@@ -41,5 +40,5 @@ class BoredGoalType(GoalType):
             entity.fire_event("take_action")
             return SUCCESS
 
-        entity.fire_event("energy_consumed", EventData(cost=1000))
+        entity.fire_event("energy_consumed", {"cost": 1000})
         return SUCCESS

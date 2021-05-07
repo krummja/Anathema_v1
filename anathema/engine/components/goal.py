@@ -1,7 +1,7 @@
 from __future__ import annotations
 from typing import *
 
-from ecstremity import Component, Entity, EventData
+from ecstremity import Component, Entity
 from anathema.engine.behavior.goal_evaluator import GoalEvaluator
 
 if TYPE_CHECKING:

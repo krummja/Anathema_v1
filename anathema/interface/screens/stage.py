@@ -17,7 +17,6 @@ if TYPE_CHECKING:
 class Stage(UIScreen):
 
     def __init__(self, game: Game) -> None:
-
         views = [
             RectView(
                 layout=Layout(

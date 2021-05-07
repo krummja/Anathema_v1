@@ -39,6 +39,7 @@ CONFIG = {
 
 class Game:
 
+    debug = False
     context: tcod.context.Context
 
     def __init__(self):

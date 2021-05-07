@@ -4,7 +4,6 @@ from collections import deque
 
 import tcod
 import numpy as np
-from ecstremity import EventData
 
 from anathema.engine.systems import BaseSystem
 
@@ -30,7 +29,7 @@ class PathSystem(BaseSystem):
         walkable[blocker_index] = 50
         walkable.T[dest_xy] = 1
 
-        graph = tcod.path.SimpleGraph(cost=walkable, cardinal=2, diagonal=3)
+        graph = tcod.path.SimpleGraph(cost=walkable, cardinal=2, diagonal=2)
         pf = tcod.path.Pathfinder(graph)
         pf.add_root(pathing_entity['Position'].ij)
         return [(ij[1], ij[0]) for ij in pf.path_to(dest_xy[::-1])[1:].tolist()]

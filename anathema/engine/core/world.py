@@ -62,7 +62,7 @@ class WorldManager(BaseManager):
 
     def __init__(self, game: Game):
         super().__init__(game)
-        self.current_area = None
+        self.current_area: Optional[Area] = None
         self.generator = PlanetGenerator(Options.WORLD_HEIGHT, Options.WORLD_WIDTH)
         self.planet_view = PlanetView(self.generator)
 

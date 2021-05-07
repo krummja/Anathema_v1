@@ -1,7 +1,6 @@
 from __future__ import annotations
 from typing import *
 from collections import deque
-from ecstremity import EventData
 
 from anathema.engine.systems import BaseSystem
 
@@ -16,6 +15,8 @@ class ActionSystem(BaseSystem):
 
     def update(self):
         entities = self._queries['actors'].result
+        self.game.world.current_area.actors.update(set(entities))
+
         entities = deque(sorted(entities, key=(lambda e: e['Actor'])))
         entity = entities[0]
 

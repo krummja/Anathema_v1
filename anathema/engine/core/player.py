@@ -2,7 +2,7 @@ from __future__ import annotations
 from typing import *
 from collections import deque
 
-from ecstremity import EventData, Entity
+from ecstremity import Entity
 from anathema.engine.core import BaseManager
 from anathema.engine.behavior.goal_types.bored_goal_type import BoredGoalType
 
@@ -65,9 +65,9 @@ class PlayerManager(BaseManager):
         target_x = self.position[0] + direction[0]
         target_y = self.position[1] + direction[1]
         self.queue_action((lambda: self.entity.fire_event(
-            'try_move', EventData(target=(target_x, target_y)))))
+            'try_move', {"target": (target_x, target_y)})))
 
     def wait(self, turns: int = 1):
         self.queue_action((lambda: self.entity.fire_event(
-            'energy_consumed', EventData(cost=turns * 1000)
+            'energy_consumed', {"cost": turns * 1000}
         )))

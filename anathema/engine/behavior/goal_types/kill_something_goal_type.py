@@ -2,7 +2,7 @@ from __future__ import annotations
 from typing import *
 import tcod
 import numpy as np
-from ecstremity import EventData
+# from ecstremity import EventData
 
 from anathema.engine.behavior.goal_action_result import *
 from anathema.engine.data.directions import direction_delta
@@ -51,5 +51,5 @@ class KillSomethingGoalType(GoalType):
             return SUCCESS
 
         entity['Actor'].is_pathing = False
-        entity.fire_event('energy_consumed', EventData(cost = 1000))
+        entity.fire_event('energy_consumed', {"cost": 1000})
         return FAILURE
