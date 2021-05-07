@@ -19,8 +19,6 @@ if TYPE_CHECKING:
     from anathema.engine.core.game import Game
 
 
-Options.STAGE_PANEL_HEIGHT = Options.CONSOLE_HEIGHT
-
 RENDER_CONFIGURATION = {
     'Palette': {
         'Normal': np.array([
@@ -73,7 +71,6 @@ class WorldGen(UIScreen):
 
     def __init__(self, game: Game):
         self.position = (ceil(Options.WORLD_WIDTH // 2), ceil(Options.WORLD_HEIGHT // 2))
-
         self.menu_options = {
             'View': ['Standard', 'Biome', 'Rainfall', 'Temp'],
             'Palette': ['Normal', 'Red', 'Knutux'],
@@ -82,7 +79,6 @@ class WorldGen(UIScreen):
             'View': 'Standard',
             'Palette': 'Normal',
         }
-
         self.lat_label = LabelView(
             text = "", align_horz = 'left', align_vert = 'top',
             layout = Layout.row_top(0.2).with_updates(left = 2, top = 2, width = 0.5, right = None)
@@ -155,6 +151,7 @@ class WorldGen(UIScreen):
         return self.position[1]
 
     def on_enter(self):
+        Options.STAGE_PANEL_HEIGHT = Options.CONSOLE_HEIGHT
         self.generate_new()
         self.game.camera.camera_pos = self.position
 
@@ -177,9 +174,9 @@ class WorldGen(UIScreen):
         self.biome_label.update(
             "Biome:  " + self.biome_name(world_data[self.y][self.x]["biome_id"]))
         self.temp_label.update(
-            "Temp:   " + str(round(world_data[self.y][self.x]["temperature"])))
+            "Temp:   " + str(round(world_data[self.y][self.x]["temperature"], 2)))
         self.rainfall_label.update(
-            "Rain:   " + str(round(world_data[self.y][self.x]["precipitation"])))
+            "Rain:   " + str(round(world_data[self.y][self.x]["precipitation"], 2)))
 
     def move_focus(self, direction):
         WIDTH = self.game.world.generator.width

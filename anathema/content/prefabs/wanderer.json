@@ -1,0 +1,9 @@
+{
+  "name": "Wanderer",
+  "inherit": ["Npc"],
+  "components": [
+    {
+      "type": "Wandering"
+    }
+  ]
+}

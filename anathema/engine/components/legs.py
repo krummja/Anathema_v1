@@ -25,6 +25,11 @@ class Legs(Component):
         #         # Route Message to LogManager
         #         pass
         else:
+            # speed = get_skill_value(SKILL_SPEED, self.entity)     TODO implement this!
+            speed = 10
+            cost = (20 / (20 + speed)) * 1000
+            evt.data.cost = cost
+            self.entity.fire_event('energy_consumed', evt.data)
             self.update_position(*evt.data.target)
         evt.handle()
 

@@ -11,12 +11,31 @@ class Actor(Component):
 
     def __init__(self) -> None:
         self._energy: int = 0
+        self._dest_xy = None
+        self._path = None
+        self.is_pathing = False
 
     def __lt__(self, other: Actor) -> bool:
         return self._energy < other._energy
 
     def __str__(self) -> str:
-        return f"{self._energy}"
+        return f"Energy: {self._energy}"
+
+    @property
+    def dest_xy(self):
+        return self._dest_xy
+
+    @dest_xy.setter
+    def dest_xy(self, value):
+        self._dest_xy = value
+
+    @property
+    def path(self):
+        return self._path
+
+    @path.setter
+    def path(self, value):
+        self._path = value
 
     @property
     def energy(self) -> int:

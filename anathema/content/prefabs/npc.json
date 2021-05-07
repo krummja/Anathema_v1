@@ -1,0 +1,8 @@
+{
+  "name": "Npc",
+  "components": [
+    {
+      "type": "Brain"
+    }
+  ]
+}

@@ -20,6 +20,7 @@ from anathema.engine.systems.interaction_system import InteractionSystem
 from anathema.engine.systems.physics_system import PhysicsSystem
 from anathema.engine.systems.fov_system import FOVSystem
 from anathema.engine.systems.render_system import RenderSystem
+from anathema.engine.systems.path_system import PathSystem
 
 from .options import Options
 
@@ -59,6 +60,7 @@ class Game:
         self.interaction_system: InteractionSystem = InteractionSystem(self)
         self.fov_system: FOVSystem = FOVSystem(self)
         self.render_system: RenderSystem = RenderSystem(self)
+        self.path_system: PathSystem = PathSystem(self)
 
     def run(self):
         print("Starting...")
@@ -75,6 +77,7 @@ class Game:
                 self.input.update()
 
     def player_update(self):
+        self.clock.update()
         player_turn = self.action_system.update()
         if player_turn:
             self.systems_update()
@@ -82,5 +85,6 @@ class Game:
     def systems_update(self):
         self.physics_system.update()
         self.interaction_system.update()
+        self.path_system.update()
         self.fov_system.update()
         self.render_system.update()

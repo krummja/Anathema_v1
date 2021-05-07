@@ -33,15 +33,23 @@ class PlanetGenerator:
         self.width = width
         self.heightmap = Heightmap(height, width)
         self.world_data = np.zeros((height, width), world_tile, order="C")
+        self.messages = []
 
     def generate(self):
+        print("Initializing")
         self.initialize_map()
+        print("Generating Polar Regions...")
         self.pole_generator(0)
         self.pole_generator(1)
+        print("Tectonic Simulation: Pass 1")
         self.tectonic_generator(0)
+        print("Tectonic Simulation: Pass 2")
         self.tectonic_generator(1)
+        print("Simulating Rain Erosion")
         self.heightmap.rain_erode()
+        print("Initializing World Data...")
         self.initialize_world_data()
+        print("Done!")
         # self.river_gen()
 
     def initialize_map(self):
@@ -56,59 +64,60 @@ class PlanetGenerator:
         self.precipitation()
         self.drainage()
 
+        temp_factor = self.height / 2
         for x in range(self.width):
             for y in range(self.height):
 
                 # Ice Cap, Tundra, Subarctic, Highland
                 if (self.world_data[y][x]["precipitation"] < 0.5
-                        and self.world_data[y][x]["temperature"] < 0.08):
+                        and self.world_data[y][x]["temperature"] < 0.08 * temp_factor):
                     self.world_data[y][x]["biome_id"] = 0   # ice cap
 
                 if (self.world_data[y][x]["precipitation"] < 0.5
-                        and 0.08 <= self.world_data[y][x]["temperature"] < 0.15):
+                        and 0.08 * temp_factor <= self.world_data[y][x]["temperature"] < 0.15 * temp_factor):
                     self.world_data[y][x]["biome_id"] = 1   # tundra
 
                 if (self.world_data[y][x]["precipitation"] < 0.5
-                        and 0.15 <= self.world_data[y][x]["temperature"] < 0.23):
+                        and 0.15 * temp_factor <= self.world_data[y][x]["temperature"] < 0.23 * temp_factor):
                     self.world_data[y][x]["biome_id"] = 2   # subarctic
 
                 if (0.5 <= self.world_data[y][x]["precipitation"]
-                        and self.world_data[y][x]["temperature"] < 0.23):
+                        and self.world_data[y][x]["temperature"] < 0.23 * temp_factor):
                     self.world_data[y][x]["biome_id"] = 5   # highland
 
                 # Dry Steppe, Dry Desert
                 if (self.world_data[y][x]["precipitation"] < 0.32
-                        and 0.23 <= self.world_data[y][x]["temperature"] < 0.54):
+                        and 0.23 * temp_factor <= self.world_data[y][x]["temperature"] < 0.54 * temp_factor):
                     self.world_data[y][x]["biome_id"] = 3   # dry steppe
 
                 if (self.world_data[y][x]["precipitation"] < 0.32
-                        and 0.54 <= self.world_data[y][x]["temperature"]):
+                        and 0.54 * temp_factor <= self.world_data[y][x]["temperature"]):
                     self.world_data[y][x]["biome_id"] = 4   # dry desert
 
                 # Humid Continental, Dry Summer Subtropics, Tropical Wet & Dry
                 if (0.32 <= self.world_data[y][x]["precipitation"] < 0.82
-                        and 0.23 <= self.world_data[y][x]["temperature"] < 0.54):
+                        and 0.23 * temp_factor <= self.world_data[y][x]["temperature"] < 0.54 * temp_factor):
                     self.world_data[y][x]["biome_id"] = 6   # humid continental
 
                 if (0.32 <= self.world_data[y][x]["precipitation"] < 0.77
-                        and 0.54 <= self.world_data[y][x]["temperature"] < 0.77):
+                        and 0.54 * temp_factor <= self.world_data[y][x]["temperature"] < 0.77 * temp_factor):
                     self.world_data[y][x]["biome_id"] = 7   # dry summer subtropic
 
                 if (0.32 <= self.world_data[y][x]["precipitation"] < 0.68
-                        and 0.77 <= self.world_data[y][x]["temperature"]):
+                        and 0.77 * temp_factor <= self.world_data[y][x]["temperature"]):
                     self.world_data[y][x]["biome_id"] = 8   # tropical wet & dry
 
                 # Marine West Coast, Humid Subtropical, Wet Tropics
                 if (0.82 <= self.world_data[y][x]["precipitation"]
-                        and 0.23 <= self.world_data[y][x]["temperature"] < 0.54):
+                        and 0.23 * temp_factor <= self.world_data[y][x]["temperature"] < 0.54 * temp_factor):
                     self.world_data[y][x]["biome_id"] = 9   # marine west coast
 
                 if (0.77 <= self.world_data[y][x]["precipitation"]
-                        and 0.54 <= self.world_data[y][x]["temperature"] < 0.77):
+                        and 0.54 * temp_factor <= self.world_data[y][x]["temperature"] < 0.77 * temp_factor):
                     self.world_data[y][x]["biome_id"] = 10  # humid subtropical
 
                 if (0.68 <= self.world_data[y][x]["precipitation"]
-                        and 0.77 <= self.world_data[y][x]["temperature"]):
+                        and 0.77 * temp_factor <= self.world_data[y][x]["temperature"]):
                     self.world_data[y][x]["biome_id"] = 11  # wet tropics
 
                 if self.world_data[y][x]["height"] <= 0.3:
@@ -116,72 +125,6 @@ class PlanetGenerator:
 
                 if 0.2 < self.world_data[y][x]["height"] <= 0.3:
                     self.world_data[y][x]["biome_id"] = 13  # shallow ocean
-
-                # if (0.10 <= self.world_data[y][x]["precipitation"] < 0.33
-                #         and self.world_data[y][x]["drainage"] < 0.5):
-                #     self.world_data[y][x]["biome_id"] = 3
-                #
-                # if (0.10 <= self.world_data[y][x]["precipitation"] < 0.33
-                #         and self.world_data[y][x]["drainage"] < 0.5
-                #     ):
-                #     self.world_data[y][x]["biome_id"] = 3
-                #     if randint(1, 2) == 2:
-                #         self.world_data[y][x]["biome_id"] = 16
-                #
-                # if (self.world_data[y][x]["precipitation"] >= 0.10
-                #         and self.world_data[y][x]["precipitation"] > 0.33
-                #     ):
-                #     self.world_data[y][x]["biome_id"] = 2
-                #     if self.world_data[y][x]["precipitation"] >= 0.66:
-                #         self.world_data[y][x]["biome_id"] = 1
-                #
-                # if (0.33 <= self.world_data[y][x]["precipitation"] < 0.66
-                #         and self.world_data[y][x]["drainage"] >= 0.33
-                #     ):
-                #     self.world_data[y][x]["biome_id"] = 15
-                #     if randint(1, 5) == 5:
-                #         self.world_data[y][x]["biome_id"] = 5
-                #
-                # if (self.world_data[y][x]["temperature"] > 0.2
-                #         and self.world_data[y][x]["precipitation"] >= 0.66
-                #         and self.world_data[y][x]["drainage"] > 0.33
-                #     ):
-                #     self.world_data[y][x]["biome_id"] = 5
-                #     if self.world_data[y][x]["precipitation"] >= 0.75:
-                #         self.world_data[y][x]["biome_id"] = 6
-                #     if randint(1, 5) == 5:
-                #         self.world_data[y][x]["biome_id"] = 15
-                #
-                # if (0.10 <= self.world_data[y][x]["precipitation"] < 0.33
-                #         and self.world_data[y][x]["drainage"] >= 0.5
-                #     ):
-                #     self.world_data[y][x]["biome_id"] = 16
-                #     if randint(1, 2) == 2:
-                #         self.world_data[y][x]["biome_id"] = 14
-                #
-                # if self.world_data[y][x]["precipitation"] < 0.10:
-                #     self.world_data[y][x]["biome_id"] = 4
-                #     if self.world_data[y][x]["drainage"] > 0.5:
-                #         self.world_data[y][x]["biome_id"] = 16
-                #         if randint(1, 2) == 2:
-                #             self.world_data[y][x]["biome_id"] = 14
-                #
-                #     if self.world_data[y][x]["drainage"] >= 0.66:
-                #         self.world_data[y][x]["biome_id"] = 8
-                #
-                # if self.world_data[y][x]["height"] <= 0.2:
-                #     self.world_data[y][x]["biome_id"] = 0
-                #
-                # if (self.world_data[y][x]["temperature"] <= 0.2
-                #         and self.world_data[y][x]["height"] > 0.15
-                #     ):
-                #     self.world_data[y][x]["biome_id"] = randint(11, 13)
-                #
-                # if self.world_data[y][x]["height"] > 0.6:
-                #     self.world_data[y][x]["biome_id"] = 9
-                #
-                # if self.world_data[y][x]["height"] > 0.9:
-                #     self.world_data[y][x]["biome_id"] = 10
 
     def pole_generator(self, ns: int):
         if ns == 0:
@@ -289,11 +232,11 @@ class PlanetGenerator:
                 return
             try:
                 if (
-                    self.world_data[x][y]["has_river"] or
-                    self.world_data[x+1][y]["has_river"] or
-                    self.world_data[x-1][y]["has_river"] or
-                    self.world_data[x][y+1]["has_river"] or
-                    self.world_data[x][y-1]["has_river"]
+                        self.world_data[x][y]["has_river"] or
+                        self.world_data[x+1][y]["has_river"] or
+                        self.world_data[x-1][y]["has_river"] or
+                        self.world_data[x][y+1]["has_river"] or
+                        self.world_data[x][y-1]["has_river"]
                 ):
                     return
             except IndexError:
@@ -319,16 +262,6 @@ class PlanetGenerator:
 class PlanetView:
 
     def __init__(self, generator: PlanetGenerator) -> None:
-        """Constructs viewable arrays for the planet generator.
-
-        world_data      ndarray<world_tile>
-                        - height          np.float32
-                        - temperature     np.float32
-                        - precipitation   np.float32
-                        - drainage        np.float32
-                        - biome_id        np.uint8
-                        - has_river       np.bool
-        """
         self.generator = generator
         self.world_data = generator.world_data
         self.view = np.zeros((self.height, self.width), tile_graphic, order="C")

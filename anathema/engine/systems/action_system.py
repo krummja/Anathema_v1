@@ -1,6 +1,7 @@
 from __future__ import annotations
 from typing import *
 from collections import deque
+from ecstremity import EventData
 
 from anathema.engine.systems import BaseSystem
 
@@ -16,7 +17,7 @@ class ActionSystem(BaseSystem):
     def update(self):
         entities = self._queries['actors'].result
         entities = deque(sorted(entities, key=(lambda e: e['Actor'])))
-        entity = entities.popleft()
+        entity = entities[0]
 
         if entity and not entity['Actor'].has_energy:
             self.game.clock.increment(-1 * entity['Actor'].energy)
@@ -24,14 +25,17 @@ class ActionSystem(BaseSystem):
                 entity['Actor'].add_energy(self.game.clock.tick_delta)
 
         while entity and entity['Actor'].has_energy:
+
             if entity.has('IsPlayer'):
-                try:
-                    action = self.game.player.get_next_action()
-                    if action:
-                        action()
-                    return True
-                except IndexError:
-                    return False
+
+                action = self.game.player.get_next_action()
+                if action:
+                    action()
+                return True
+
             entity.fire_event('take_action')
-            entity = entities.popleft()
+            try:
+                entity = entities.popleft()
+            except IndexError:
+                return False
         return False

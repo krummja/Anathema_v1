@@ -46,7 +46,15 @@ class Heightmap:
 
     def apply_simplex_noise(self):
         _noise = heightmap_new(self.height, self.width)
-        noise_2d = tcod.noise_new(2)
+        noise_2d = tcod.noise.Noise(
+            dimensions = 2,
+            algorithm = tcod.noise.Algorithm.SIMPLEX,
+            implementation = tcod.noise.Implementation.SIMPLE,
+            hurst = 0.8,
+            lacunarity = 1.2,
+            octaves = 4.0
+        )
+
         heightmap_add_fbm(_noise, noise_2d, 6, 6, 0, 0, 32, 1, 1)
         heightmap_normalize(_noise, 0.0, 1.0)
         heightmap_multiply_hm(self._array, _noise, self._array)
