@@ -39,19 +39,19 @@ class Location:
 
 class AreaLocation(Location):
 
-    def __init__(self, area: Area, x: int, y: int) -> None:
+    def __init__(self, area: TileMap, x: int, y: int) -> None:
         self.area = area
         super().__init__(x, y)
 
 
-class Area:
+class TileMap:
 
     name: str
 
     def __init__(self, width: int, height: int) -> None:
         self.width = width
         self.height = height
-        self._factory = Tiles()
+        self._tile_registry = Tiles()
         self._tiles = np.zeros(self.shape, dtype=tile_dt)
         self._explored = np.zeros(self.shape, dtype=bool)
         self._visible = np.zeros(self.shape, dtype=bool)
@@ -89,9 +89,6 @@ class Area:
         if any(actor["Position"].xy == (x, y) for actor in self.actors):
             return True
         return False
-
-    def get_bg_color(self, x: int, y: int) -> List[int]:
-        pass
 
     def __getitem__(self, key: Tuple[int, int]) -> AreaLocation:
         return AreaLocation(self, *key)

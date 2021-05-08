@@ -10,7 +10,7 @@ from .goal_type import GoalType
 from .move_goal_type import MoveGoalType
 
 if TYPE_CHECKING:
-    from anathema.engine.world.area import Area
+    from anathema.engine.world.tilemap import TileMap
     from ecstremity import Engine, Entity
 
 
@@ -24,12 +24,10 @@ class KillSomethingGoalType(GoalType):
 
     @staticmethod
     def take_action(entity: Entity, goal: Component):
-        # evt = entity.fire_event('try_melee', EventData(
-        #     target = goal.target
-        # ))
-        #
-        # if evt.data.success:
-        #     return SUCCESS
+        evt = entity.fire_event('try_melee', {"target": goal.target})
+
+        if evt.data.success:
+            return SUCCESS
 
         target_pos = goal.target['Position'].xy
         entity['Actor'].is_pathing = True

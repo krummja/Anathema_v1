@@ -40,6 +40,9 @@ CONFIG = {
 class Game:
 
     debug = False
+    ui_debug = False
+    hot_start = False
+
     context: tcod.context.Context
 
     def __init__(self):
@@ -53,8 +56,8 @@ class Game:
         self.world: WorldManager = WorldManager(self)
         self.player: PlayerManager = PlayerManager(self)
 
-        self.content: ContentManager = ContentManager(self)
         self.storage: StorageManager = StorageManager(self)
+        self.content: ContentManager = ContentManager(self)
 
         self.action_system: ActionSystem = ActionSystem(self)
         self.physics_system: PhysicsSystem = PhysicsSystem(self)

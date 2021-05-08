@@ -19,8 +19,8 @@ class InputManager(BaseManager, Generic[T], tcod.event.EventDispatch[T]):
 
     COMMAND_KEYS = {
         tcod.event.K_ESCAPE: 'escape',
-        # tcod.event.K_SPACE: 'space',
-        # tcod.event.K_RETURN: 'return',
+        tcod.event.K_c: 'character_info',
+        tcod.event.K_F1: 'debug_f1'
     }
 
     MOVE_KEYS: Dict[int, Tuple[int, int]] = {
@@ -54,13 +54,6 @@ class InputManager(BaseManager, Generic[T], tcod.event.EventDispatch[T]):
             value = self.dispatch(event)
             if value is not None:
                 return value
-        # all_input_events = list(tcod.event.get())
-        # key_events = [e for e in all_input_events if e.type == 'KEYDOWN']
-        # if len(key_events) > 0:
-        #     event = key_events.pop()
-        #     value = self.dispatch(event)
-        #     if value is not None:
-        #         return value
 
     def ev_keydown(self, event):
         self.game.screens.active_screen.handle_input(event)

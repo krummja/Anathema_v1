@@ -6,7 +6,7 @@ from anathema.engine.core import BaseManager
 from anathema.engine.core.options import Options
 
 if TYPE_CHECKING:
-    from anathema.engine.world.area import Area
+    from anathema.engine.world.tilemap import TileMap
     from anathema.engine.core.game import Game
 
 

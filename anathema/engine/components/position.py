@@ -5,12 +5,12 @@ from ecstremity import Component
 
 if TYPE_CHECKING:
     from ecstremity import EntityEvent
-    from anathema.engine.world.area import Area
+    from anathema.engine.world.tilemap import TileMap
 
 
 class Position(Component):
 
-    def __init__(self, area: Area, x: int, y: int) -> None:
+    def __init__(self, area: TileMap, x: int, y: int) -> None:
         self.area = area
         self.x = x
         self.y = y

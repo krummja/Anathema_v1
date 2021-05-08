@@ -28,13 +28,11 @@ class RenderSystem(BaseSystem):
         actors = self._queries['actors'].result
         for actor in actors:
             x, y = actor['Position'].xy
-            x -= cam_x
-            y -= cam_y
-
-            self.game.console.root.tiles_rgb[["ch", "fg"]][y, x] = (
-                actor['Renderable'].char,
-                actor['Renderable'].fg
-            )
+            if self.game.world.current_area.visible[y, x]:
+                self.game.console.root.tiles_rgb[["ch", "fg"]][y - cam_y, x - cam_x] = (
+                    actor['Renderable'].char,
+                    actor['Renderable'].fg
+                )
 
     def draw_path(self):
         cam_x, cam_y = self.game.camera.camera_pos

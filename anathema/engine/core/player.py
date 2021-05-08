@@ -33,18 +33,18 @@ class PlayerManager(BaseManager):
         player = self.game.ecs.world.create_prefab("Player", {
             "position": {
                 "area": self.game.world.current_area,
-                "x": 10,
-                "y": 20
+                "x": 247,
+                "y": 247
             },
             "renderable": {
                 "char": "@",
-                "fg": (255, 0, 255)
+                "fg": (255, 255, 255)
             }
         }, uid="PLAYER")
         self._uid = player.uid
 
         test_npc: Entity = self.game.ecs.world.create_entity('test')
-        test_npc.add("position", {"area": self.game.world.current_area, "x": 20, "y": 20})
+        test_npc.add("position", {"area": self.game.world.current_area, "x": 247, "y": 249})
         test_npc.add("renderable", {"char": "N", "fg": (0, 255, 255)})
         test_npc.add("actor", {})
         test_npc.add("legs", {})

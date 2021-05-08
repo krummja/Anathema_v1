@@ -5,10 +5,11 @@ from .equipment_slot import EquipmentSlot
 from .goal import Goal
 from .isplayer import IsPlayer
 from .legs import Legs
+from .pathing import Pathing
 from .position import Position
 from .renderable import Renderable
+from .stats import Stats
 from .wandering import Wandering
-from .pathing import Pathing
 
 
 def all_components():
@@ -20,8 +21,9 @@ def all_components():
         Goal,
         IsPlayer,
         Legs,
+        Pathing,
         Position,
         Renderable,
+        Stats,
         Wandering,
-        Pathing,
     ]

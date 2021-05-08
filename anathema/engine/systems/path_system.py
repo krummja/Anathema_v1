@@ -9,7 +9,7 @@ from anathema.engine.systems import BaseSystem
 
 if TYPE_CHECKING:
     from ecstremity import Entity
-    from anathema.engine.world.area import Area
+    from anathema.engine.world.tilemap import TileMap
 
 
 class PathSystem(BaseSystem):
@@ -19,7 +19,7 @@ class PathSystem(BaseSystem):
         self.query('blockers', all_of=[ 'Blocker' ])
 
     def compute_path(self, pathing_entity: Entity):
-        _area: Area = self.game.world.current_area
+        _area: TileMap = self.game.world.current_area
         walkable = np.copy(_area.tiles["move_cost"])
 
         dest_xy = pathing_entity['Actor'].dest_xy

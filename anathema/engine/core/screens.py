@@ -18,6 +18,8 @@ class ScreenManager(BaseManager):
             'STAGE': Stage(game),
             'TEST': TestScreen(game),
             'WORLD GEN': WorldGen(game),
+            'CHARACTER INFO': CharacterInfo(game),
+            'ESCAPE MENU': EscapeMenu(game),
         }
         self._stack: List[Screen] = []
         self.should_continue: bool = True
