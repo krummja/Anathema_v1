@@ -67,6 +67,10 @@ RENDER_CONFIGURATION = {
 }
 
 
+def option_filter(key, val):
+    self.set_option(key, val)
+
+
 class WorldGen(UIScreen):
 
     def __init__(self, game: Game):
@@ -106,7 +110,7 @@ class WorldGen(UIScreen):
         self.settings_list = SettingsListView(
             label_control_pairs = [
                 (k, CyclingButtonView(
-                    k, v, v[0], callback=lambda key, val: self.set_option(key, val), align_horz = 'left'))
+                    k, v, v[0], callback=option_filter, align_horz = 'left'))
                 for k, v in sorted(self.menu_options.items())
             ],
             value_column_width = 12,

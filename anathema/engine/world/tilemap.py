@@ -57,6 +57,9 @@ class TileMap:
         self._visible = np.zeros(self.shape, dtype=bool)
         self.actors = set()
 
+    def initialize(self):
+        raise NotImplementedError("TileMap must be initialized before use!")
+
     @property
     def shape(self) -> Tuple[int, int]:
         return self.height, self.width

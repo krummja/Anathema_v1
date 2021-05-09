@@ -22,27 +22,40 @@ class Mapping:
     PADDING = 9
 
 
-theme = {
-    "flagstone": {
-        "ground": Tiles.dirt_1.make(),
-        "wall": Tiles.flagstone_wall.make(),
-        "floor": Tiles.flagstone_floor.make(),
-        "portal": Tiles.flagstone_floor.make(),
-    }
-}
+class Themes:
+    FLAGSTONE = "flagstone"
+
+
+class Resources:
+    GROUND = "ground"
+    WALL = "wall"
+    FLOOR = "floor"
+    PORTAL = "portal"
+
+
+def theme_select(theme: str, resource: str):
+    return {
+        "flagstone": {
+            "ground": Tiles.dirt_2.make(),
+            "wall": Tiles.flagstone_wall.make(),
+            "floor": Tiles.flagstone_floor.make(),
+            "portal": Tiles.flagstone_floor.make(),
+        }
+    }[theme][resource]
 
 
 def edge_selection(rect: Rect, roll: int) -> Tuple[int, int]:
     return {
-        0: (randint(1, rect.height-1), int(rect.top)),
-        1: (randint(1, rect.height-1), int(rect.bottom-1)),
-        2: (randint(1, rect.width-1), int(rect.left)),
-        3: (randint(1, rect.width-1), int(rect.right-1))
+        0: point_select(rect.points_left),
+        1: point_select(rect.points_right),
+        2: point_select(rect.points_top),
+        3: point_select(rect.points_bottom),
     }[roll]
 
 
-class Themes:
-    FLAGSTONE = "flagstone"
+def point_select(points: Generator[Point, Any, None]) -> Tuple[int, int]:
+    points = [_ for _ in points]
+    return points[randint(1, len(points)-1)]
 
 
 class StructureScheme(Scheme):
@@ -70,10 +83,10 @@ class StructureScheme(Scheme):
     @staticmethod
     def populate(tile_mask: np.ndarray, theme_name: str) -> np.ndarray:
         tiles = np.zeros(tile_mask.shape, dtype=tile_dt)
-        tiles[:] = theme[theme_name]["ground"]
-        tiles[tile_mask == 1] = theme[theme_name]["floor"]
-        tiles[tile_mask == 2] = theme[theme_name]["wall"]
-        tiles[tile_mask == 3] = theme[theme_name]["portal"]
+        tiles[:] = theme_select(theme_name, Resources.GROUND)
+        tiles[tile_mask == 1] = theme_select(theme_name, Resources.FLOOR)
+        tiles[tile_mask == 2] = theme_select(theme_name, Resources.WALL)
+        tiles[tile_mask == 3] = theme_select(theme_name, Resources.PORTAL)
         return tiles
 
     @staticmethod

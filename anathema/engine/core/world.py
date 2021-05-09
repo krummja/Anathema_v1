@@ -1,6 +1,7 @@
 from __future__ import annotations
 from typing import *
 
+import numpy as np
 from morphism import *
 import tcod.map
 from tcod.color import Color
@@ -47,10 +48,41 @@ class TestArea(TileMap):
              (40, self._tile_registry.tall_grass)]
         )
 
-        self._tiles[246:266+10, 246:266] = self._tile_registry.dirt_1.make()
+        self._tiles[246:266+10, 246:266] = self._tile_registry.dirt_2.make()
         room_mask = StructureScheme.generate()
         room_struct = StructureScheme.populate(room_mask, "flagstone")
         self._tiles = StructureScheme.plop(room_struct, (250, 250), self._tiles)
+
+
+class AreaData:
+
+    def __init__(self, index: Tuple[int, int], tile_map: TileMap):
+        self.index = index
+        self.tile_map = tile_map
+        self.connections = {}
+
+
+class WorldData:
+
+    def __init__(self, world_id: str):
+        self.world_id = world_id
+        self.buildable = np.ones((Options.WORLD_HEIGHT, Options.WORLD_WIDTH), dtype=bool)
+        self.area_registry = {}
+
+    def new_area(self, x: int, y: int, prefab: Optional[TileMap] = None):
+        if self.buildable[y, x]:
+            if prefab:
+                prefab.initialize()
+                area = AreaData((y, x), prefab)
+            else:
+                area_data = TileMap(512, 512)
+                area_data.initialize()
+                area = AreaData((y, x), area_data)
+            self.buildable[y, x] = False
+            self.area_registry[area.index] = area
+
+    def get_area_data(self, x: int, y: int):
+        return self.area_registry[(y, x)].tile_map
 
 
 class WorldManager(BaseManager):
@@ -58,19 +90,15 @@ class WorldManager(BaseManager):
     def __init__(self, game: Game):
         super().__init__(game)
         self.current_area: Optional[TileMap] = None
+        self.world_data: Optional[WorldData] = None
+
         self.generator = PlanetGenerator(Options.WORLD_HEIGHT, Options.WORLD_WIDTH)
         self.planet_view = PlanetView(self.generator)
 
-    def initialize_world(self):
-        self.generator.generate()
-
-    def initialize_region(self):
-        pass
-
-    def initialize_area(self):
-        self.current_area = TestArea()
-        self.current_area.initialize()
-
     def initialize(self):
-        self.initialize_region()
-        self.initialize_area()
+        self.initialize_world()
+
+    def initialize_world(self):
+        self.world_data = WorldData("Test World")
+        self.world_data.new_area(0, 0, TestArea())
+        self.current_area = self.world_data.get_area_data(0, 0)

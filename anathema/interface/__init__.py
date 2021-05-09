@@ -1,7 +1,7 @@
 from .screens.main_menu import MainMenu
 from .screens.stage import Stage, EscapeMenu
-from .screens.test import TestScreen
+from .screens.new_character import NewCharacter
 from .screens.world_gen import WorldGen
 from .screens.character_info import CharacterInfo
 
-__all__ = ['MainMenu', 'Stage', 'TestScreen', 'WorldGen', 'CharacterInfo', 'EscapeMenu']
+__all__ = ['MainMenu', 'Stage', 'NewCharacter', 'WorldGen', 'CharacterInfo', 'EscapeMenu']

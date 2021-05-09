@@ -3,6 +3,7 @@ from typing import *
 from morphism import *
 import numpy as np
 import tcod
+import copy
 
 from anathema.engine.core.options import Options
 from anathema.interface.screens import UIScreen
@@ -10,6 +11,7 @@ from anathema.interface.views import Layout, View
 from anathema.interface.views.rect_view import RectView
 from anathema.interface.views.label_view import LabelView
 from anathema.interface.views.button_view import ButtonView
+from anathema.data import CharacterSave, GameData, Storage, CharacterRegistry, WorldSave
 
 if TYPE_CHECKING:
     from anathema.engine.core.game import Game
@@ -76,10 +78,10 @@ class EscapeMenu(UIScreen):
 
         views = [
             RectView(
-                layout = Layout(left = 44, right = 44, top = 23, bottom = 23),
+                layout = Layout(left = 44, right = 44, top = 23, bottom = 33),
                 subviews = [
                     ButtonView(
-                        "Options", callback = lambda: print("Options"),
+                        "Options", callback = None,
                         align_vert = "top",
                         layout = Layout(left = 2, right = 2, top = 2)
                     ),
@@ -104,6 +106,31 @@ class EscapeMenu(UIScreen):
         self.game.screens.replace_screen(self.game.screens.screens['MAIN MENU'])
 
     def ui_exit_game(self):
+
+        game_data = GameData()
+
+        Storage.add_character(
+            game_data,
+            CharacterSave(
+                name = "Aulia Inuicta",
+                level = 1,
+                area = "Test",
+                uid = self.game.player.uid,
+                components = [c for c in self.game.player.entity.components]
+            )
+        )
+
+        world_data = self.game.world.world_data
+        Storage.add_world(
+            game_data,
+            WorldSave(
+                world_id = world_data.world_id,
+                buildable = world_data.buildable,
+                area_registry = {k: v for k, v in world_data.area_registry.items()}
+            )
+        )
+
+        Storage.write_to_file(game_data, "test_save")
         self.game.screens.quit()
 
     def cmd_escape(self):

@@ -16,7 +16,7 @@ class ScreenManager(BaseManager):
         self.screens = {
             'MAIN MENU': MainMenu(game),
             'STAGE': Stage(game),
-            'TEST': TestScreen(game),
+            'NEW CHARACTER': NewCharacter(game),
             'WORLD GEN': WorldGen(game),
             'CHARACTER INFO': CharacterInfo(game),
             'ESCAPE MENU': EscapeMenu(game),

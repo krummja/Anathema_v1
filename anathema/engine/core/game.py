@@ -12,8 +12,9 @@ from anathema.engine.core.input import InputManager, LoopExit
 from anathema.engine.core.player import PlayerManager
 from anathema.engine.core.renderer import RenderManager
 from anathema.engine.core.screens import ScreenManager
-from anathema.engine.core.storage import StorageManager
 from anathema.engine.core.world import WorldManager
+
+from anathema.engine.core.session import Session
 
 from anathema.engine.systems.action_system import ActionSystem
 from anathema.engine.systems.interaction_system import InteractionSystem
@@ -56,8 +57,8 @@ class Game:
         self.world: WorldManager = WorldManager(self)
         self.player: PlayerManager = PlayerManager(self)
 
-        self.storage: StorageManager = StorageManager(self)
         self.content: ContentManager = ContentManager(self)
+        self.session: Session = Session()
 
         self.action_system: ActionSystem = ActionSystem(self)
         self.physics_system: PhysicsSystem = PhysicsSystem(self)

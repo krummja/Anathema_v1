@@ -2,34 +2,34 @@ from __future__ import annotations
 from typing import *
 from collections import deque
 
-from ecstremity import Entity
 from anathema.engine.core import BaseManager
 from anathema.engine.behavior.goal_types.bored_goal_type import BoredGoalType
 
 if TYPE_CHECKING:
+    from ecstremity import Entity
     from anathema.engine.core.game import Game
 
 
 class PlayerManager(BaseManager):
 
-    def __init__(self, game: Game):
+    def __init__(self, game: Game) -> None:
         super().__init__(game)
         self._uid = None
         self._action_queue = deque([])
 
     @property
-    def entity(self):
+    def entity(self) -> Entity:
         return self.game.ecs.world.get_entity(self._uid)
 
     @property
-    def uid(self):
+    def uid(self) -> str:
         return self._uid
 
     @property
-    def position(self):
+    def position(self) -> Tuple[int, int]:
         return self.entity['Position'].xy
 
-    def initialize(self):
+    def initialize(self) -> None:
         player = self.game.ecs.world.create_prefab("Player", {
             "position": {
                 "area": self.game.world.current_area,
@@ -42,15 +42,6 @@ class PlayerManager(BaseManager):
             }
         }, uid="PLAYER")
         self._uid = player.uid
-
-        test_npc: Entity = self.game.ecs.world.create_entity('test')
-        test_npc.add("position", {"area": self.game.world.current_area, "x": 247, "y": 249})
-        test_npc.add("renderable", {"char": "N", "fg": (0, 255, 255)})
-        test_npc.add("actor", {})
-        test_npc.add("legs", {})
-        test_npc.add("brain", {})
-        test_npc['Brain'].append_goal(BoredGoalType().create(self.game.ecs.world))
-        test_npc.add("wandering", {})
 
     def get_next_action(self):
         try:
@@ -67,7 +58,16 @@ class PlayerManager(BaseManager):
         self.queue_action((lambda: self.entity.fire_event(
             'try_move', {"target": (target_x, target_y)})))
 
-    def wait(self, turns: int = 1):
+    def wait(self, turns: int = 1) -> None:
         self.queue_action((lambda: self.entity.fire_event(
             'energy_consumed', {"cost": turns * 1000}
         )))
+
+    # test_npc: Entity = self.game.ecs.world.create_entity('test')
+    # test_npc.add("position", {"area": self.game.world.current_area, "x": 247, "y": 249})
+    # test_npc.add("renderable", {"char": "N", "fg": (0, 255, 255)})
+    # test_npc.add("actor", {})
+    # test_npc.add("legs", {})
+    # test_npc.add("brain", {})
+    # test_npc['Brain'].append_goal(BoredGoalType().create(self.game.ecs.world))
+    # test_npc.add("wandering", {})

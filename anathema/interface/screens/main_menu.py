@@ -12,6 +12,7 @@ from anathema.interface.views.rect_view import RectView
 from anathema.interface.views.label_view import LabelView
 from anathema.interface.views.button_view import ButtonView
 from anathema.engine.core.input import LoopExit
+from anathema.data import CharacterSave, GameData, Storage, CharacterRegistry, get_data
 
 if TYPE_CHECKING:
     from anathema.engine.core.game import Game
@@ -23,11 +24,52 @@ POSITION_RECT = Rect(Point(0, 0), Size(Options.CONSOLE_WIDTH, Options.CONSOLE_HE
 class LogoView(View):
 
     def draw(self):
-        self.console.clear()
-        anathema_logo = tcod.image_load('logo.png')
-        print(anathema_logo)
-        # anathema_logo.set_key_color((21, 21, 21))
-        anathema_logo.blit(self.console, 2, 2, tcod.BKGND_SET, 1.0, 1.0, 0.0)
+        logo = [
+            "          █                                                                ",
+            "          █                                                                ",
+            "          █                                                                ",
+            "          █                                                                ",
+            "          █                                                                ",
+            "          █                                                                ",
+            "          █                                                                ",
+            "   █      █                                                                ",
+            "          █                                                                ",
+            "     █   ███      ████████                                                 ",
+            "      ██ ███   ██████████████                                              ",
+            "      ██ █████████████████████                                             ",
+            "        ████████████████████████                                           ",
+            "     ██████████████        ██████                                          ",
+            "████████████████              ████                                         ",
+            "     ██████████                ███                                         ",
+            "       ██████                    ██                                        ",
+            "       █████                      ██                                       ",
+            "       █████                █      ██                                      ",
+            "       █████                ██     ██                                      ",
+            "       ████                █ █      █                                      ",
+            "      ████                 ████      █                                     ",
+            "      ████                ██ █ █     █                                     ",
+            "      ████                █  █  █    █                                     ",
+            "      ███                 █ ██   █                                         ",
+            "      ███                █ █  █   █                                        ",
+            "      ███                ██   ██   █                                       ",
+            "      ███                █   █  █   ██                                     ",
+            "      ███               █   █   ██    █                                    ",
+            "       ██           █   █  █   █  █    ██                                  ",
+            "       ██          █ ███  █   █   ██     ██   ██                           ",
+            "       ███         ██  █ █   █   █ █       ███  █                          ",
+            "        ██        █ ██  █   █   █  █          █  █                         ",
+            "         █        ██ █   ███   █   █          █ █ ██                       ",
+            "         ██      ██  ██    █  █   ██           █   ██                      ",
+            "          ██     █  █ █     ██   █ █            █ █  ██                    ",
+            "           █     █ █  ██     ██ █   █            █    ███                  ",
+            "            █   █ █  █  ██     █   █ █            ██ █   ██                ",
+            "               █ █  █  █  █     █ █   ██            █   █  ██              ",
+            "           ██████  █  █  █ ███████   █  █████████████  █  █ ██████████████",
+        ]
+
+        for x in range(74):
+            for y in range(40):
+                self.console.put_char(x + 1, y + 1, ord(logo[y][x]))
 
 
 class MainMenu(UIScreen):
@@ -36,14 +78,21 @@ class MainMenu(UIScreen):
 
         self.logo_box = RectView(
             fg = (21, 21, 21),
-            layout = Layout(top = 0, left = 0, right = 0, bottom = POSITION_RECT.relative_point(1.0, 0.66)[1]),
-            subviews = []
+            layout = Layout(
+                top = 0,
+                left = 0,
+                right = 0,
+                bottom = POSITION_RECT.relative_point(1.0, 0.33)[1]
+            ),
+            subviews = [
+                LogoView()
+            ]
         )
 
         self.menu_box = RectView(
             fg = (21, 21, 21),
             layout = Layout(
-                top = POSITION_RECT.relative_point(1.0, 0.33)[1] + 1,
+                top = POSITION_RECT.relative_point(1.0, 0.66)[1] + 1,
                 right = POSITION_RECT.relative_point(0.66, 1.0)[0] + 1,
                 bottom = 0,
                 left = 0
@@ -57,13 +106,13 @@ class MainMenu(UIScreen):
                 ),
                 ButtonView(
                     "New Character",
-                    callback = lambda: None,
+                    callback = self.ui_new_character,
                     align_horz = "left", align_vert = "bottom",
                     layout = Layout(left = 2, bottom = 6)
                 ),
                 ButtonView(
                     "Load Character",
-                    callback = lambda: None,
+                    callback = self.ui_load_character,
                     align_horz = "left", align_vert = "bottom",
                     layout = Layout(left = 2, bottom = 4)
                 ),
@@ -76,19 +125,41 @@ class MainMenu(UIScreen):
             ]
         )
 
-        self.active_character_label = LabelView(
-            "", align_horz = "left", layout = Layout.row_top(1.0).with_updates(left = 2, top = 2, right = 0)
+        self.world_label = LabelView(
+            "",
+            align_horz = "left",
+            align_vert = "bottom",
+            layout = Layout.row_top(1.0).with_updates(
+                top = None,
+                left = 2,
+                bottom = 4,
+                right = 0
+            )
         )
+
+        self.character_label = LabelView(
+            "",
+            align_horz = "left",
+            align_vert = "bottom",
+            layout = Layout.row_top(1.0).with_updates(
+                top = None,
+                left = 2,
+                bottom = 2,
+                right = 0
+            )
+        )
+
         self.character_box = RectView(
             fg = (21, 21, 21),
             layout = Layout(
-                top = POSITION_RECT.relative_point(1.0, 0.33)[1] + 1,
+                top = POSITION_RECT.relative_point(1.0, 0.66)[1] + 1,
                 right = 0,
                 bottom = 0,
                 left = POSITION_RECT.relative_point(0.33, 1.0)[0] + 1
             ),
             subviews = [
-                self.active_character_label
+                self.world_label,
+                self.character_label
             ]
         )
 
@@ -100,19 +171,34 @@ class MainMenu(UIScreen):
         super().__init__(name = "MAIN MENU", game = game, views = views)
 
     def post_update(self):
-        if self.game.storage.active_character:
-            name = self.game.storage.active_character["name"]
-            self.active_character_label.update(name)
+        if self.game.session.world_data:
+            name = self.game.session.world_data.world_id
+            self.world_label.update(name)
+        else:
+            self.world_label.update("-- NO WORLD DATA --")
 
-    def ui_start(self):
-        self.game.world.initialize()
-        if not self.game.hot_start:
-            self.game.player.initialize()
-            self.game.hot_start = True
-        self.game.screens.push_screen(self.game.screens.screens['STAGE'])
+        if self.game.session.character_data:
+            name = self.game.session.character_data.name
+            self.character_label.update(name)
+        else:
+            self.character_label.update("-- NO CHARACTER DATA --")
 
     def ui_generate(self):
         self.game.screens.push_screen(self.game.screens.screens['WORLD GEN'])
+
+    def ui_start(self):
+        if not self.game.session.data:
+            pass  # TODO Raise an error box
+        else:
+            self.game.world.initialize()
+            self.game.player.initialize()
+            self.game.screens.push_screen(self.game.screens.screens['STAGE'])
+
+    def ui_new_character(self):
+        self.game.screens.push_screen(self.game.screens.screens["NEW CHARACTER"])
+
+    def ui_load_character(self):
+        self.game.session.data = Storage.load_from_file("test_save")
 
     def ui_quit(self):
         self.game.screens.quit()
