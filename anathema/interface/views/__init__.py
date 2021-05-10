@@ -309,6 +309,9 @@ class View:
     def handle_input(self, char):
         return False
 
+    def handle_textinput(self, text):
+        return False
+
     @property
     def leftmost_leaf(self):
         if self.subviews:

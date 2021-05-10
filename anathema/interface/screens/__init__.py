@@ -35,6 +35,10 @@ class BaseScreen:
         for handler in self._input_handlers:
             handler.handle_input(event)
 
+    def handle_textinput(self, event):
+        for handler in self._input_handlers:
+            handler.handle_textinput(event)
+
     def on_update(self, is_active=False) -> bool:
         return True
 

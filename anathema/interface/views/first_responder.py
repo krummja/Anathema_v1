@@ -96,21 +96,30 @@ class FirstResponderView(View):
             else:
                 self.set_first_responder(None)
 
-    def handle_input(self, val):
-        handled = self.first_responder and self.first_responder.handle_input(val)
+    def handle_textinput(self, event):
+        handled = self.first_responder and self.first_responder.handle_textinput(event)
         if self.first_responder and not handled:
             for v in self.first_responder.ancestors:
                 if v == self:
                     break
-                if v.handle_input(val):
+                if v.handle_textinput(event):
+                    return True
+
+    def handle_input(self, event):
+        handled = self.first_responder and self.first_responder.handle_input(event)
+        if self.first_responder and not handled:
+            for v in self.first_responder.ancestors:
+                if v == self:
+                    break
+                if v.handle_input(event):
                     return True
 
         can_resign = (not self.first_responder or self.first_responder.can_resign_first_responder)
-        return self.handle_input_after_first_responder(val, can_resign)
+        return self.handle_input_after_first_responder(event, can_resign)
 
-    def handle_input_after_first_responder(self, val, can_resign):
-        if can_resign and val.sym == tcod.event.K_TAB:
-            if val.mod & tcod.event.KMOD_LSHIFT:
+    def handle_input_after_first_responder(self, event, can_resign):
+        if can_resign and event.sym == tcod.event.K_TAB:
+            if event.mod & tcod.event.KMOD_LSHIFT:
                 self.find_prev_responder()
                 return True
             else:

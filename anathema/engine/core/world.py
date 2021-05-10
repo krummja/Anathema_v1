@@ -69,7 +69,8 @@ class WorldData:
         self.buildable = np.ones((Options.WORLD_HEIGHT, Options.WORLD_WIDTH), dtype=bool)
         self.area_registry = {}
 
-    def new_area(self, x: int, y: int, prefab: Optional[TileMap] = None):
+    def new_area(self, position: Tuple[int, int], prefab: Optional[TileMap] = None):
+        x, y = position
         if self.buildable[y, x]:
             if prefab:
                 prefab.initialize()
@@ -100,5 +101,5 @@ class WorldManager(BaseManager):
 
     def initialize_world(self):
         self.world_data = WorldData("Test World")
-        self.world_data.new_area(0, 0, TestArea())
+        self.world_data.new_area((0, 0), TestArea())
         self.current_area = self.world_data.get_area_data(0, 0)

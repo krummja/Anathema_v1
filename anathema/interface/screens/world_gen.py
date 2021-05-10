@@ -13,7 +13,10 @@ from anathema.interface.views.rect_view import RectView
 from anathema.interface.views.label_view import LabelView
 from anathema.interface.views.button_view import ButtonView, CyclingButtonView
 from anathema.interface.views.collection_list import SettingsListView
+from anathema.interface.views.text_input import TextInputView, TextInputConfig
 from anathema.engine.world.tile import tile_graphic
+from anathema.data import *
+from anathema.engine.core.world import TestArea, WorldData
 
 if TYPE_CHECKING:
     from anathema.engine.core.game import Game
@@ -130,16 +133,28 @@ class WorldGen(UIScreen):
                     self.settings_list,
                     ButtonView(
                         text = "Apply",
-                        callback = self.apply_options,
+                        callback = self.ui_apply_options,
+                        align_horz = 'left',
+                        layout = Layout.row_bottom(0.2).with_updates(left = 2, bottom = 7)
+                    ),
+                    ButtonView(
+                        text = "New World",
+                        callback = self.ui_generate_new,
+                        align_horz = 'left',
+                        layout = Layout.row_bottom(0.2).with_updates(left = 2, bottom = 5)
+                    ),
+                    ButtonView(
+                        text = "Continue",
+                        callback = self.ui_continue,
                         align_horz = 'left',
                         layout = Layout.row_bottom(0.2).with_updates(left = 2, bottom = 3)
                     ),
                     ButtonView(
-                        text = "New World",
-                        callback = self.generate_new,
+                        text = "Back",
+                        callback = self.ui_back,
                         align_horz = 'left',
                         layout = Layout.row_bottom(0.2).with_updates(left = 2, bottom = 1)
-                    ),
+                    )
                 ]
             )
         ]
@@ -156,11 +171,11 @@ class WorldGen(UIScreen):
 
     def on_enter(self):
         Options.STAGE_PANEL_HEIGHT = Options.CONSOLE_HEIGHT
-        self.generate_new()
+        self.generate()
         self.game.camera.camera_pos = self.position
 
     def cmd_escape(self):
-        self.game.screens.pop_screen()
+        pass
 
     def pre_update(self):
         self.game.render_system.draw_world_map()
@@ -194,11 +209,20 @@ class WorldGen(UIScreen):
     def set_option(self, key, value):
         self.configuration[key] = value
 
-    def apply_options(self):
+    def ui_apply_options(self):
         self.get_current_view()
         self.game.console.root.clear()
 
-    def generate_new(self):
+    def ui_generate_new(self):
+        self.generate()
+
+    def ui_continue(self):
+        self.game.screens.push_screen(FinalizeWorld(self.game, self.position))
+
+    def ui_back(self):
+        self.game.screens.replace_screen(self.game.screens.screens["MAIN MENU"])
+
+    def generate(self):
         self.game.world.generator.generate()
         self.game.world.planet_view.generate_standard_view(
             RENDER_CONFIGURATION['Palette'][self.configuration['Palette']]
@@ -245,3 +269,50 @@ class WorldGen(UIScreen):
             12: "ocean",
             13: "shallow ocean"
         }[biome_id]
+
+
+class FinalizeWorld(UIScreen):
+
+    def __init__(self, game: Game, position: Tuple[int, int]) -> None:
+        self.world_id: str = ""
+        self.position = position
+        self.input = TextInputView(
+            config = TextInputConfig(),
+            callback = self.ui_set_world_id,
+            layout = Layout(top = 1, left = 1)
+        )
+        super().__init__(name = "FINALIZE WORLD", game = game, views = [
+            RectView(
+                layout = Layout.centered(20, 8),
+                subviews = [
+                    self.input,
+                    ButtonView(
+                        "Back", callback = self.ui_back,
+                        align_vert = "top", align_horz = "left",
+                        layout = Layout.row_bottom(1).with_updates(bottom = 1, left = 1)
+                    ),
+                    ButtonView(
+                        "Done", callback = self.ui_confirm,
+                        align_vert = "top", align_horz = "right",
+                        layout = Layout.row_bottom(1).with_updates(right = 1, bottom = 1)
+                    )
+                ]
+            )
+        ])
+
+    def ui_set_world_id(self, value):
+        self.world_id = value
+
+    def ui_back(self):
+        self.game.screens.pop_screen()
+
+    def ui_confirm(self):
+        world_data = WorldData(world_id = self.world_id)
+        world_data.new_area(self.position, TestArea())
+
+        if self.game.session.world_data:
+            self.game.session.world_data = None
+        self.game.session.new_world_data(world_data)
+
+        self.game.screens.replace_screen(self.game.screens.screens["MAIN MENU"])
+        Storage.write_to_file(self.game.session.game_data)

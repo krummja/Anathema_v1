@@ -4,6 +4,7 @@ from typing import *
 from dataclasses import dataclass
 import copy
 import os
+import json
 import sys
 import time
 import datetime
@@ -32,6 +33,14 @@ def get_save(path: str) -> str:
     SAVE_DIR = os.path.join(ROOT_DIR, "_saves")
     assert os.path.exists(SAVE_DIR), f"Cannot find save path: {SAVE_DIR}"
     return os.path.join(SAVE_DIR, path)
+
+
+def get_save_manifest():
+    with open("_saves/manifest.json", "r") as f:
+        manifest = json.load(f)
+        if "saves" not in manifest.keys():
+            manifest["saves"] = {}
+    return {"saves": {save_id: save_file for save_id, save_file in manifest["saves"].items()}}
 
 
 class CharacterRegistry:
@@ -69,6 +78,13 @@ class GameData:
     def __init__(self):
         self._character: Optional[CharacterSave] = None
         self._world: Optional[WorldSave] = None
+        self.save_id = None
+
+    @property
+    def has_data(self):
+        has_world = True if self._world else False
+        has_character = True if self._character else False
+        return has_world, has_character
 
     def add_character(self, character: CharacterSave) -> None:
         self._character = character
@@ -78,12 +94,15 @@ class GameData:
 
     def add_world(self, world: WorldSave) -> None:
         self._world = world
+        self.save_id = self._world.world_id + "_" + str(datetime.date.today())
 
     def load_world(self) -> WorldSave:
         return self._world
 
 
 class Storage:
+
+    manifest = {"saves": {}}
 
     @staticmethod
     def add_character(game_data: GameData, character: CharacterSave) -> None:
@@ -104,15 +123,23 @@ class Storage:
         return game_data.load_world()
 
     @staticmethod
-    def write_to_file(data: GameData, file: str) -> None:
-        data = pickle.dumps(data, protocol=4)
-        with open(get_save(file), "wb") as f:
-            f.write(data)
+    def write_to_file(data: GameData) -> None:
+        Storage.manifest["saves"].update({
+            data.save_id: data.save_id + ".sav"
+        })
+        save_data = pickle.dumps(data, protocol=4)
+
+        with open(get_save(Storage.manifest["saves"][data.save_id]), "wb") as f:
+            f.write(save_data)
+        with open("_saves/manifest.json", "w") as out:
+            json.dump(Storage.manifest, out)
 
     @staticmethod
     def load_from_file(file: str) -> GameData:
+        Storage.manifest = get_save_manifest()
         try:
-            with open(get_save(file), "rb") as f:
+            _file = Storage.manifest["saves"][file]
+            with open(get_save(_file), "rb") as f:
                 data = pickle.loads(f.read())
                 return data
         except Exception:

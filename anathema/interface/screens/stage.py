@@ -106,7 +106,6 @@ class EscapeMenu(UIScreen):
         self.game.screens.replace_screen(self.game.screens.screens['MAIN MENU'])
 
     def ui_exit_game(self):
-
         game_data = GameData()
 
         Storage.add_character(

@@ -55,6 +55,9 @@ class InputManager(BaseManager, Generic[T], tcod.event.EventDispatch[T]):
             if value is not None:
                 return value
 
+    def ev_textinput(self, event):
+        self.game.screens.active_screen.handle_textinput(event)
+
     def ev_keydown(self, event):
         self.game.screens.active_screen.handle_input(event)
 
