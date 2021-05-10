@@ -23,6 +23,8 @@ from anathema.engine.systems.fov_system import FOVSystem
 from anathema.engine.systems.render_system import RenderSystem
 from anathema.engine.systems.path_system import PathSystem
 
+from anathema.data import *
+
 from .options import Options
 
 if TYPE_CHECKING:

@@ -11,7 +11,7 @@ from anathema.interface.views import Layout, View
 from anathema.interface.views.rect_view import RectView
 from anathema.interface.views.label_view import LabelView
 from anathema.interface.views.button_view import ButtonView
-from anathema.data import CharacterSave, GameData, Storage, CharacterRegistry, WorldSave
+from anathema.data import CharacterSave, GameData, Storage, WorldSave
 
 if TYPE_CHECKING:
     from anathema.engine.core.game import Game

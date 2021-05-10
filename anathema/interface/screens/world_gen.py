@@ -307,12 +307,24 @@ class FinalizeWorld(UIScreen):
         self.game.screens.pop_screen()
 
     def ui_confirm(self):
+        # Create a new WorldData object
         world_data = WorldData(world_id = self.world_id)
         world_data.new_area(self.position, TestArea())
 
+        # Check if the current session already has a loaded GameData object.
+        if self.game.session.game_data:
+            # If so, have session save it and make a new one.
+            self.game.session.new_game_data()
+
+        # Check if the current session already has loaded data
         if self.game.session.world_data:
+            # Clear it if so
             self.game.session.world_data = None
+        # Then update the session to reflect the new world data.
         self.game.session.new_world_data(world_data)
 
-        self.game.screens.replace_screen(self.game.screens.screens["MAIN MENU"])
+        # Save the game
         Storage.write_to_file(self.game.session.game_data)
+
+        # Return to Main Menu
+        self.game.screens.replace_screen(self.game.screens.screens["MAIN MENU"])

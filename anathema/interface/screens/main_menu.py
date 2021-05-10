@@ -11,10 +11,10 @@ from anathema.interface.screens import UIScreen
 from anathema.interface.views import Layout, View
 from anathema.interface.views.rect_view import RectView
 from anathema.interface.views.label_view import LabelView
-from anathema.interface.views.button_view import ButtonView
+from anathema.interface.views.button_view import ButtonView, CyclingButtonView
 from anathema.interface.views.collection_list import SettingsListView
 from anathema.engine.core.input import LoopExit
-from anathema.data import CharacterSave, GameData, Storage, CharacterRegistry, get_data, get_save_manifest
+from anathema.data import CharacterSave, GameData, Manifest, Storage, get_data
 
 if TYPE_CHECKING:
     from anathema.engine.core.game import Game
@@ -152,24 +152,15 @@ class MainMenu(UIScreen):
         ])
 
     def on_enter(self, *args):
-        manifest = Storage.manifest
-
-        if manifest["saves"].keys():
-            try:
-                saves = [file for file in manifest["saves"].keys()]
-                game_data: GameData = Storage.load_from_file(saves[-1])
-                if game_data:
-                    self.game.session.game_data = game_data
-                    self.game.session.load_game_data()
-            except IndexError:
-                print("No game data found!")
+        Manifest.load()
+        self.menu_updated = False
 
     def post_update(self):
         if self.game.session.world_data:
             if self.game.session.character_data:
                 if self.menu_state != MenuStates.READY:
                     self.menu_state = MenuStates.READY
-                    self.menu_state = False
+                    self.menu_updated = False
             else:
                 if self.menu_state != MenuStates.NO_CHARACTER:
                     self.menu_state = MenuStates.NO_CHARACTER
@@ -181,6 +172,7 @@ class MainMenu(UIScreen):
 
         if not self.menu_updated:
             self.menu_box.remove_subviews([v for v in self.menu_box.subviews])
+
             if self.menu_state == MenuStates.NO_WORLD:
                 self.world_label.update("-- NO WORLD DATA  --")
                 self.world_button.callback = self.ui_world_menu
@@ -191,6 +183,7 @@ class MainMenu(UIScreen):
                     self.quit_game_button,
                 ])
                 self.world_button.did_become_first_responder()
+
             elif self.menu_state == MenuStates.NO_CHARACTER:
                 self.world_label.update(self.game.session.world_data.world_id)
                 self.character_label.update("-- NO CHARACTER --")
@@ -201,6 +194,7 @@ class MainMenu(UIScreen):
                     self.quit_game_button,
                 ])
                 self.world_button.did_become_first_responder()
+
             elif self.menu_state == MenuStates.READY:
                 self.character_label.update(self.game.session.character_data.name)
                 self.menu_box.add_subviews([
@@ -210,6 +204,7 @@ class MainMenu(UIScreen):
                     self.quit_game_button
                 ])
                 self.start_button.did_become_first_responder()
+
             self.view.find_next_responder()
             self.menu_box.set_needs_layout(True)
             self.menu_box.perform_layout()
@@ -291,6 +286,9 @@ class MainMenu(UIScreen):
             self.game.session.new_game_data()
         self.game.screens.push_screen(SaveFiles(self.game))
 
+    def ui_delete_world(self):
+        pass
+
     def ui_start(self):
         pass
         # self.game.world.initialize()
@@ -338,14 +336,18 @@ class Submenu(UIScreen):
 class SaveFiles(UIScreen):
 
     def __init__(self, game: Game) -> None:
+        label_control_pairs = [
+            (str(index), CyclingButtonView(
+                key = index,
+                options = save_id,
+                initial_value = save_id[0],
+                callback = self.ui_select,
+                align_horz = "left"))
+            for index, save_id in SaveFiles.get_file_list()
+        ]
+
         self.view = SettingsListView(
-            label_control_pairs = [
-                (str(index), ButtonView(
-                    text = save_id,
-                    callback = self.ui_select,
-                    align_horz = "left"))
-                for index, save_id in SaveFiles.get_save_data()
-            ],
+            label_control_pairs = label_control_pairs,
             value_column_width = 30,
             layout = Layout(
                 top = 10,
@@ -358,13 +360,16 @@ class SaveFiles(UIScreen):
         super().__init__(name = "SAVE FILES", game = game, views = [self.view])
 
     @staticmethod
-    def get_save_data():
-        manifest = get_save_manifest()
-        for index, save_id in enumerate(manifest["saves"].keys()):
-            yield index, save_id
+    def get_file_list():
+        for index, save_id in enumerate(Manifest.data["saves"].keys()):
+            yield index, [save_id]
 
-    def ui_select(self):
-        pass
+    def ui_select(self, index: int, save_id: str):
+        _ = index
+        print(save_id)
+        self.game.session.game_data = Storage.load_from_file(save_id)
+        self.game.session.load_game_data()
+        self.game.screens.replace_screen(self.game.screens.screens["MAIN MENU"])
 
     def cmd_escape(self):
         self.game.screens.replace_screen(self.game.screens.screens["MAIN MENU"])

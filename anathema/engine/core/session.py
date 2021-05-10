@@ -29,20 +29,26 @@ class Session:
         self._data = value
 
     def new_game_data(self):
+        """Create a new GameData object."""
         self._data = GameData()
 
     def new_world_data(self, world_data: WorldData):
+        """Add WorldData object from WorldGen, then add it to the session."""
         world_save = WorldSave(
             world_id = world_data.world_id,
             buildable = world_data.buildable,
             area_registry = world_data.area_registry,
         )
         self.world_data = world_data
-        self._data.add_world(world_save)
+        self._data.world = world_save
 
     def load_game_data(self):
+        """Load all data from the session's GameData into memory."""
         if self._data:
-            if self._data.has_data[0]:
-                self.world_data = self._data.load_world()
-            if self._data.has_data[1]:
-                self.character_data = self._data.load_character()
+            print("Found save file...")
+            if self._data.world:
+                print("Loaded world data.")
+                self.world_data = self._data.world
+            if self._data.character:
+                print("Loaded character data.")
+                self.character_data = self._data.character
