@@ -113,9 +113,9 @@ class EscapeMenu(UIScreen):
             CharacterSave(
                 name = "Aulia Inuicta",
                 level = 1,
-                area = "Test",
+                world_id = self.game.session.world_data.world_id,
                 uid = self.game.player.uid,
-                components = [c for c in self.game.player.entity.components]
+                components = self.game.player.entity.components
             )
         )
 

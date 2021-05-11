@@ -71,4 +71,16 @@ class NewCharacter(UIScreen):
         self.game.screens.pop_screen()
 
     def ui_accept(self):
-        self.game.screens.pop_screen()
+        game_data = self.game.session.game_data
+
+        self.game.player.initialize()
+        self.game.session.new_character_data(
+            name = "Test Character",
+            level = 1,
+            world_id = game_data.world.world_id,
+            uid = self.game.player.uid,
+            components = self.game.player.entity.components
+        )
+
+        Storage.write_to_file(self.game.session.game_data)
+        self.game.screens.replace_screen(self.game.screens.screens["MAIN MENU"])

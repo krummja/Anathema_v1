@@ -23,6 +23,7 @@ if TYPE_CHECKING:
 ROOT_DIR = os.path.dirname(__file__)
 ASSET_DIR = os.path.join(ROOT_DIR, "_assets")
 SAVE_DIR = os.path.join(ROOT_DIR, "_saves")
+CONTENT_DIR = os.path.join(ROOT_DIR, "content")
 
 
 def get_data(path: str) -> str:
@@ -61,9 +62,9 @@ class Manifest:
 class CharacterSave:
     name: str
     level: int
-    area: str
     uid: str
-    components: List[Component]
+    world_id: str
+    components: Dict[str, Component]
 
 
 @dataclass
@@ -96,6 +97,13 @@ class GameData:
     @character.setter
     def character(self, character: CharacterSave) -> None:
         self._character = character
+
+    def __str__(self) -> str:
+        if self._world:
+            if self._character:
+                return f"WORLD: {self._world.world_id}; CHARACTER: {self._character}"
+            return f"WORLD: {self._world.world_id}; CHARACTER: None"
+        return f"WORLD: None; Character: None"
 
 
 class Storage:

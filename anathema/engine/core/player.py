@@ -25,6 +25,10 @@ class PlayerManager(BaseManager):
     def uid(self) -> str:
         return self._uid
 
+    @uid.setter
+    def uid(self, value: str):
+        self._uid = value
+
     @property
     def position(self) -> Tuple[int, int]:
         return self.entity['Position'].xy
@@ -40,7 +44,7 @@ class PlayerManager(BaseManager):
                 "char": "@",
                 "fg": (255, 255, 255)
             }
-        }, uid="PLAYER")
+        })
         self._uid = player.uid
 
     def get_next_action(self):

@@ -15,6 +15,7 @@ from anathema.engine.world.planet.generator import PlanetView, PlanetGenerator
 from anathema.engine.core.options import Options
 from anathema.engine.world.generation.schemata.structure import StructureScheme, Themes
 from anathema.engine.world.generation.room_builder import RoomBuilder
+from anathema.data import *
 
 if TYPE_CHECKING:
     from anathema.engine.core.game import Game
@@ -99,7 +100,10 @@ class WorldManager(BaseManager):
     def initialize(self):
         self.initialize_world()
 
-    def initialize_world(self):
-        self.world_data = WorldData("Test World")
-        self.world_data.new_area((0, 0), TestArea())
-        self.current_area = self.world_data.get_area_data(0, 0)
+    def initialize_world(self, world_save: WorldSave):
+        self.world_data = WorldData(world_id = world_save.world_id)
+        self.world_data.buildable = world_save.buildable
+        self.world_data.area_registry = world_save.area_registry
+        position = [key for key in self.world_data.area_registry.keys()]
+        print(self.world_data.area_registry)
+        self.current_area = self.world_data.get_area_data(position[0][1], position[0][0])

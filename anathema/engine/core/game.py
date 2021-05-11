@@ -71,7 +71,7 @@ class Game:
 
     def run(self):
         print("Starting...")
-        self.content.load_prefabs(path="content/prefabs/")
+        self.content.load_prefabs()
         self.screens.replace_screen(self.screens.screens['MAIN MENU'])
         self.loop()
 
