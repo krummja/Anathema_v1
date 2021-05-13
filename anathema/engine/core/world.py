@@ -70,21 +70,16 @@ class WorldData:
         self.buildable = np.ones((Options.WORLD_HEIGHT, Options.WORLD_WIDTH), dtype=bool)
         self.area_registry = {}
 
-    def new_area(self, position: Tuple[int, int], prefab: Optional[TileMap] = None):
+    def new_area(self, position: Tuple[int, int], tile_map: Optional[TileMap] = None):
         x, y = position
         if self.buildable[y, x]:
-            if prefab:
-                prefab.initialize()
-                area = AreaData((y, x), prefab)
-            else:
-                area_data = TileMap(512, 512)
-                area_data.initialize()
-                area = AreaData((y, x), area_data)
+            tile_map.initialize()
+            area = AreaData((y, x), tile_map)
             self.buildable[y, x] = False
             self.area_registry[area.index] = area
 
     def get_area_data(self, x: int, y: int):
-        return self.area_registry[(y, x)].tile_map
+        return self.area_registry[(x, y)].tile_map
 
 
 class WorldManager(BaseManager):
@@ -98,12 +93,9 @@ class WorldManager(BaseManager):
         self.planet_view = PlanetView(self.generator)
 
     def initialize(self):
-        self.initialize_world()
-
-    def initialize_world(self, world_save: WorldSave):
-        self.world_data = WorldData(world_id = world_save.world_id)
+        world_save = self.game.session.data.world_save
+        self.world_data = WorldData(world_save.world_id)
         self.world_data.buildable = world_save.buildable
         self.world_data.area_registry = world_save.area_registry
         position = [key for key in self.world_data.area_registry.keys()]
-        print(self.world_data.area_registry)
-        self.current_area = self.world_data.get_area_data(position[0][1], position[0][0])
+        self.current_area = self.world_data.get_area_data(*position[0])

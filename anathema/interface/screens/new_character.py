@@ -2,6 +2,7 @@ from __future__ import annotations
 from typing import *
 import numpy as np
 import tcod
+import copy
 
 from anathema.engine.core.options import Options
 from anathema.interface.screens import UIScreen
@@ -12,6 +13,7 @@ from anathema.interface.views.button_view import ButtonView, CyclingButtonView
 from anathema.interface.views.collection_list import SettingsListView
 from anathema.engine.core.input import LoopExit
 from anathema.data import *
+from anathema.storage import Storage
 
 if TYPE_CHECKING:
     from anathema.engine.core.game import Game
@@ -71,16 +73,13 @@ class NewCharacter(UIScreen):
         self.game.screens.pop_screen()
 
     def ui_accept(self):
-        game_data = self.game.session.game_data
-
         self.game.player.initialize()
-        self.game.session.new_character_data(
-            name = "Test Character",
+        self.game.session.data.character_save = CharacterSave(
+            name = "Test Player",
             level = 1,
-            world_id = game_data.world.world_id,
             uid = self.game.player.uid,
-            components = self.game.player.entity.components
+            world_id = self.game.session.data.world_save.world_id,
+            entity = copy.copy(self.game.player.entity)
         )
-
-        Storage.write_to_file(self.game.session.game_data)
+        Storage.write_to_file(self.game.session)
         self.game.screens.replace_screen(self.game.screens.screens["MAIN MENU"])

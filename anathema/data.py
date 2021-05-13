@@ -15,9 +15,8 @@ import sys
 import traceback
 
 if TYPE_CHECKING:
-    from anathema.engine.world.tilemap import TileMap
-    from anathema.engine.core.world import WorldData, AreaData
-    from ecstremity import Component
+    from ecstremity import Component, Entity
+    from anathema.engine.core.world import AreaData
 
 
 ROOT_DIR = os.path.dirname(__file__)
@@ -26,45 +25,13 @@ SAVE_DIR = os.path.join(ROOT_DIR, "_saves")
 CONTENT_DIR = os.path.join(ROOT_DIR, "content")
 
 
-def get_data(path: str) -> str:
-    assert os.path.exists(ASSET_DIR), f"Cannot find asset path: {ASSET_DIR}"
-    return os.path.join(ASSET_DIR, path)
-
-
-def get_save(path: str) -> str:
-    assert os.path.exists(SAVE_DIR), f"Cannot find save path: {SAVE_DIR}"
-    return os.path.join(SAVE_DIR, path)
-
-
-class Manifest:
-    data = {"saves": {}}
-
-    @staticmethod
-    def load():
-        if not os.path.exists(os.path.join(SAVE_DIR, "manifest.json")):
-            with open(os.path.join(SAVE_DIR, "manifest.json"), "w") as manifest:
-                json.dump(Manifest.data, manifest)
-        with open(os.path.join(SAVE_DIR, "manifest.json"), "r") as manifest:
-            Manifest.data = json.load(manifest)
-
-    @staticmethod
-    def save():
-        with open(os.path.join(SAVE_DIR, "manifest.json"), "w") as manifest:
-            json.dump(Manifest.data, manifest)
-
-    @staticmethod
-    def update(data: GameData):
-        Manifest.data["saves"].update({data.save_id: data.save_id + ".sav"})
-        Manifest.save()
-
-
 @dataclass
 class CharacterSave:
     name: str
     level: int
     uid: str
     world_id: str
-    components: Dict[str, Component]
+    entity: Entity
 
 
 @dataclass
@@ -76,69 +43,37 @@ class WorldSave:
 
 class GameData:
 
-    def __init__(self):
-        self._character: Optional[CharacterSave] = None
-        self._world: Optional[WorldSave] = None
-        self.save_id = None
+    def __init__(
+            self,
+            save_id: str,
+            world_save: WorldSave
+        ) -> None:
+        self.save_id = save_id
+        self._world_save = world_save
+        self._character_save: Optional[CharacterSave] = None
+        self._queries = None
 
     @property
-    def world(self) -> WorldSave:
-        return self._world
+    def world_save(self) -> WorldSave:
+        return self._world_save
 
-    @world.setter
-    def world(self, world: WorldSave) -> None:
-        self._world = world
-        self.save_id = self._world.world_id + "_" + str(datetime.date.today())
+    @world_save.setter
+    def world_save(self, value) -> None:
+        self._world_save = value
 
     @property
-    def character(self) -> CharacterSave:
-        return self._character
+    def character_save(self) -> CharacterSave:
+        return self._character_save
 
-    @character.setter
-    def character(self, character: CharacterSave) -> None:
-        self._character = character
+    @character_save.setter
+    def character_save(self, value: CharacterSave) -> None:
+        self._character_save = value
 
-    def __str__(self) -> str:
-        if self._world:
-            if self._character:
-                return f"WORLD: {self._world.world_id}; CHARACTER: {self._character}"
-            return f"WORLD: {self._world.world_id}; CHARACTER: None"
-        return f"WORLD: None; Character: None"
+    @property
+    def queries(self):
+        return self._queries
 
+    @queries.setter
+    def queries(self, value):
+        self._queries = value
 
-class Storage:
-
-    @staticmethod
-    def add_character(game_data: GameData, character: CharacterSave) -> None:
-        game_data.character = character
-
-    @staticmethod
-    def load_character(game_data: GameData) -> CharacterSave:
-        return game_data.character
-
-    @staticmethod
-    def add_world(game_data: GameData, world: WorldSave) -> None:
-        for area in world.area_registry.values():
-            area.tile_map.actors = None
-        game_data.world = world
-
-    @staticmethod
-    def load_world(game_data: GameData) -> WorldSave:
-        return game_data.world
-
-    @staticmethod
-    def write_to_file(data: GameData) -> None:
-        Manifest.update(data)
-        save_data = pickle.dumps(data, protocol=4)
-        with open(get_save(Manifest.data["saves"][data.save_id]), "wb") as f:
-            f.write(save_data)
-
-    @staticmethod
-    def load_from_file(file: str) -> GameData:
-        try:
-            _file = Manifest.data["saves"][file]
-            with open(get_save(_file), "rb") as f:
-                data = pickle.loads(f.read())
-                return data
-        except Exception:
-            traceback.print_exc(file=sys.stderr)

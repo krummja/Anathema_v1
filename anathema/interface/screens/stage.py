@@ -11,7 +11,8 @@ from anathema.interface.views import Layout, View
 from anathema.interface.views.rect_view import RectView
 from anathema.interface.views.label_view import LabelView
 from anathema.interface.views.button_view import ButtonView
-from anathema.data import CharacterSave, GameData, Storage, WorldSave
+from anathema.data import CharacterSave, GameData, WorldSave
+from anathema.storage import Storage
 
 if TYPE_CHECKING:
     from anathema.engine.core.game import Game
@@ -103,34 +104,11 @@ class EscapeMenu(UIScreen):
         self.covers_screen = True
 
     def ui_quit_to_menu(self):
+        Storage.write_to_file(self.game.session)
         self.game.screens.replace_screen(self.game.screens.screens['MAIN MENU'])
 
     def ui_exit_game(self):
-        game_data = GameData()
-
-        Storage.add_character(
-            game_data,
-            CharacterSave(
-                name = "Aulia Inuicta",
-                level = 1,
-                world_id = self.game.session.world_data.world_id,
-                uid = self.game.player.uid,
-                components = self.game.player.entity.components
-            )
-        )
-
-        world_data = self.game.world.world_data
-        Storage.add_world(
-            game_data,
-            WorldSave(
-                world_id = world_data.world_id,
-                buildable = world_data.buildable,
-                area_registry = {k: v for k, v in world_data.area_registry.items()}
-            )
-        )
-
-        Storage.write_to_file(game_data, "test_save")
-        self.game.screens.quit()
+        pass
 
     def cmd_escape(self):
         self.game.screens.pop_screen()

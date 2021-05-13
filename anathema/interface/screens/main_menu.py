@@ -15,7 +15,8 @@ from anathema.interface.views.label_view import LabelView
 from anathema.interface.views.button_view import ButtonView, CyclingButtonView
 from anathema.interface.views.collection_list import SettingsListView
 from anathema.engine.core.input import LoopExit
-from anathema.data import CharacterSave, GameData, Manifest, Storage, get_data
+from anathema.data import CharacterSave, GameData
+from anathema.storage import Storage, get_data
 
 if TYPE_CHECKING:
     from anathema.engine.core.game import Game
@@ -153,27 +154,21 @@ class MainMenu(UIScreen):
         ])
 
     def on_enter(self, *args):
-        Manifest.load()
+        Storage.load_from_manifest()
         self.update_menu_state()
 
     def update_menu_state(self):
-        if self.game.session.world_data:
-            print("WORLD_DATA found")
-            if self.game.session.character_data:
-                print("CHARACTER_DATA found")
+        if self.game.session.data:
+            if self.game.session.data.character_save:
                 if self.menu_state != MenuStates.READY:
                     self.menu_state = MenuStates.READY
-                    self.menu_updated = False
             else:
-                print("NO CHARACTER_DATA")
                 if self.menu_state != MenuStates.NO_CHARACTER:
                     self.menu_state = MenuStates.NO_CHARACTER
-                    self.menu_updated = False
         else:
-            print("NO WORLD_DATA")
             if self.menu_state != MenuStates.NO_WORLD:
                 self.menu_state = MenuStates.NO_WORLD
-                self.menu_updated = False
+        self.menu_updated = False
 
     def post_update(self):
         if not self.menu_updated:
@@ -190,7 +185,7 @@ class MainMenu(UIScreen):
                 ])
 
             elif self.menu_state == MenuStates.NO_CHARACTER:
-                self.world_label.update(self.game.session.world_data.world_id)
+                self.world_label.update(self.game.session.data.world_save.world_id)
                 self.character_label.update("-- NO CHARACTER --")
                 self.menu_box.add_subviews([
                     self.no_start_label,
@@ -200,8 +195,8 @@ class MainMenu(UIScreen):
                 ])
 
             elif self.menu_state == MenuStates.READY:
-                self.world_label.update(self.game.session.world_data.world_id)
-                self.character_label.update(self.game.session.character_data.name)
+                self.world_label.update(self.game.session.data.world_save.world_id)
+                self.character_label.update(self.game.session.data.character_save.name)
                 self.menu_box.add_subviews([
                     self.start_button,
                     self.world_button,
@@ -274,37 +269,38 @@ class MainMenu(UIScreen):
                 )
             )
         else:
-            Submenu(
-                name = "CHARACTER/NO CHARACTER",
-                game = self.game,
-                views = [delete_character]
+            self.game.screens.push_screen(
+                Submenu(
+                    name = "CHARACTER/NO CHARACTER",
+                    game = self.game,
+                    views = [delete_character]
+                )
             )
 
     def ui_new_world(self):
         self.game.screens.push_screen(self.game.screens.screens['WORLD GEN'])
 
     def ui_load_world(self):
-        if not self.game.session.game_data:
-            self.game.session.new_game_data()
         self.game.screens.push_screen(SaveFiles(self.game))
 
     def ui_delete_world(self):
-        pass
+        Storage.delete_world(self.game.session)
+        self.game.screens.replace_screen(self.game.screens.screens["MAIN MENU"])
 
     def ui_start(self):
-        assert self.game.session.game_data
-        assert self.game.session.world_data
-        assert self.game.session.character_data
-        self.game.world.initialize_world(self.game.session.world_data)
-        self.game.ecs.world.create_entity(self.game.session.character_data.uid)
-        self.game.player.entity.components = OrderedDict(self.game.session.character_data.components)
+        assert self.game.session.data
+        assert self.game.session.data.world_save
+        assert self.game.session.data.character_save
+        self.game.world.initialize()
+        self.game.player.initialize_from_save()
         self.game.screens.push_screen(self.game.screens.screens['STAGE'])
 
     def ui_new_character(self):
         self.game.screens.push_screen(self.game.screens.screens["NEW CHARACTER"])
 
     def ui_delete_character(self):
-        pass
+        Storage.delete_character(self.game.session)
+        self.game.screens.replace_screen(self.game.screens.screens["MAIN MENU"])
 
     def ui_quit(self):
         self.game.screens.quit()
@@ -364,13 +360,11 @@ class SaveFiles(UIScreen):
 
     @staticmethod
     def get_file_list():
-        for index, save_id in enumerate(Manifest.data["saves"].keys()):
+        for index, save_id in enumerate(Storage.manifest_entries()):
             yield index, [save_id]
 
-    def ui_select(self, index: int, save_id: str):
-        _ = index
-        self.game.session.game_data = Storage.load_from_file(save_id)
-        self.game.session.load_game_data()
+    def ui_select(self, _: int, save_id: str):
+        Storage.load_from_file(self.game.session, save_id)
         self.game.screens.replace_screen(self.game.screens.screens["MAIN MENU"])
 
     def cmd_escape(self):

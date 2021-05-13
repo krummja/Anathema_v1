@@ -9,3 +9,6 @@ class BaseManager:
 
     def __init__(self, game: Game) -> None:
         self.game = game
+
+    def __repr__(self):
+        return repr(self.__class__.__name__)

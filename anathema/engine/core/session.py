@@ -1,11 +1,12 @@
 from __future__ import annotations
 from typing import *
-from anathema.data import Storage
 
-from anathema.data import GameData, WorldSave, CharacterSave
+import datetime
+from anathema.storage import Storage
+from anathema.data import GameData
 
 if TYPE_CHECKING:
-    from anathema.data import CharacterSave, WorldData
+    from anathema.data import WorldSave, CharacterSave
     from ecstremity import Component
 
 
@@ -15,62 +16,52 @@ class Session:
         """Data for a single game session.
 
         The Session class holds reference to a single GameData object.
-        Every GameData object has only one WorldSave and one CharacterSave.
+        While the Session object is locked, its values are readonly.
         """
+        self.locked = True
         self._data: Optional[GameData] = None
-        self.world_data: Optional[WorldSave] = None
-        self.character_data: Optional[CharacterSave] = None
 
     @property
-    def game_data(self) -> GameData:
+    def data(self) -> GameData:
         return self._data
 
-    @game_data.setter
-    def game_data(self, value: GameData) -> None:
-        self._data = value
+    @data.setter
+    def data(self, value: GameData) -> None:
+        if not self.locked:
+            self._data = value
+        else:
+            print("Session data instance is readonly while locked!")
 
-    def new_game_data(self):
-        """Create a new GameData object."""
-        self._data = GameData()
+    def lock(self):
+        if not self.locked:
+            self.locked = True
 
-    def new_world_data(self, world_data: WorldData):
-        """Add WorldData object from WorldGen, then add it to the session."""
-        if not self._data:
-            self.new_game_data()
-        self._data.world = WorldSave(
-            world_id = world_data.world_id,
-            buildable = world_data.buildable,
-            area_registry = world_data.area_registry,
-        )
-        self.load_game_data()
+    def unlock(self):
+        if self.locked:
+            self.locked = False
 
-    def new_character_data(
-            self,
-            name: str,
-            level: int,
-            world_id: str,
-            uid: str,
-            components: Dict[str, Component]
-        ) -> None:
-        assert self._data.world
-        self._data.character = CharacterSave(
-            name = name,
-            level = level,
-            world_id = world_id,
-            uid = uid,
-            components = components
-        )
-        self.load_game_data()
+    def clear(self):
+        if not self.locked:
+            self._data = None
+        else:
+            print("Session data instance is readonly while locked!")
 
-    def load_game_data(self):
-        """Load all data from the session's GameData into memory."""
-        self.world_data = None
-        self.character_data = None
-        if self._data:
-            print("Found save file...")
-            if self._data.world:
-                print("Loaded world data.")
-                self.world_data = self._data.world
-            if self._data.character:
-                print("Loaded character data.")
-                self.character_data = self._data.character
+    def delete(self):
+        if not self.locked:
+            save_id = self.data.save_id
+            self._data = None
+            Storage.delete_from_manifest(save_id)
+        else:
+            print("Session data instance is readonly while locked!")
+
+    def delete_character(self):
+        if not self.locked:
+            self._data.character_save = None
+        else:
+            print("Session data instance is readonly while locked!")
+
+    def new_game(self, world_save: WorldSave) -> None:
+        if not self.locked:
+            save_id = world_save.world_id + "_" + str(datetime.date.today())
+            self.data = GameData(save_id, world_save)
+

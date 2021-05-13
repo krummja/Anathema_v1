@@ -8,6 +8,7 @@ from anathema.engine.behavior.goal_types.bored_goal_type import BoredGoalType
 if TYPE_CHECKING:
     from ecstremity import Entity
     from anathema.engine.core.game import Game
+    from anathema.engine.core.session import Session
 
 
 class PlayerManager(BaseManager):
@@ -46,6 +47,15 @@ class PlayerManager(BaseManager):
             }
         })
         self._uid = player.uid
+
+    def initialize_from_save(self):
+        # player = self.game.session.data.character_save.entity
+        self.initialize()
+        # FIXME It seems that the prefab system only initializes the two top-level prefabs in the player definition.
+        # FIXME ... and then copying the component dict breaks things. Investigate this...
+        player = self.game.ecs.world.get_entity(self.uid)
+        player.components = self.game.session.data.character_save.entity.components
+        self.game.ecs.world.candidate(player)
 
     def get_next_action(self):
         try:

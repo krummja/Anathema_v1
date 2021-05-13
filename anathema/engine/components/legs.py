@@ -11,12 +11,10 @@ if TYPE_CHECKING:
 class Legs(Component):
 
     def __init__(self, leg_count: int = 2) -> None:
-        super().__init__()
-        self._leg_count = leg_count
-        self.area = self.client.world.current_area
+        self.leg_count = leg_count
 
     def on_try_move(self, evt: EntityEvent) -> None:
-        if self.area.is_blocked(*evt.data.target):
+        if self.client.world.current_area.is_blocked(*evt.data.target):
             pass
         # if self.area.is_blocked(*evt.data.target):
         #     if self.area.is_interactable(*evt.data.target):

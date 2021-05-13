@@ -10,8 +10,8 @@ if TYPE_CHECKING:
 
 class Brain(Component):
 
-    def __init__(self) -> None:
-        self.goals: List[Entity] = []
+    def __init__(self, goals: List[Entity] = None) -> None:
+        self.goals: List[Entity] = goals if goals else []
 
     def on_destroyed(self):
         for goal in self.goals:
