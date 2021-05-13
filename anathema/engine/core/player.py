@@ -48,11 +48,16 @@ class PlayerManager(BaseManager):
         })
         self._uid = player.uid
 
+        # test_npc: Entity = self.game.ecs.world.create_entity('test')
+        # test_npc.add("position", {"area": self.game.world.current_area, "x": 247, "y": 249})
+        # test_npc.add("renderable", {"char": "N", "fg": (0, 255, 255)})
+        # test_npc.add("actor", {})
+        # test_npc.add("legs", {})
+        # test_npc.add("brain", {})
+        # test_npc['Brain'].append_goal(BoredGoalType().create(self.game.ecs.world))
+        # test_npc.add("wandering", {})
+
     def initialize_from_save(self):
-        # player = self.game.session.data.character_save.entity
-        self.initialize()
-        # FIXME It seems that the prefab system only initializes the two top-level prefabs in the player definition.
-        # FIXME ... and then copying the component dict breaks things. Investigate this...
         player = self.game.ecs.world.get_entity(self.uid)
         player.components = self.game.session.data.character_save.entity.components
         self.game.ecs.world.candidate(player)
@@ -76,12 +81,3 @@ class PlayerManager(BaseManager):
         self.queue_action((lambda: self.entity.fire_event(
             'energy_consumed', {"cost": turns * 1000}
         )))
-
-    # test_npc: Entity = self.game.ecs.world.create_entity('test')
-    # test_npc.add("position", {"area": self.game.world.current_area, "x": 247, "y": 249})
-    # test_npc.add("renderable", {"char": "N", "fg": (0, 255, 255)})
-    # test_npc.add("actor", {})
-    # test_npc.add("legs", {})
-    # test_npc.add("brain", {})
-    # test_npc['Brain'].append_goal(BoredGoalType().create(self.game.ecs.world))
-    # test_npc.add("wandering", {})

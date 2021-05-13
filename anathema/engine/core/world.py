@@ -16,6 +16,7 @@ from anathema.engine.core.options import Options
 from anathema.engine.world.generation.schemata.structure import StructureScheme, Themes
 from anathema.engine.world.generation.room_builder import RoomBuilder
 from anathema.data import *
+# from anathema.engine.data.spawnables.wanderer import create_spawnable as wanderer
 
 if TYPE_CHECKING:
     from anathema.engine.core.game import Game

@@ -60,8 +60,9 @@ class Game:
         self.player: PlayerManager = PlayerManager(self)
 
         self.content: ContentManager = ContentManager(self)
-        self.session: Session = Session()
+        self.session: Session = Session(self)
 
+        self.ecs.new_world()
         self.action_system: ActionSystem = ActionSystem(self)
         self.physics_system: PhysicsSystem = PhysicsSystem(self)
         self.interaction_system: InteractionSystem = InteractionSystem(self)
