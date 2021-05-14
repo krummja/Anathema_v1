@@ -72,6 +72,7 @@ class Session(BaseManager):
 
     def new_game(self, world_save: WorldSave) -> None:
         if not self.locked:
-            self.game.ecs.new_world()
+            if not self.game.ecs.world:
+                self.game.ecs.new_world()
             save_id = world_save.world_id + "_" + str(datetime.date.today())
             self.data = GameData(save_id, world_save)

@@ -28,10 +28,8 @@ CONTENT_DIR = os.path.join(ROOT_DIR, "content")
 @dataclass
 class CharacterSave:
     name: str
-    level: int
     uid: str
     world_id: str
-    entity: Entity
 
 
 @dataclass
@@ -76,4 +74,3 @@ class GameData:
     @queries.setter
     def queries(self, value):
         self._queries = value
-

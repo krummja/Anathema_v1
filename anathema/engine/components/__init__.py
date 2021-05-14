@@ -12,7 +12,7 @@ from .stats import Stats
 from .wandering import Wandering
 
 
-def all_components():
+def game_object_components():
     return [
         Actor,
         Blocker,

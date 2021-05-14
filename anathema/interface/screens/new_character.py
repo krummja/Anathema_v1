@@ -76,10 +76,8 @@ class NewCharacter(UIScreen):
         self.game.player.initialize()
         self.game.session.data.character_save = CharacterSave(
             name = "Test Player",
-            level = 1,
             uid = self.game.player.uid,
-            world_id = self.game.session.data.world_save.world_id,
-            entity = copy.copy(self.game.player.entity)
+            world_id = self.game.session.data.world_save.world_id
         )
         Storage.write_to_file(self.game.session)
         self.game.screens.replace_screen(self.game.screens.screens["MAIN MENU"])
