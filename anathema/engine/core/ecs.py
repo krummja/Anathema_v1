@@ -3,7 +3,6 @@ from typing import *
 
 from ecstremity import Engine
 from anathema.engine.components import game_object_components
-from anathema.engine.world.components import world_object_components
 from anathema.engine.core import BaseManager
 
 if TYPE_CHECKING:
@@ -34,6 +33,4 @@ class ECSManager(BaseManager):
 
     def _register_components(self):
         for component in game_object_components():
-            self.engine.register_component(component)
-        for component in world_object_components():
             self.engine.register_component(component)

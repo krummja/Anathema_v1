@@ -57,6 +57,9 @@ class PlayerManager(BaseManager):
         # test_npc['Brain'].append_goal(BoredGoalType().create(self.game.ecs.world))
         # test_npc.add("wandering", {})
 
+    def teardown(self):
+        self.game.ecs.world.destroy_entity(self.uid)
+
     def get_next_action(self):
         try:
             return self._action_queue.popleft()

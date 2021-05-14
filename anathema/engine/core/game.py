@@ -39,28 +39,53 @@ CONFIG = {
 }
 
 
-class Game:
+class AbstractGame:
+
+    def __init__(self):
+        self.ecs: Optional[ECSManager] = None
+        self.clock: Optional[ClockManager] = None
+        self.console: Optional[ConsoleManager] = None
+        self.camera: Optional[CameraManager] = None
+        self.renderer: Optional[RenderManager] = None
+        self.screens: Optional[ScreenManager] = None
+        self.input: Optional[InputManager] = None
+        self.world: Optional[WorldManager] = None
+        self.player: Optional[PlayerManager] = None
+
+        self.content: Optional[ContentManager] = None
+
+        self.action_system: Optional[ActionSystem] = None
+        self.physics_system: Optional[PhysicsSystem] = None
+        self.interaction_system: Optional[InteractionSystem] = None
+        self.fov_system: Optional[FOVSystem] = None
+        self.render_system: Optional[RenderSystem] = None
+        self.path_system: Optional[PathSystem] = None
+
+
+class Game(AbstractGame):
 
     debug = False
-    ui_debug = False
-    hot_start = False
-
     context: tcod.context.Context
 
     def __init__(self):
-        self.ecs: ECSManager = ECSManager(self)
-        self.clock: ClockManager = ClockManager(self)
-        self.console: ConsoleManager = ConsoleManager(self)
-        self.camera: CameraManager = CameraManager(self)
-        self.renderer: RenderManager = RenderManager(self)
-        self.screens: ScreenManager = ScreenManager(self)
-        self.input: InputManager = InputManager(self)
-        self.world: WorldManager = WorldManager(self)
-        self.player: PlayerManager = PlayerManager(self)
+        super().__init__()
 
-        self.content: ContentManager = ContentManager(self)
+        # Look into RanvierMUD's Manager setup, see if there's ideas to take from there
+        self.ecs = ECSManager(self)
+        self.clock = ClockManager(self)
+        self.console = ConsoleManager(self)
+        self.camera = CameraManager(self)
+        self.renderer = RenderManager(self)
+        self.screens = ScreenManager(self)  # TODO Rename this to "interface"
+        self.input = InputManager(self)
+        self.world = WorldManager(self)     # TODO Rename this to "maps"
+        self.content = ContentManager(self)
 
+    def initialize(self):
         self.ecs.new_world()
+        self.content.load_prefabs()
+        self.player = PlayerManager(self)
+
         self.action_system: ActionSystem = ActionSystem(self)
         self.physics_system: PhysicsSystem = PhysicsSystem(self)
         self.interaction_system: InteractionSystem = InteractionSystem(self)
@@ -68,9 +93,26 @@ class Game:
         self.render_system: RenderSystem = RenderSystem(self)
         self.path_system: PathSystem = PathSystem(self)
 
+        self.world.initialize()
+        self.player.initialize()
+
+    def teardown(self):
+        self.player.teardown()
+        self.world.teardown()
+
+        self.action_system = None
+        self.physics_system = None
+        self.interaction_system = None
+        self.fov_system = None
+        self.render_system = None
+        self.path_system = None
+
+        self.player = None
+        self.content.unload_prefabs()
+        self.ecs.delete_world()
+
     def run(self):
         print("Starting...")
-        self.content.load_prefabs()
         self.screens.replace_screen(self.screens.screens['MAIN MENU'])
         self.loop()
 

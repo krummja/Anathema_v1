@@ -120,8 +120,7 @@ class MainMenu(UIScreen):
         ])
 
     def ui_start(self):
-        self.game.world.initialize()
-        self.game.player.initialize()
+        self.game.initialize()
         self.game.screens.push_screen(self.game.screens.screens['STAGE'])
 
     def ui_quit(self):

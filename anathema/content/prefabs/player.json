@@ -1,20 +1,20 @@
 {
-    "name": "Player",
-    "inherit": ["Being"],
-    "components": [
-        {
-            "type": "IsPlayer"
-        },
-        {
-            "type": "Stats",
-            "properties": {
-                "base_might": 10,
-                "base_finesse": 10,
-                "base_vitality": 10,
-                "base_piety": 10,
-                "base_cunning": 10,
-                "base_knowledge": 10
-            }
-        }
-    ]
+  "name": "Player",
+  "inherit": ["Being"],
+  "components": [
+    {
+      "type": "IsPlayer"
+    },
+    {
+      "type": "Stats",
+      "properties": {
+        "base_might": 10,
+        "base_finesse": 10,
+        "base_vitality": 10,
+        "base_piety": 10,
+        "base_cunning": 10,
+        "base_knowledge": 10
+      }
+    }
+  ]
 }

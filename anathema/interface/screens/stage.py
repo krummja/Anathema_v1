@@ -4,6 +4,7 @@ from morphism import *
 import numpy as np
 import tcod
 import copy
+import random
 
 from anathema.engine.core.options import Options
 from anathema.interface.screens import UIScreen
@@ -11,6 +12,7 @@ from anathema.interface.views import Layout, View
 from anathema.interface.views.rect_view import RectView
 from anathema.interface.views.label_view import LabelView
 from anathema.interface.views.button_view import ButtonView
+from anathema.engine.data.spawner import spawn
 
 if TYPE_CHECKING:
     from anathema.engine.core.game import Game
@@ -53,6 +55,15 @@ class Stage(UIScreen):
     def cmd_character_info(self):
         self.game.screens.push_screen(self.game.screens.screens['CHARACTER INFO'])
 
+    def cmd_spawn(self):
+        roll = random.randrange(0, 100)
+        if roll >= 50:
+            offset = 1
+        else:
+            offset = -1
+        x, y = self.game.player.position
+        spawn(self.game, 'SPAWN_WANDERER', x + offset, y)
+
 
 class EscapeMenu(UIScreen):
 
@@ -85,6 +96,7 @@ class EscapeMenu(UIScreen):
         self.covers_screen = True
 
     def ui_quit_to_menu(self):
+        self.game.teardown()
         self.game.screens.replace_screen(self.game.screens.screens['MAIN MENU'])
 
     def ui_exit_game(self):

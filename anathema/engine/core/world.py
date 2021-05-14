@@ -87,10 +87,14 @@ class WorldManager(BaseManager):
 
     def __init__(self, game: Game):
         super().__init__(game)
-        self.current_area: Optional[TileMap] = TestArea()
+        self.current_area: Optional[TileMap] = None
 
         self.generator = PlanetGenerator(Options.WORLD_HEIGHT, Options.WORLD_WIDTH)
         self.planet_view = PlanetView(self.generator)
 
     def initialize(self):
+        self.current_area = TestArea()
         self.current_area.initialize()
+
+    def teardown(self):
+        self.current_area = None

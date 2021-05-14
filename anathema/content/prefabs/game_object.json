@@ -1,5 +1,6 @@
 {
   "name": "GameObject",
+  "inherit": [],
   "components": [
     {
       "type": "Position"

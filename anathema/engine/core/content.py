@@ -22,3 +22,6 @@ class ContentManager(BaseManager):
             with open(path + prefab) as f:
                 definition = json.load(f)
                 self.game.ecs.engine.prefabs.register(definition)
+
+    def unload_prefabs(self):
+        self.game.ecs.engine.prefabs.clear()

@@ -20,7 +20,8 @@ class InputManager(BaseManager, Generic[T], tcod.event.EventDispatch[T]):
     COMMAND_KEYS = {
         tcod.event.K_ESCAPE: 'escape',
         tcod.event.K_c: 'character_info',
-        tcod.event.K_F1: 'debug_f1'
+        tcod.event.K_F1: 'debug_f1',
+        tcod.event.K_F2: 'spawn'
     }
 
     MOVE_KEYS: Dict[int, Tuple[int, int]] = {
