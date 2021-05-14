@@ -1,6 +1,6 @@
 import tcod
 from tcod.tileset import Tileset
-from anathema.storage import get_data
+from anathema.data import get_data
 
 
 class Options:

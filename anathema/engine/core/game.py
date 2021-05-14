@@ -14,7 +14,6 @@ from anathema.engine.core.renderer import RenderManager
 from anathema.engine.core.screens import ScreenManager
 from anathema.engine.core.world import WorldManager
 
-from anathema.engine.core.session import Session
 
 from anathema.engine.systems.action_system import ActionSystem
 from anathema.engine.systems.interaction_system import InteractionSystem
@@ -60,7 +59,6 @@ class Game:
         self.player: PlayerManager = PlayerManager(self)
 
         self.content: ContentManager = ContentManager(self)
-        self.session: Session = Session(self)
 
         self.ecs.new_world()
         self.action_system: ActionSystem = ActionSystem(self)

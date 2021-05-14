@@ -16,10 +16,7 @@ class ScreenManager(BaseManager):
         self.screens = {
             'MAIN MENU': MainMenu(game),
             'STAGE': Stage(game),
-            'NEW CHARACTER': NewCharacter(game),
-            'WORLD GEN': WorldGen(game),
             'CHARACTER INFO': CharacterInfo(game),
-            'ESCAPE MENU': EscapeMenu(game),
         }
         self._stack: List[Screen] = []
         self.should_continue: bool = True

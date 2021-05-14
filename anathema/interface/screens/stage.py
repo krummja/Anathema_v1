@@ -11,8 +11,6 @@ from anathema.interface.views import Layout, View
 from anathema.interface.views.rect_view import RectView
 from anathema.interface.views.label_view import LabelView
 from anathema.interface.views.button_view import ButtonView
-from anathema.data import CharacterSave, GameData, WorldSave
-from anathema.storage import Storage
 
 if TYPE_CHECKING:
     from anathema.engine.core.game import Game
@@ -21,11 +19,6 @@ if TYPE_CHECKING:
 class Stage(UIScreen):
 
     def __init__(self, game: Game) -> None:
-
-        self.strength_label = LabelView(
-            "", align_horz = "left", align_vert = "top",
-            layout = Layout(left = 2, top = 2)
-        )
 
         views = [
             RectView(
@@ -38,16 +31,7 @@ class Stage(UIScreen):
                 layout = Layout(
                     left = Options.STAGE_PANEL_WIDTH,
                 ),
-                subviews = [
-                    RectView(
-                        layout = Layout(
-                            left = 1, right = 1, top = 10, bottom = 40
-                        ),
-                        subviews = [
-                            self.strength_label
-                        ]
-                    )
-                ]
+                subviews = []
             )
         ]
 
@@ -63,11 +47,8 @@ class Stage(UIScreen):
     def pre_update(self):
         self.game.player_update()
 
-    def post_update(self):
-        self.strength_label.update(str(self.game.player.entity["Stats"].base_might))
-
     def cmd_escape(self):
-        self.game.screens.push_screen(self.game.screens.screens['ESCAPE MENU'])
+        self.game.screens.push_screen(EscapeMenu(self.game))
 
     def cmd_character_info(self):
         self.game.screens.push_screen(self.game.screens.screens['CHARACTER INFO'])
@@ -104,7 +85,6 @@ class EscapeMenu(UIScreen):
         self.covers_screen = True
 
     def ui_quit_to_menu(self):
-        Storage.write_to_file(self.game.session)
         self.game.screens.replace_screen(self.game.screens.screens['MAIN MENU'])
 
     def ui_exit_game(self):

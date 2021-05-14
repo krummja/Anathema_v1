@@ -57,11 +57,6 @@ class PlayerManager(BaseManager):
         # test_npc['Brain'].append_goal(BoredGoalType().create(self.game.ecs.world))
         # test_npc.add("wandering", {})
 
-    def initialize_from_save(self):
-        player = self.game.ecs.world.get_entity(self.uid)
-        player.components = self.game.session.data.character_save.entity.components
-        self.game.ecs.world.candidate(player)
-
     def get_next_action(self):
         try:
             return self._action_queue.popleft()
