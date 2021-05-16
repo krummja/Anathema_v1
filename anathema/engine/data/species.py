@@ -5,7 +5,7 @@ from .species_data import SpeciesData
 class Species:
     HUMAN = SpeciesData(
         name = "Human",
-        speed = 2,
+        speed = 1,
         base_might = 10,
         base_finesse = 10,
         base_vitality = 10,

@@ -3,6 +3,7 @@ from typing import *
 import tcod
 import os
 import logging
+import time
 
 from anathema.engine.core.camera import CameraManager
 from anathema.engine.core.clock import ClockManager
@@ -14,6 +15,7 @@ from anathema.engine.core.player import PlayerManager
 from anathema.engine.core.renderer import RenderManager
 from anathema.engine.core.screens import ScreenManager
 from anathema.engine.core.world import WorldManager
+from anathema.engine.core.fps import FPSManager
 
 
 from anathema.engine.systems.action_system import ActionSystem
@@ -54,6 +56,7 @@ class AbstractGame:
         self.input: Optional[InputManager] = None
         self.world: Optional[WorldManager] = None
         self.player: Optional[PlayerManager] = None
+        self.fps: Optional[FPSManager] = None
 
         self.content: Optional[ContentManager] = None
 
@@ -73,6 +76,8 @@ class Game(AbstractGame):
     def __init__(self):
         super().__init__()
 
+        self.last_update: float = 0.0
+
         logging.info("Starting Core Managers\n============================================================")
         self.ecs = ECSManager(self)
         self.clock = ClockManager(self)
@@ -83,6 +88,7 @@ class Game(AbstractGame):
         self.input = InputManager(self)
         self.world = WorldManager(self)     # TODO Rename this to "maps"
         self.content = ContentManager(self)
+        self.fps = FPSManager(self)
 
     def initialize(self):
         logging.info("ECStremity: Creating World\n============================================================")
@@ -118,17 +124,24 @@ class Game(AbstractGame):
         self.ecs.delete_world()
 
     def run(self):
+        self.last_update = time.time()
         self.screens.replace_screen(self.screens.screens['MAIN MENU'])
         self.loop()
 
     def loop(self):
         with tcod.context.new(**CONFIG) as self.context:
             while self.screens.should_continue:
-                self.screens.update()
-                self.context.present(self.console.root)
-                self.input.update()
+                now = time.time()
+                dt = now - self.last_update
 
-    def player_update(self):
+                self.screens.update()
+                self.fps.update(dt)
+                self.input.update()
+                self.context.present(self.console.root)
+
+                self.last_update = now
+
+    def engine_update(self):
         for _ in range(20):
             self.clock.update()
             player_turn = self.action_system.update()
@@ -136,10 +149,6 @@ class Game(AbstractGame):
             self.path_system.update()
 
             if player_turn:
-                self.systems_update()
-
-    def systems_update(self):
-        self.physics_system.update()
-        self.interaction_system.update()
-        self.fov_system.update()
-        self.render_system.update()
+                self.fov_system.update()
+                self.render_system.update()
+                return

@@ -30,9 +30,7 @@ class Legs(Component):
             evt.data.cost = cost
             self.entity.fire_event('energy_consumed', evt.data)
             self.update_position(*evt.data.target)
-        evt.handle()
+            evt.handle()
 
     def update_position(self, x: int, y: int) -> None:
-        previous = self.entity['Position'].xy
         self.entity['Position'].xy = x, y
-        logging.info(f"{self.entity['Moniker'].name} moving! {self.entity['Position'].distance_to(*previous)}")

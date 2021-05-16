@@ -14,7 +14,7 @@ if TYPE_CHECKING:
 class Wandering(Component):
 
     def on_boredom(self, evt: EntityEvent):
-        if randint(0, 100) > 1:
+        if randint(0, 100) > 50:
             return
         direction = floor(random() * 9)
         delta = direction_delta(direction)

@@ -13,6 +13,7 @@ from anathema.interface.views.rect_view import RectView
 from anathema.interface.views.label_view import LabelView
 from anathema.interface.views.button_view import ButtonView
 from anathema.interface.views.bar_gauge import BarGaugeView
+from anathema.interface.views.simple_list import SimpleListView
 from anathema.engine.data.spawner import spawn
 
 if TYPE_CHECKING:
@@ -23,7 +24,14 @@ class Stage(UIScreen):
 
     def __init__(self, game: Game) -> None:
 
-        self.player_energy = 0.0
+        self.fps_label = LabelView(
+            "", align_horz = "right", layout = Layout(top = 2, right = 2, bottom = None, height = 1)
+        )
+
+        self.turn_label = LabelView(
+            "", align_horz = "left", layout = Layout(top = 4, bottom = None, left = 2, height = 1))
+        self.subturn_label = LabelView(
+            "", align_horz = "left", layout = Layout(top = 6, bottom = None, left = 2, height = 1))
 
         views = [
             RectView(
@@ -37,17 +45,22 @@ class Stage(UIScreen):
                     left = Options.STAGE_PANEL_WIDTH,
                 ),
                 subviews = [
-                    BarGaugeView(
-                        text = str(self.player_energy),
-                        label="Player",
-                        fullness = self.player_energy / -2000,
-                        fg = (50, 50, 255),
-                        layout = Layout(
-                            top = 2, left = 2, bottom = None, right = None,
-                            height = 1, width = 20
-                        )
-                    )
+                    self.fps_label,
+                    self.turn_label,
+                    self.subturn_label
                 ]
+                # subviews = [
+                #     BarGaugeView(
+                #         text = str(self.player_energy),
+                #         label="Player",
+                #         fullness = self.player_energy / -2000,
+                #         fg = (50, 50, 255),
+                #         layout = Layout(
+                #             top = 2, left = 2, bottom = None, right = None,
+                #             height = 1, width = 20
+                #         )
+                #     )
+                # ]
             )
         ]
 
@@ -61,10 +74,12 @@ class Stage(UIScreen):
         self.game.render_system.update()
 
     def pre_update(self):
-        self.game.player_update()
+        self.game.engine_update()
 
     def post_update(self):
-        self.player_energy = self.game.player.entity['Actor'].energy
+        self.fps_label.update(str(int(self.game.fps.fps)))
+        self.turn_label.update("Turn:    " + str(self.game.clock.turn))
+        self.subturn_label.update("Subturn: " + str(self.game.clock.subturn))
 
     def cmd_escape(self):
         self.game.screens.push_screen(EscapeMenu(self.game))

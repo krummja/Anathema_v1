@@ -75,18 +75,3 @@ class InputManager(BaseManager, Generic[T], tcod.event.EventDispatch[T]):
 
                 if event.sym == tcod.event.K_KP_5:
                     self.game.player.wait()
-
-            if self.game.screens.active_screen.name == "WORLD GEN":
-                map_keys = {
-                    tcod.event.K_KP_1: (-1, 1),
-                    tcod.event.K_KP_2: (0, 1),
-                    tcod.event.K_KP_3: (1, 1),
-                    tcod.event.K_KP_4: (-1, 0),
-                    tcod.event.K_KP_5: (0, 0),
-                    tcod.event.K_KP_6: (1, 0),
-                    tcod.event.K_KP_7: (-1, -1),
-                    tcod.event.K_KP_8: (0, -1),
-                    tcod.event.K_KP_9: (1, -1),
-                }
-                if event.sym in map_keys:
-                    self.game.screens.active_screen.move_focus((map_keys[event.sym]))

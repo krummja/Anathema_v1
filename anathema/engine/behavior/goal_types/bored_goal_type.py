@@ -35,10 +35,11 @@ class BoredGoalType(GoalType):
             return SUCCESS
 
         bored_event = entity.fire_event('boredom')
-        if bored_event.data.goal:
-            entity["Brain"].append_goal(bored_event.data.goal)
-            entity.fire_event("take_action")
+        try:
+            if bored_event.data.goal:
+                entity["Brain"].append_goal(bored_event.data.goal)
+                entity.fire_event("take_action")
+                return SUCCESS
+        except AttributeError:
+            entity.fire_event("energy_consumed", {"cost": 1000})
             return SUCCESS
-
-        entity.fire_event("energy_consumed", {"cost": 1000})
-        return SUCCESS

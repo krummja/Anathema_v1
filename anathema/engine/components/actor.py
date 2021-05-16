@@ -1,5 +1,6 @@
 from __future__ import annotations
 from typing import *
+import logging
 
 from ecstremity import Component
 
@@ -13,10 +14,11 @@ class Actor(Component):
         self._energy: int = 0
         self._dest_xy = None
         self._path = None
+        self._can_take_turn = False
         self.is_pathing = False
 
     def __lt__(self, other: Actor) -> bool:
-        return self._energy > other._energy
+        return self._energy < other._energy
 
     def __str__(self) -> str:
         return f"Energy: {self._energy}"
@@ -40,6 +42,14 @@ class Actor(Component):
     @property
     def energy(self) -> int:
         return self._energy
+
+    @property
+    def can_take_turn(self):
+        return self._can_take_turn
+
+    @can_take_turn.setter
+    def can_take_turn(self, value):
+        self._can_take_turn = value
 
     @property
     def has_energy(self) -> bool:

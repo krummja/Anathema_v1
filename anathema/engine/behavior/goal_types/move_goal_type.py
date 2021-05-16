@@ -28,8 +28,5 @@ class MoveGoalType(GoalType):
 
         if evt.handled:
             goal.complete = True
-            if entity['Actor'].is_pathing:
-                if not entity['Actor'].path:
-                    entity['Actor'].is_pathing = False
             return SUCCESS
         return FAILURE
