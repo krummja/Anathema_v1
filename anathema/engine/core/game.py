@@ -15,8 +15,6 @@ from anathema.engine.core.player import PlayerManager
 from anathema.engine.core.renderer import RenderManager
 from anathema.engine.core.screens import ScreenManager
 from anathema.engine.core.world import WorldManager
-from anathema.engine.core.fps import FPSManager
-
 
 from anathema.engine.systems.action_system import ActionSystem
 from anathema.engine.systems.interaction_system import InteractionSystem
@@ -56,7 +54,6 @@ class AbstractGame:
         self.input: Optional[InputManager] = None
         self.world: Optional[WorldManager] = None
         self.player: Optional[PlayerManager] = None
-        self.fps: Optional[FPSManager] = None
 
         self.content: Optional[ContentManager] = None
 
@@ -88,7 +85,6 @@ class Game(AbstractGame):
         self.input = InputManager(self)
         self.world = WorldManager(self)     # TODO Rename this to "maps"
         self.content = ContentManager(self)
-        self.fps = FPSManager(self)
 
     def initialize(self):
         logging.info("ECStremity: Creating World\n============================================================")
@@ -132,10 +128,8 @@ class Game(AbstractGame):
         with tcod.context.new(**CONFIG) as self.context:
             while self.screens.should_continue:
                 now = time.time()
-                dt = now - self.last_update
 
                 self.screens.update()
-                self.fps.update(dt)
                 self.input.update()
                 self.context.present(self.console.root)
 

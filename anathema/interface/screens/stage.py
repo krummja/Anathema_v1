@@ -24,10 +24,6 @@ class Stage(UIScreen):
 
     def __init__(self, game: Game) -> None:
 
-        self.fps_label = LabelView(
-            "", align_horz = "right", layout = Layout(top = 2, right = 2, bottom = None, height = 1)
-        )
-
         self.turn_label = LabelView(
             "", align_horz = "left", layout = Layout(top = 4, bottom = None, left = 2, height = 1))
         self.subturn_label = LabelView(
@@ -44,11 +40,6 @@ class Stage(UIScreen):
                 layout = Layout(
                     left = Options.STAGE_PANEL_WIDTH,
                 ),
-                subviews = [
-                    self.fps_label,
-                    self.turn_label,
-                    self.subturn_label
-                ]
                 # subviews = [
                 #     BarGaugeView(
                 #         text = str(self.player_energy),
@@ -77,9 +68,7 @@ class Stage(UIScreen):
         self.game.engine_update()
 
     def post_update(self):
-        self.fps_label.update(str(int(self.game.fps.fps)))
-        self.turn_label.update("Turn:    " + str(self.game.clock.turn))
-        self.subturn_label.update("Subturn: " + str(self.game.clock.subturn))
+        pass
 
     def cmd_escape(self):
         self.game.screens.push_screen(EscapeMenu(self.game))

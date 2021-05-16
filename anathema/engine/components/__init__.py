@@ -2,6 +2,7 @@ from .actor import Actor
 from .blocker import Blocker
 from .brain import Brain
 from .equipment_slot import EquipmentSlot
+from .eyes import Eyes
 from .goal import Goal
 from .isplayer import IsPlayer
 from .legs import Legs
@@ -20,6 +21,7 @@ def game_object_components():
         Blocker,
         Brain,
         EquipmentSlot,
+        Eyes,
         Goal,
         IsPlayer,
         Legs,

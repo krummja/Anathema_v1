@@ -16,13 +16,11 @@ from anathema.engine.core.options import Options
 from anathema.engine.world.generation.schemata.structure import StructureScheme, Themes
 from anathema.engine.world.generation.room_builder import RoomBuilder
 from anathema.data import *
-from anathema.utils.logging import log_init
 
 if TYPE_CHECKING:
     from anathema.engine.core.game import Game
 
 
-@log_init
 class TestArea(TileMap):
 
     name: str = "Test"
@@ -36,28 +34,25 @@ class TestArea(TileMap):
         )
 
     def initialize(self):
-        self.tiles[:] = self._tile_registry.flagstone_floor.make()
+        automata = Anneal((512, 512), density=0.46)
+        automata.generate(10)
+        result = automata.board
+        result = np.where(result == 1, self._tile_registry.dirt_2.make(), self._tile_registry.unformed.make())
+        self._tiles[:] = result
 
-    # def initialize(self):
-    #     automata = Anneal((512, 512), density=0.46)
-    #     automata.generate(10)
-    #     result = automata.board
-    #     result = np.where(result == 1, self._tile_registry.dirt_2.make(), self._tile_registry.unformed.make())
-    #     self._tiles[:] = result
-    #
-    #     self._tiles = rng_selection(
-    #         self._tiles,
-    #         self._tile_registry.unformed,
-    #         self._tile_registry.dirt_2,
-    #         [(10, self._tile_registry.tree_1),
-    #          (20, self._tile_registry.grass),
-    #          (40, self._tile_registry.tall_grass)]
-    #     )
-    #
-    #     self._tiles[246:266+10, 246:266] = self._tile_registry.dirt_2.make()
-    #     room_mask = StructureScheme.generate()
-    #     room_struct = StructureScheme.populate(room_mask, "flagstone")
-    #     self._tiles = StructureScheme.plop(room_struct, (250, 250), self._tiles)
+        self._tiles = rng_selection(
+            self._tiles,
+            self._tile_registry.unformed,
+            self._tile_registry.dirt_2,
+            [(10, self._tile_registry.tree_1),
+             (20, self._tile_registry.grass),
+             (40, self._tile_registry.tall_grass)]
+        )
+
+        self._tiles[246:266+10, 246:266] = self._tile_registry.dirt_2.make()
+        room_mask = StructureScheme.generate()
+        room_struct = StructureScheme.populate(room_mask, "flagstone")
+        self._tiles = StructureScheme.plop(room_struct, (250, 250), self._tiles)
 
 
 class AreaData:
