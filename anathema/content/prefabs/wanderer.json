@@ -4,6 +4,12 @@
   "components": [
     {
       "type": "Wandering"
+    },
+    {
+      "type": "Species",
+      "properties": {
+        "key": "Wanderer"
+      }
     }
   ]
 }

@@ -12,6 +12,7 @@ from anathema.interface.views import Layout, View
 from anathema.interface.views.rect_view import RectView
 from anathema.interface.views.label_view import LabelView
 from anathema.interface.views.button_view import ButtonView
+from anathema.interface.views.bar_gauge import BarGaugeView
 from anathema.engine.data.spawner import spawn
 
 if TYPE_CHECKING:
@@ -21,6 +22,8 @@ if TYPE_CHECKING:
 class Stage(UIScreen):
 
     def __init__(self, game: Game) -> None:
+
+        self.player_energy = 0.0
 
         views = [
             RectView(
@@ -33,7 +36,18 @@ class Stage(UIScreen):
                 layout = Layout(
                     left = Options.STAGE_PANEL_WIDTH,
                 ),
-                subviews = []
+                subviews = [
+                    BarGaugeView(
+                        text = str(self.player_energy),
+                        label="Player",
+                        fullness = self.player_energy / -2000,
+                        fg = (50, 50, 255),
+                        layout = Layout(
+                            top = 2, left = 2, bottom = None, right = None,
+                            height = 1, width = 20
+                        )
+                    )
+                ]
             )
         ]
 
@@ -48,6 +62,9 @@ class Stage(UIScreen):
 
     def pre_update(self):
         self.game.player_update()
+
+    def post_update(self):
+        self.player_energy = self.game.player.entity['Actor'].energy
 
     def cmd_escape(self):
         self.game.screens.push_screen(EscapeMenu(self.game))

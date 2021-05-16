@@ -17,7 +17,7 @@ class FOVSystem(BaseSystem):
         self.game.world.current_area.visible = tcod.map.compute_fov(
             transparency=self.game.world.current_area.tiles["transparent"],
             pov=self._queries['pov'].result[0]['Position'].ij,
-            radius=12,
+            radius=30,
             light_walls=True,
             algorithm=tcod.FOV_RESTRICTIVE
         )

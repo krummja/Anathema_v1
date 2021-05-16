@@ -2,6 +2,7 @@ from __future__ import annotations
 from typing import *
 import tcod
 import os
+import logging
 
 from anathema.engine.core.camera import CameraManager
 from anathema.engine.core.clock import ClockManager
@@ -42,6 +43,8 @@ CONFIG = {
 class AbstractGame:
 
     def __init__(self):
+        logging.basicConfig(format='%(asctime)s - %(message)s', level=logging.INFO)
+
         self.ecs: Optional[ECSManager] = None
         self.clock: Optional[ClockManager] = None
         self.console: Optional[ConsoleManager] = None
@@ -70,7 +73,7 @@ class Game(AbstractGame):
     def __init__(self):
         super().__init__()
 
-        # Look into RanvierMUD's Manager setup, see if there's ideas to take from there
+        logging.info("Starting Core Managers\n============================================================")
         self.ecs = ECSManager(self)
         self.clock = ClockManager(self)
         self.console = ConsoleManager(self)
@@ -82,10 +85,13 @@ class Game(AbstractGame):
         self.content = ContentManager(self)
 
     def initialize(self):
+        logging.info("ECStremity: Creating World\n============================================================")
         self.ecs.new_world()
+        logging.info("Loading Component Prefabs\n============================================================")
         self.content.load_prefabs()
         self.player = PlayerManager(self)
 
+        logging.info("Starting Engine Systems\n============================================================")
         self.action_system: ActionSystem = ActionSystem(self)
         self.physics_system: PhysicsSystem = PhysicsSystem(self)
         self.interaction_system: InteractionSystem = InteractionSystem(self)
@@ -112,27 +118,28 @@ class Game(AbstractGame):
         self.ecs.delete_world()
 
     def run(self):
-        print("Starting...")
         self.screens.replace_screen(self.screens.screens['MAIN MENU'])
         self.loop()
 
     def loop(self):
         with tcod.context.new(**CONFIG) as self.context:
-            print("Welcome to Anathema.")
             while self.screens.should_continue:
                 self.screens.update()
                 self.context.present(self.console.root)
                 self.input.update()
 
     def player_update(self):
-        self.clock.update()
-        player_turn = self.action_system.update()
-        if player_turn:
-            self.systems_update()
+        for _ in range(20):
+            self.clock.update()
+            player_turn = self.action_system.update()
+
+            self.path_system.update()
+
+            if player_turn:
+                self.systems_update()
 
     def systems_update(self):
         self.physics_system.update()
         self.interaction_system.update()
-        self.path_system.update()
         self.fov_system.update()
         self.render_system.update()

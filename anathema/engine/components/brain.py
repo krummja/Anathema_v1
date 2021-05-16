@@ -43,7 +43,7 @@ class Brain(Component):
                 return False
             return True
 
-        self.goals = filter(goal_filter, self.goals)
+        self.goals = [_ for _ in filter(goal_filter, self.goals)]
         for goal in goals_to_destroy:
             goal.entity.destroy()
 

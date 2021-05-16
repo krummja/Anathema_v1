@@ -1,6 +1,7 @@
 from __future__ import annotations
 from typing import *
 from collections import deque
+import logging
 
 from anathema.engine.core import BaseManager
 from anathema.engine.behavior.goal_types.bored_goal_type import BoredGoalType
@@ -44,18 +45,12 @@ class PlayerManager(BaseManager):
             "renderable": {
                 "char": "@",
                 "fg": (255, 255, 255)
+            },
+            "moniker": {
+                "name": "Aulia Inuicta"
             }
         })
         self._uid = player.uid
-
-        # test_npc: Entity = self.game.ecs.world.create_entity('test')
-        # test_npc.add("position", {"area": self.game.world.current_area, "x": 247, "y": 249})
-        # test_npc.add("renderable", {"char": "N", "fg": (0, 255, 255)})
-        # test_npc.add("actor", {})
-        # test_npc.add("legs", {})
-        # test_npc.add("brain", {})
-        # test_npc['Brain'].append_goal(BoredGoalType().create(self.game.ecs.world))
-        # test_npc.add("wandering", {})
 
     def teardown(self):
         self.game.ecs.world.destroy_entity(self.uid)

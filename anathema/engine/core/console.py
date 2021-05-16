@@ -141,6 +141,10 @@ class Context:
         computed = point + self._offset
         self.console.vline(int(computed.x), int(computed.y), *args, **kwargs)
 
+    def tiles_rgb(self, point: Point, width: int, height: int):
+        computed = point + self._offset
+        return self.console.tiles_rgb[computed.y:computed.y+height, computed.x:computed.x+width]
+
 
 class ConsoleManager(BaseManager):
 

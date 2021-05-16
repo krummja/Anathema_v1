@@ -5,9 +5,11 @@ from .equipment_slot import EquipmentSlot
 from .goal import Goal
 from .isplayer import IsPlayer
 from .legs import Legs
+from .moniker import Moniker
 from .pathing import Pathing
 from .position import Position
 from .renderable import Renderable
+from .species import Species
 from .stats import Stats
 from .wandering import Wandering
 
@@ -21,9 +23,11 @@ def game_object_components():
         Goal,
         IsPlayer,
         Legs,
+        Moniker,
         Pathing,
         Position,
         Renderable,
         Stats,
+        Species,
         Wandering,
     ]

@@ -16,7 +16,7 @@ class Actor(Component):
         self.is_pathing = False
 
     def __lt__(self, other: Actor) -> bool:
-        return self._energy < other._energy
+        return self._energy > other._energy
 
     def __str__(self) -> str:
         return f"Energy: {self._energy}"

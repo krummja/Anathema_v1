@@ -1,11 +1,13 @@
 from __future__ import annotations
 from typing import *
+from anathema.utils.logging import log_init
 
 if TYPE_CHECKING:
     from anathema.engine.core.game import Game
     from ecstremity import Query, World
 
 
+@log_init
 class BaseSystem:
 
     def __init__(self, game: Game) -> None:

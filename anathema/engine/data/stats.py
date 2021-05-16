@@ -13,12 +13,12 @@ class Stat:
     abbreviation: str
 
 
-MIGHT = Stat("might", "MIG")
-FINESSE = Stat("finesse", "FIN")
-VITALITY = Stat("vitality", "VIT")
-PIETY = Stat("piety", "PIE")
-CUNNING = Stat("cunning", "CUN")
-KNOWLEDGE = Stat("knowledge", "KNO")
+STAT_MIGHT = Stat("might", "MIG")
+STAT_FINESSE = Stat("finesse", "FIN")
+STAT_VITALITY = Stat("vitality", "VIT")
+STAT_PIETY = Stat("piety", "PIE")
+STAT_CUNNING = Stat("cunning", "CUN")
+STAT_KNOWLEDGE = Stat("knowledge", "KNO")
 
 
 def get_stat_name(stat: Stat) -> str:
@@ -31,7 +31,7 @@ def get_stat_abbr(stat: Stat) -> str:
 
 def get_stat(stat: Stat, entity: Entity) -> int:
     name = stat.name
-    return entity["Stats"][name]()
+    return entity["Stats"][name]
 
 
 def roll_stat(stat: Stat, entity: Entity) -> int:

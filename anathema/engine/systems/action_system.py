@@ -1,6 +1,7 @@
 from __future__ import annotations
 from typing import *
 from collections import deque
+import logging
 
 from anathema.engine.systems import BaseSystem
 
@@ -35,8 +36,6 @@ class ActionSystem(BaseSystem):
                 return True
 
             entity.fire_event('take_action')
-            try:
+            if len(entities) > 0:
                 entity = entities.popleft()
-            except IndexError:
-                return False
         return False

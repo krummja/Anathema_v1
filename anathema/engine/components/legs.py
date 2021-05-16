@@ -1,8 +1,10 @@
 from __future__ import annotations
-
 from typing import TYPE_CHECKING
+import logging
 
 from ecstremity import Component
+
+from anathema.engine.data.skills import get_skill_value, SKILL_SPEED
 
 if TYPE_CHECKING:
     from ecstremity import EntityEvent
@@ -23,8 +25,7 @@ class Legs(Component):
         #         # Route Message to LogManager
         #         pass
         else:
-            # speed = get_skill_value(SKILL_SPEED, self.entity)     TODO implement this!
-            speed = 10
+            speed = get_skill_value(SKILL_SPEED, self.entity)
             cost = (20 / (20 + speed)) * 1000
             evt.data.cost = cost
             self.entity.fire_event('energy_consumed', evt.data)
@@ -32,5 +33,6 @@ class Legs(Component):
         evt.handle()
 
     def update_position(self, x: int, y: int) -> None:
-        self.entity['Position'].x = x
-        self.entity['Position'].y = y
+        previous = self.entity['Position'].xy
+        self.entity['Position'].xy = x, y
+        logging.info(f"{self.entity['Moniker'].name} moving! {self.entity['Position'].distance_to(*previous)}")

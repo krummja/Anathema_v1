@@ -1,5 +1,6 @@
 from __future__ import annotations
 from typing import *
+import logging
 
 from ecstremity import Component
 
@@ -18,6 +19,10 @@ class Position(Component):
     @property
     def xy(self):
         return self.x, self.y
+
+    @xy.setter
+    def xy(self, value):
+        self.x, self.y = value
 
     @property
     def ij(self):

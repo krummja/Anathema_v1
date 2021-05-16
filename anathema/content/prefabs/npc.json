@@ -1,23 +1,9 @@
 {
   "name": "Npc",
+  "inherit": ["Being"],
   "components": [
     {
-      "type": "Position"
-    },
-    {
-      "type": "Renderable",
-      "properties": {
-        "char": "?"
-      }
-    },
-    {
       "type": "Brain"
-    },
-    {
-      "type": "Actor"
-    },
-    {
-      "type": "Legs"
     }
   ]
 }

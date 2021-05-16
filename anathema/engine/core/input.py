@@ -34,13 +34,11 @@ class InputManager(BaseManager, Generic[T], tcod.event.EventDispatch[T]):
         tcod.event.K_END     : (-1, 1),
         tcod.event.K_PAGEUP  : (1, -1),
         tcod.event.K_PAGEDOWN: (1, 1),
-        tcod.event.K_PERIOD  : (0, 0),
         # Numpad keys.
         tcod.event.K_KP_1    : (-1, 1),
         tcod.event.K_KP_2    : (0, 1),
         tcod.event.K_KP_3    : (1, 1),
         tcod.event.K_KP_4    : (-1, 0),
-        tcod.event.K_KP_5    : (0, 0),
         tcod.event.K_KP_6    : (1, 0),
         tcod.event.K_KP_7    : (-1, -1),
         tcod.event.K_KP_8    : (0, -1),
@@ -74,6 +72,9 @@ class InputManager(BaseManager, Generic[T], tcod.event.EventDispatch[T]):
             if self.game.screens.active_screen.name == 'STAGE':
                 if event.sym in self.MOVE_KEYS:
                     self.game.player.move(self.MOVE_KEYS[event.sym])
+
+                if event.sym == tcod.event.K_KP_5:
+                    self.game.player.wait()
 
             if self.game.screens.active_screen.name == "WORLD GEN":
                 map_keys = {

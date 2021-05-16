@@ -3,10 +3,24 @@
   "inherit": ["GameObject"],
   "components": [
     {
+      "type": "Moniker"
+    },
+    {
       "type": "Actor"
     },
     {
       "type": "Legs"
+    },
+    {
+      "type": "Stats",
+      "properties": {
+        "base_might": 10,
+        "base_finesse": 10,
+        "base_vitality": 10,
+        "base_piety": 10,
+        "base_cunning": 10,
+        "base_knowledge": 10
+      }
     }
   ]
 }
