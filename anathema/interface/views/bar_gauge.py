@@ -16,8 +16,8 @@ class BarGaugeView(View):
             fullness: float,
             fg: Tuple[int, int, int],
             *args, **kwargs
-            ) -> None:
-        super().__init__(subviews=[LabelView(label, align_horz = "left")], *args, **kwargs)
+        ) -> None:
+        super().__init__(subviews=[LabelView(label, align_horz = "left", layout = Layout(top = 2))], *args, **kwargs)
         self.text = text
         self.label = label
         self.fullness = fullness
@@ -26,7 +26,11 @@ class BarGaugeView(View):
 
     def draw(self):
         self.context.print(Point(1, 1), self.text.center(self.frame.width)[:self.frame.width], fg=(255, 255, 255))
-        bar_bg = self.context.tiles_rgb(Point(1, 1), self.frame.width, self.frame.height)["bg"]
+        bar_bg = self.context.tiles_rgb(Point(10, 1), self.frame.width, self.frame.height)["bg"]
         bar_bg[...] = self.bg_hue
         fill_width = max(0, min(self.frame.width, int(self.fullness * self.frame.width)))
         bar_bg[:fill_width] = self.fg
+
+    def update(self, fullness: float, text: Optional[str] = None) -> None:
+        self.fullness = fullness
+        self.text = self.text if not text else text

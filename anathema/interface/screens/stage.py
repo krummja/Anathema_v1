@@ -24,10 +24,17 @@ class Stage(UIScreen):
 
     def __init__(self, game: Game) -> None:
 
-        self.turn_label = LabelView(
-            "", align_horz = "left", layout = Layout(top = 4, bottom = None, left = 2, height = 1))
-        self.subturn_label = LabelView(
-            "", align_horz = "left", layout = Layout(top = 6, bottom = None, left = 2, height = 1))
+        self.health_gauge = BarGaugeView(
+            text = "", label = "Health",
+            fullness = 1.0, fg = (255, 50, 50),
+            layout = Layout(top = 2, left = 2, bottom = None, right = None, height = 1, width = 20)
+        )
+
+        self.exp_gauge = BarGaugeView(
+            text = "", label = "Exp.",
+            fullness = 1.0, fg = (255, 180, 0),
+            layout = Layout(top = 4, left = 2, bottom = None, right = None, height = 1, width = 20)
+        )
 
         views = [
             RectView(
@@ -40,18 +47,10 @@ class Stage(UIScreen):
                 layout = Layout(
                     left = Options.STAGE_PANEL_WIDTH,
                 ),
-                # subviews = [
-                #     BarGaugeView(
-                #         text = str(self.player_energy),
-                #         label="Player",
-                #         fullness = self.player_energy / -2000,
-                #         fg = (50, 50, 255),
-                #         layout = Layout(
-                #             top = 2, left = 2, bottom = None, right = None,
-                #             height = 1, width = 20
-                #         )
-                #     )
-                # ]
+                subviews = [
+                    self.health_gauge,
+                    self.exp_gauge
+                ]
             )
         ]
 

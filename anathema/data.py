@@ -5,8 +5,8 @@ import json
 
 
 ROOT_DIR = os.path.dirname(__file__)
-ASSET_DIR = os.path.join(ROOT_DIR, "_assets")
-CONTENT_DIR = os.path.join(ROOT_DIR, "content")
+ASSET_DIR = os.path.join(ROOT_DIR, "assets")
+DATA_DIR = os.path.join(ROOT_DIR, "engine/data")
 
 
 def get_data(path: str) -> str:

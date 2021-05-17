@@ -1,4 +1,0 @@
-
-def content():
-    return {
-    }
