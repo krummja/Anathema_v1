@@ -6,6 +6,9 @@ from anathema.engine.world.tile import Tile
 
 class Renderable(Component):
 
-    def __init__(self, char: str, fg: Tuple[int, int, int]) -> None:
-        self.char = ord(char)
+    def __init__(self, char: Union[str, int], fg: Tuple[int, int, int]) -> None:
+        if isinstance(char, str):
+            self.char = ord(char)
+        else:
+            self.char = char
         self.fg = fg

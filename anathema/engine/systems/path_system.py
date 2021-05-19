@@ -19,7 +19,7 @@ class PathSystem(BaseSystem):
         self.query('blockers', all_of=[ 'Blocker' ])
 
     def compute_path(self, pathing_entity: Entity):
-        _area: TileMap = self.game.world.current_area
+        _area: TileMap = self.game.maps.current_area
         walkable = np.copy(_area.tiles["move_cost"])
 
         dest_xy = pathing_entity['Actor'].dest_xy

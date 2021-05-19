@@ -14,7 +14,7 @@ from anathema.interface.views.rect_view import RectView
 from anathema.interface.views.label_view import LabelView
 from anathema.interface.views.button_view import ButtonView, CyclingButtonView
 from anathema.interface.views.collection_list import SettingsListView
-from anathema.data import get_data
+from anathema.data import get_data, get_save
 
 if TYPE_CHECKING:
     from anathema.engine.core.game import Game
@@ -89,6 +89,11 @@ class MainMenu(UIScreen):
             "Start", callback = self.ui_start,
             align_horz = "left", align_vert = "bottom",
             layout = Layout(bottom = 8, left = 2))
+        self.load_button = ButtonView(
+            "Load", callback = self.ui_load,
+            align_horz = "left", align_vert = "bottom",
+            layout = Layout(bottom = 6, left = 2)
+        )
         self.quit_game_button = ButtonView(
             "Quit Game", callback = self.ui_quit,
             align_horz = "left", align_vert = "bottom",
@@ -100,6 +105,7 @@ class MainMenu(UIScreen):
                             right = POSITION_RECT.relative_point(0.66, 1.0)[0] + 1),
             subviews = [
                 self.start_button,
+                self.load_button,
                 self.quit_game_button
             ])
 
@@ -119,12 +125,19 @@ class MainMenu(UIScreen):
             self.character_box,
         ])
 
+    def on_enter(self, *args):
+        self.game.storage.read_from_manifest()
+
     def ui_start(self):
+        # self.game.initialize("2021-05-18")
         self.game.initialize()
-        self.game.screens.push_screen(self.game.screens.screens['STAGE'])
+        self.game.ui.push_screen(self.game.ui.screens['STAGE'])
+
+    def ui_load(self):
+        print(self.game.storage.manifest_entries)
 
     def ui_quit(self):
-        self.game.screens.quit()
+        self.game.ui.quit()
 
     def cmd_debug_f1(self):
         if not self.game.ui_debug:

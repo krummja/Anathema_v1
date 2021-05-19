@@ -13,8 +13,9 @@ from anathema.engine.core.ecs import ECSManager
 from anathema.engine.core.input import InputManager, LoopExit
 from anathema.engine.core.player import PlayerManager
 from anathema.engine.core.renderer import RenderManager
-from anathema.engine.core.screens import ScreenManager
-from anathema.engine.core.world import WorldManager
+from anathema.engine.core.ui import UIManager
+from anathema.engine.core.maps import MapManager
+from anathema.data import Storage
 
 from anathema.engine.systems.action_system import ActionSystem
 from anathema.engine.systems.interaction_system import InteractionSystem
@@ -50,12 +51,13 @@ class AbstractGame:
         self.console: Optional[ConsoleManager] = None
         self.camera: Optional[CameraManager] = None
         self.renderer: Optional[RenderManager] = None
-        self.screens: Optional[ScreenManager] = None
+        self.ui: Optional[UIManager] = None
         self.input: Optional[InputManager] = None
-        self.world: Optional[WorldManager] = None
+        self.maps: Optional[MapManager] = None
         self.player: Optional[PlayerManager] = None
 
         self.content: Optional[ContentManager] = None
+        self.storage: Optional[Storage] = None
 
         self.action_system: Optional[ActionSystem] = None
         self.physics_system: Optional[PhysicsSystem] = None
@@ -75,25 +77,28 @@ class Game(AbstractGame):
 
         self.last_update: float = 0.0
 
-        logging.info("Starting Core Managers\n============================================================")
         self.ecs = ECSManager(self)
         self.clock = ClockManager(self)
         self.console = ConsoleManager(self)
         self.camera = CameraManager(self)
         self.renderer = RenderManager(self)
-        self.screens = ScreenManager(self)  # TODO Rename this to "interface"
+        self.ui = UIManager(self)
         self.input = InputManager(self)
-        self.world = WorldManager(self)     # TODO Rename this to "maps"
+        self.maps = MapManager(self)
         self.content = ContentManager(self)
+        self.storage = Storage(self)
 
-    def initialize(self):
-        logging.info("ECStremity: Creating World\n============================================================")
+    def initialize(self, save_file=None):
         self.ecs.new_world()
-        logging.info("Loading Component Prefabs\n============================================================")
-        self.content.load_prefabs()
+
+        player_data = None
+        if save_file:
+            player_data = self.storage.read_from_file(save_file)
+
+        self.content.load_game_object_prefabs()
+        self.content.load_world_prefabs()
         self.player = PlayerManager(self)
 
-        logging.info("Starting Engine Systems\n============================================================")
         self.action_system: ActionSystem = ActionSystem(self)
         self.physics_system: PhysicsSystem = PhysicsSystem(self)
         self.interaction_system: InteractionSystem = InteractionSystem(self)
@@ -101,12 +106,15 @@ class Game(AbstractGame):
         self.render_system: RenderSystem = RenderSystem(self)
         self.path_system: PathSystem = PathSystem(self)
 
-        self.world.initialize()
-        self.player.initialize()
+        self.maps.initialize()  # load map
+        if save_file:
+            self.player.initialize(player_data)
+        else:
+            self.player.initialize()
 
     def teardown(self):
         self.player.teardown()
-        self.world.teardown()
+        self.maps.teardown()
 
         self.action_system = None
         self.physics_system = None
@@ -121,15 +129,15 @@ class Game(AbstractGame):
 
     def run(self):
         self.last_update = time.time()
-        self.screens.replace_screen(self.screens.screens['MAIN MENU'])
+        self.ui.replace_screen(self.ui.screens['MAIN MENU'])
         self.loop()
 
     def loop(self):
         with tcod.context.new(**CONFIG) as self.context:
-            while self.screens.should_continue:
+            while self.ui.should_continue:
                 now = time.time()
 
-                self.screens.update()
+                self.ui.update()
                 self.input.update()
                 self.context.present(self.console.root)
 

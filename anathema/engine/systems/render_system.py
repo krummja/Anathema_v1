@@ -15,10 +15,10 @@ class RenderSystem(BaseSystem):
 
     def draw_world_map(self):
         self.game.console.root.clear()
-        self.game.renderer.render_world_map(self.game.world.planet_view)
+        self.game.renderer.render_world_map(self.game.maps.planet_view)
 
     def draw_tiles(self):
-        self.game.renderer.render_area_tiles(self.game.world.current_area)
+        self.game.renderer.render_area_tiles(self.game.maps.current_area)
 
     def draw_items(self):
         pass
@@ -28,7 +28,7 @@ class RenderSystem(BaseSystem):
         actors = self._queries['actors'].result
         for actor in actors:
             x, y = actor['Position'].xy
-            if self.game.world.current_area.visible[y, x]:
+            if self.game.maps.current_area.visible[y, x]:
                 self.game.console.root.tiles_rgb[["ch", "fg"]][y - cam_y, x - cam_x] = (
                     actor['Renderable'].char,
                     actor['Renderable'].fg

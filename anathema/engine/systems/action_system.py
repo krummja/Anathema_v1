@@ -30,7 +30,7 @@ class ActionSystem(BaseSystem):
 
     def update(self):
         entities = self._queries['actors'].result
-        self.game.world.current_area.actors.update(set(entities))
+        self.game.maps.current_area.actors.update(set(entities))
 
         sorted_entities = deque(sorted(entities, key=(lambda e: e['Actor']), reverse = True))
         entity = sorted_entities[0]
@@ -38,10 +38,9 @@ class ActionSystem(BaseSystem):
         if entity and not entity['Actor'].has_energy:
             self.game.clock.increment(-1 * entity['Actor'].energy)
             for entity in entities:
-                entity['Actor'].add_energy(self.game.clock.tick_delta)
+                entity['Actor'].add_energy(1000)
 
         while entity and entity['Actor'].has_energy:
-
             if entity.has('IsPlayer'):
                 action = self.game.player.get_next_action()
                 if action:

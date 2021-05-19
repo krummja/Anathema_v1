@@ -38,7 +38,7 @@ def create_spawnable(game: Game):
     def spawn(x: int, y: int):
         wanderer = game.ecs.world.create_prefab("Wanderer", {
             "position": {
-                "area": game.world.current_area,
+                "area": game.maps.current_area,
                 "x": x,
                 "y": y,
             },

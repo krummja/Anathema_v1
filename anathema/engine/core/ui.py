@@ -9,7 +9,7 @@ if TYPE_CHECKING:
     from anathema.engine.core.game import Game
 
 
-class ScreenManager(BaseManager):
+class UIManager(BaseManager):
 
     def __init__(self, game: Game):
         super().__init__(game)

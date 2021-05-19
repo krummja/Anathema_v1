@@ -15,8 +15,16 @@ class ContentManager(BaseManager):
     def __init__(self, game: Game):
         super().__init__(game)
 
-    def load_prefabs(self):
-        path = os.path.join(DATA_DIR, "prefabs/")
+    def load_game_object_prefabs(self):
+        path = os.path.join(DATA_DIR, "game_object_prefabs/")
+        prefabs = [f for f in os.listdir(path) if f.endswith(".json")]
+        for prefab in prefabs:
+            with open(path + prefab) as f:
+                definition = json.load(f)
+                self.game.ecs.engine.prefabs.register(definition)
+
+    def load_world_prefabs(self):
+        path = os.path.join(DATA_DIR, "world_prefabs/")
         prefabs = [f for f in os.listdir(path) if f.endswith(".json")]
         for prefab in prefabs:
             with open(path + prefab) as f:

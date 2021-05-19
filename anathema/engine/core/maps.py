@@ -16,6 +16,7 @@ from anathema.engine.core.options import Options
 from anathema.engine.world.generation.schemata.structure import StructureScheme, Themes
 from anathema.engine.world.generation.room_builder import RoomBuilder
 from anathema.data import *
+from anathema.engine.world.generation.components import world_components
 
 if TYPE_CHECKING:
     from anathema.engine.core.game import Game
@@ -82,14 +83,15 @@ class WorldData:
         return self.area_registry[(x, y)].tile_map
 
 
-class WorldManager(BaseManager):
+class MapManager(BaseManager):
 
     def __init__(self, game: Game):
         super().__init__(game)
+        self.engine = self.game.ecs.engine
+        self.world = self.game.ecs.world
         self.current_area: Optional[TileMap] = None
-
-        self.generator = PlanetGenerator(Options.WORLD_HEIGHT, Options.WORLD_WIDTH)
-        self.planet_view = PlanetView(self.generator)
+        # self.generator = PlanetGenerator(Options.WORLD_HEIGHT, Options.WORLD_WIDTH)
+        # self.planet_view = PlanetView(self.generator)
 
     def initialize(self):
         self.current_area = TestArea()
@@ -97,3 +99,7 @@ class WorldManager(BaseManager):
 
     def teardown(self):
         self.current_area = None
+
+    def _register_components(self):
+        for component in world_components():
+            self.engine.register_component(component)

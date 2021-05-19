@@ -16,7 +16,7 @@ class Legs(Component):
         self.leg_count = leg_count
 
     def on_try_move(self, evt: EntityEvent) -> None:
-        if self.client.world.current_area.is_blocked(*evt.data.target):
+        if self.client.maps.current_area.is_blocked(*evt.data.target):
             pass
         # if self.area.is_blocked(*evt.data.target):
         #     if self.area.is_interactable(*evt.data.target):

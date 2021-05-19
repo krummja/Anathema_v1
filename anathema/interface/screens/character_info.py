@@ -34,4 +34,4 @@ class CharacterInfo(UIScreen):
         self.covers_screen = True
 
     def cmd_escape(self):
-        self.game.screens.pop_screen()
+        self.game.ui.pop_screen()

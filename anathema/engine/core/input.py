@@ -55,21 +55,21 @@ class InputManager(BaseManager, Generic[T], tcod.event.EventDispatch[T]):
                 return value
 
     def ev_textinput(self, event):
-        self.game.screens.active_screen.handle_textinput(event)
+        self.game.ui.active_screen.handle_textinput(event)
 
     def ev_keydown(self, event):
-        self.game.screens.active_screen.handle_input(event)
+        self.game.ui.active_screen.handle_input(event)
 
         func: T
         if event.sym in self.COMMAND_KEYS:
             try:
-                func = getattr(self.game.screens.active_screen, f"cmd_{self.COMMAND_KEYS[event.sym]}")
+                func = getattr(self.game.ui.active_screen, f"cmd_{self.COMMAND_KEYS[event.sym]}")
                 return func()
             except AttributeError:
                 pass
 
-        if self.game.screens.active_screen:
-            if self.game.screens.active_screen.name == 'STAGE':
+        if self.game.ui.active_screen:
+            if self.game.ui.active_screen.name == 'STAGE':
                 if event.sym in self.MOVE_KEYS:
                     self.game.player.move(self.MOVE_KEYS[event.sym])
 

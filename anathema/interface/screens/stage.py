@@ -16,6 +16,8 @@ from anathema.interface.views.bar_gauge import BarGaugeView
 from anathema.interface.views.simple_list import SimpleListView
 from anathema.engine.data.spawner import spawn
 
+from anathema.data import Storage
+
 if TYPE_CHECKING:
     from anathema.engine.core.game import Game
 
@@ -70,10 +72,10 @@ class Stage(UIScreen):
         pass
 
     def cmd_escape(self):
-        self.game.screens.push_screen(EscapeMenu(self.game))
+        self.game.ui.push_screen(EscapeMenu(self.game))
 
     def cmd_character_info(self):
-        self.game.screens.push_screen(self.game.screens.screens['CHARACTER INFO'])
+        self.game.ui.push_screen(self.game.ui.screens['CHARACTER INFO'])
 
     def cmd_spawn(self):
         roll = random.randrange(0, 100)
@@ -116,11 +118,12 @@ class EscapeMenu(UIScreen):
         self.covers_screen = True
 
     def ui_quit_to_menu(self):
+        # self.game.storage.write_to_file()
         self.game.teardown()
-        self.game.screens.replace_screen(self.game.screens.screens['MAIN MENU'])
+        self.game.ui.replace_screen(self.game.ui.screens['MAIN MENU'])
 
     def ui_exit_game(self):
         pass
 
     def cmd_escape(self):
-        self.game.screens.pop_screen()
+        self.game.ui.pop_screen()

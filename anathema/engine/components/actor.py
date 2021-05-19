@@ -10,18 +10,22 @@ if TYPE_CHECKING:
 
 class Actor(Component):
 
-    def __init__(self) -> None:
-        self._energy: int = 0
+    def __init__(self, energy: int = 0) -> None:
+        self.energy: int = energy
         self._dest_xy = None
         self._path = None
         self._can_take_turn = False
-        self.is_pathing = False
+        self._is_pathing = False
 
     def __lt__(self, other: Actor) -> bool:
-        return self._energy < other._energy
+        return self.energy < other.energy
 
     def __str__(self) -> str:
-        return f"Energy: {self._energy}"
+        return f"Energy: {self.energy}"
+
+    @property
+    def is_pathing(self):
+        return self._is_pathing
 
     @property
     def dest_xy(self):
@@ -40,10 +44,6 @@ class Actor(Component):
         self._path = value
 
     @property
-    def energy(self) -> int:
-        return self._energy
-
-    @property
     def can_take_turn(self):
         return self._can_take_turn
 
@@ -53,7 +53,7 @@ class Actor(Component):
 
     @property
     def has_energy(self) -> bool:
-        return self._energy >= 0
+        return self.energy >= 0
 
     def on_energy_consumed(self, evt: EntityEvent) -> None:
         self.reduce_energy(int(evt.data.cost))
@@ -62,9 +62,9 @@ class Actor(Component):
         self.add_energy(1)
 
     def add_energy(self, value: int) -> None:
-        self._energy += value
-        if self._energy >= 0:
-            self._energy = 0
+        self.energy += value
+        if self.energy >= 0:
+            self.energy = 0
 
     def reduce_energy(self, value: int) -> None:
         self.add_energy(value * -1)
