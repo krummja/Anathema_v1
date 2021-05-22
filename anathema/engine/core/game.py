@@ -84,20 +84,17 @@ class Game(AbstractGame):
         self.renderer = RenderManager(self)
         self.ui = UIManager(self)
         self.input = InputManager(self)
-        self.maps = MapManager(self)
+
         self.content = ContentManager(self)
         self.storage = Storage(self)
 
-    def initialize(self, save_file=None):
+    def initialize(self):
         self.ecs.new_world()
-
-        player_data = None
-        if save_file:
-            player_data = self.storage.read_from_file(save_file)
 
         self.content.load_game_object_prefabs()
         self.content.load_world_prefabs()
         self.player = PlayerManager(self)
+        self.maps = MapManager(self)
 
         self.action_system: ActionSystem = ActionSystem(self)
         self.physics_system: PhysicsSystem = PhysicsSystem(self)
@@ -106,11 +103,8 @@ class Game(AbstractGame):
         self.render_system: RenderSystem = RenderSystem(self)
         self.path_system: PathSystem = PathSystem(self)
 
-        self.maps.initialize()  # load map
-        if save_file:
-            self.player.initialize(player_data)
-        else:
-            self.player.initialize()
+        self.maps.initialize()
+        self.player.initialize_new()
 
     def teardown(self):
         self.player.teardown()

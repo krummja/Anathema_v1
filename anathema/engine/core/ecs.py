@@ -3,6 +3,7 @@ from typing import *
 
 from ecstremity import Engine
 from anathema.engine.components import game_object_components
+from anathema.engine.world.generation.components import world_components
 from anathema.engine.core import BaseManager
 
 if TYPE_CHECKING:

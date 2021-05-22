@@ -35,25 +35,25 @@ class PlayerManager(BaseManager):
     def position(self) -> Tuple[int, int]:
         return self.entity['Position'].xy
 
-    def initialize(self, save_data=None) -> None:
-        if save_data:
-            player = save_data
-        else:
-            player = self.game.ecs.world.create_prefab("Player", {
-                "position": {
-                    "area": self.game.maps.current_area,
-                    "x": 247,
-                    "y": 247
-                },
-                "renderable": {
-                    "char": "@",
-                    "fg": (255, 255, 255)
-                },
-                "moniker": {
-                    "name": "Aulia Inuicta"
-                }
-            })
+    def initialize_new(self) -> None:
+        player = self.game.ecs.world.create_prefab("Player", {
+            "position": {
+                "area": self.game.maps.current_area,
+                "x": 247,
+                "y": 247
+            },
+            "renderable": {
+                "char": "@",
+                "fg": (255, 255, 255)
+            },
+            "moniker": {
+                "name": "Aulia Inuicta"
+            }
+        })
         self._uid = player.uid
+
+    def initialize_loaded(self, save_data):
+        pass
 
     def teardown(self):
         self.game.ecs.world.destroy_entity(self.uid)

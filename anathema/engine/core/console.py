@@ -38,9 +38,6 @@ class Context:
         yield
         self._offset = previous
 
-    def blit(self):
-        pass
-
     def clear_area(self, rect: Rect, *args, **kwargs):
         computed = Rect(rect.origin + self._offset, rect.size)
         self.draw_rect(

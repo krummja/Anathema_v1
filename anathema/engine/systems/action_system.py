@@ -30,7 +30,8 @@ class ActionSystem(BaseSystem):
 
     def update(self):
         entities = self._queries['actors'].result
-        self.game.maps.current_area.actors.update(set(entities))
+        # self.game.maps.current_area.actors.update(set(entities))
+        self.game.maps.actors.update(set(entities))
 
         sorted_entities = deque(sorted(entities, key=(lambda e: e['Actor']), reverse = True))
         entity = sorted_entities[0]
