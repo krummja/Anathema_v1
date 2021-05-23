@@ -3,6 +3,7 @@ from .screens import BaseScreen, UIScreen
 from .screens.main_menu import MainMenu
 from .screens.stage import Stage
 from .screens.character_info import CharacterInfo
+from .screens.world_creation import WorldCreation
 
 __all__ = [
     'BaseScreen',
@@ -11,4 +12,5 @@ __all__ = [
     'MainMenu',
     'Stage',
     'CharacterInfo',
+    'WorldCreation'
 ]

@@ -88,8 +88,12 @@ class Game(AbstractGame):
         self.content = ContentManager(self)
         self.storage = Storage(self)
 
-    def initialize(self):
+    def initialize_creators(self):
         self.ecs.new_world()
+        self.maps = MapManager(self)
+        self.render_system = RenderSystem(self)
+
+    def initialize(self):
 
         self.content.load_game_object_prefabs()
         self.content.load_world_prefabs()

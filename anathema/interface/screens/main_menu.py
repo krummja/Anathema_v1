@@ -89,10 +89,15 @@ class MainMenu(UIScreen):
             "Start", callback = self.ui_start,
             align_horz = "left", align_vert = "bottom",
             layout = Layout(bottom = 8, left = 2))
+        self.new_button = ButtonView(
+            "New", callback = self.ui_new,
+            align_horz = "left", align_vert = "bottom",
+            layout = Layout(bottom = 6, left = 2)
+        )
         self.load_button = ButtonView(
             "Load", callback = self.ui_load,
             align_horz = "left", align_vert = "bottom",
-            layout = Layout(bottom = 6, left = 2)
+            layout = Layout(bottom = 4, left = 2)
         )
         self.quit_game_button = ButtonView(
             "Quit Game", callback = self.ui_quit,
@@ -105,6 +110,7 @@ class MainMenu(UIScreen):
                             right = POSITION_RECT.relative_point(0.66, 1.0)[0] + 1),
             subviews = [
                 self.start_button,
+                self.new_button,
                 self.load_button,
                 self.quit_game_button
             ])
@@ -132,6 +138,10 @@ class MainMenu(UIScreen):
         # self.game.initialize("2021-05-18")
         self.game.initialize()
         self.game.ui.push_screen(self.game.ui.screens['STAGE'])
+
+    def ui_new(self):
+        self.game.initialize_creators()
+        self.game.ui.push_screen(self.game.ui.screens['NEW WORLD'])
 
     def ui_load(self):
         print(self.game.storage.manifest_entries)

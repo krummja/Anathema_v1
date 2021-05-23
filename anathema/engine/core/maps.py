@@ -9,6 +9,7 @@ from tcod.color import Color
 from anathema.engine.core import BaseManager
 from anathema.engine.world.tilemap import TileMap
 from anathema.engine.world.tile import Tile
+from anathema.engine.world.generation.tiles import Tiles
 from anathema.engine.world.generation.array_tools import rng_selection
 from anathema.engine.world.generation.automata import *
 from anathema.engine.world.planet.generator import PlanetView, PlanetGenerator
@@ -29,7 +30,8 @@ class MapManager(BaseManager):
         self.engine = self.game.ecs.engine
         self.world = self.game.ecs.world
         self.current_area = None
-        self._register_components()
+        self.generator = PlanetGenerator(100, 50)
+        self.viewer = PlanetView(self.generator)
 
     @property
     def actors(self):
@@ -44,17 +46,13 @@ class MapManager(BaseManager):
         return self.current_area
 
     def initialize(self):
-        area = self.world.create_entity()
-        area.add('Map_Moniker', {'name': 'Test Area'})
-        area.add('Map_Tilemap', {'width': 512, 'height': 512})
-        area.add('Map_WorldLocation', {'x': 0, 'y': 0})
-        area.add('Map_Actors', {})
-        area.add('Map_Terrain', {})
+        area = self.game.ecs.world.create_prefab("Area", {
+            "map_worldlocation": {
+                "x": 0, "y": 0
+            }
+        })
+        area['Map_Tilemap'].tiles[:] = Tiles.unformed.make()
         self.current_area = area['Map_Tilemap']
 
     def teardown(self):
         self.current_area = None
-
-    def _register_components(self):
-        for component in world_components():
-            self.engine.register_component(component)

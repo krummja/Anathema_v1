@@ -17,6 +17,7 @@ class UIManager(BaseManager):
             'MAIN MENU': MainMenu(game),
             'STAGE': Stage(game),
             'CHARACTER INFO': CharacterInfo(game),
+            'NEW WORLD': WorldCreation(game),
         }
         self._stack: List[Screen] = []
         self.should_continue: bool = True

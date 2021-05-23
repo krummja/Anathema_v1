@@ -1,0 +1,28 @@
+{
+  "name": "Area",
+  "inherit": [],
+  "components": [
+    {
+      "type": "Map_Moniker",
+      "properties": {
+        "name": "Test Area"
+      }
+    },
+    {
+      "type": "Map_Tilemap",
+      "properties": {
+        "width": 512,
+        "height": 512
+      }
+    },
+    {
+      "type": "Map_WorldLocation"
+    },
+    {
+      "type": "Map_Actors"
+    },
+    {
+      "type": "Map_Terrain"
+    }
+  ]
+}

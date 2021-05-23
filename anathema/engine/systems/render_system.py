@@ -15,7 +15,7 @@ class RenderSystem(BaseSystem):
 
     def draw_world_map(self):
         self.game.console.root.clear()
-        self.game.renderer.render_world_map(self.game.maps.planet_view)
+        self.game.renderer.render_world_map(self.game.maps.viewer)
 
     def draw_tiles(self):
         self.game.renderer.render_area_tiles(self.game.maps.current_area)

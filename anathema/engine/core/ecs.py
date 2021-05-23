@@ -35,3 +35,5 @@ class ECSManager(BaseManager):
     def _register_components(self):
         for component in game_object_components():
             self.engine.register_component(component)
+        for component in world_components():
+            self.engine.register_component(component)
